@@ -1,24 +1,23 @@
 import Link from 'next/link';
+import Styles from '../../styles/Navbar.module.css';
 
 const Navbar = () => {
     return (
-        <div className="navbar">
-        <div className="navbar-container">
-            <div className="navbar-logo">
-            <image src="https://i.imgur.com/eQhUw7D.png" alt="logo" />
+        <div className={Styles.navbarContainer}>
+            <div className={Styles.navbarLogo}>
+                {/* <image src="../../../public/vercel.svg" alt="logo" /> */}
             </div>
-            <div className="navbar-links">
-            <div className="navbar-link">
-                <Link href="/"><a>Home</a></Link>
+            <div className={Styles.navbarLinks}>
+                <div className={Styles.navbarLink}>
+                    <Link href="/"><a>Home</a></Link>
+                </div>
+                <div className={Styles.navbarLink}>
+                    <Link href="/Empleados"><a>Empleados</a></Link>
+                </div>
+                <div className={Styles.navbarLink}>
+                    <Link href="/Proyectos"><a>Proyectos</a></Link>
+                </div>
             </div>
-            <div className="navbar-link">
-                <Link href="/Empleados"><a>Empleados</a></Link>
-            </div>
-            <div className="navbar-link">
-                <Link href="/Proyectos"><a>Proyectos</a></Link>
-            </div>
-            </div>
-        </div>
         </div>
     );
     }
