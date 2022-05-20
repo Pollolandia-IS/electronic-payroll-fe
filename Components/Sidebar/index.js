@@ -1,26 +1,34 @@
 import React from 'react';
-import * as FaIcons from 'react-icons/fa';
-import * as AiIcons from 'react-icons/ai';
-import * as IoIcons from 'react-icons/io';
+import { BsCardText, BsGearFill, BsArrowCounterclockwise, BsPersonCircle, BsFillArrowRightSquareFill } from 'react-icons/bs';
 import styles from '../../styles/Sidebar.module.css';
 
 
 const SidebarItem = [
     {
         title: 'Nomina',
-        icon: <AiIcons.AiFillProfile/>,
+        icon: <BsCardText/>,
         link: '/'
     },
     {
         title: 'Ajustes',
-        icon: <AiIcons.AiFillProject />,
+        icon: <BsGearFill />,
         link: '/'
     },
     {
         title: 'Historial',
-        icon: <AiIcons.AiFillProject />,
+        icon: <BsArrowCounterclockwise />,
         link: '/'
     },
+    {
+      title: 'Perfil',
+      icon: <BsPersonCircle />,
+      link: '/'
+  },
+  {
+    title: 'Cerrar Session',
+    icon: <BsFillArrowRightSquareFill />,
+    link: '/'
+},
 ]
 
 const Sidebar = () => {
@@ -33,7 +41,7 @@ const Sidebar = () => {
               <li key={item.title} className={styles.sidebarBodyListItem}>
                 <a className={styles.sidebarBodyListItem} href={item.link}>
                   {item.icon}
-                  <span>{item.title}</span>
+                  <span className={styles.objectSidebar}>{item.title}</span>
                 </a>
               </li>
             ))}

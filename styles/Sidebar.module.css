@@ -9,24 +9,18 @@
     height: 100%;
     background-color: #F53D3D;
     padding-right: 5rem;
-    font-size: 20px;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 700;
-}
-
-.navbar {
-    background-color: #F53D3D;
-    height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .sidebarBodyListItem {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-top: 1rem;
+    margin-top: 2rem;
+}
+
+.objectSidebar {
+    margin-left: 1rem;
+    
 }
 
 .sidebarBody {

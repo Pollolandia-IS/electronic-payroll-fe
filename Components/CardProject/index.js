@@ -1,17 +1,19 @@
 import React, {Component} from 'react';
 import { BsPersonCircle } from 'react-icons/bs';
 import Styles from '../../styles/CardProject.module.css';
+import ButtonComponent from '../Button';
 
 export default function CardProject({projects}){
     return (
-      <section>
+      <section className={Styles.section}>
         <div className={Styles.proyectos}>
           <div className={Styles.header}>
-            <div className={Styles.icon}>
-              <BsPersonCircle />
-            </div>
-
-            <span className={Styles.headerItem}>{projects.numberOfEmploys}</span>
+            <div className={Styles.headerFirst}>
+              <div className={Styles.icon}>
+                <BsPersonCircle />
+              </div>
+              <span  className={Styles.headerFirst}>{projects.numberOfEmploys}</span>
+            </div> 
             <span className={Styles.headerItem}>{projects.typeOfContract}</span>
             <span className={Styles.headerItem}>{projects.startDate} - {projects.endDate}</span>
 
@@ -25,6 +27,7 @@ export default function CardProject({projects}){
               <span className={Styles.headerItem}>Total Salario Neto: {projects.salary}</span>
             </div>
             <div className={Styles.bodyRight}>
+              <ButtonComponent/>
               <span className={Styles.headerItem}>Frecuencia de pago: {projects.frecuency}</span>
             </div>
           </div>

@@ -49,7 +49,6 @@ const Proyectos = () => {
         <div className={Styles.sidebar}>
           <Sidebar />
         </div>
-        <h1>Proyectos</h1>
         <div className={Styles.proyectoBody}>
           <div className={Styles.proyectoBodyTable}>
               {projects.map((project) => (

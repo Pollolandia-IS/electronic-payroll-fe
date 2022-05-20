@@ -10,8 +10,6 @@
     display: flex;
     margin-right: 2rem;
     padding-right: 5rem;
-    font-size: 20px;
-    font-family: 'Roboto', sans-serif;
     align-content: center;
 }
 
@@ -21,7 +19,7 @@
     display: flex;
     justify-content: center;
     border: 2px solid #0f0f0f;
-    border-end-end-radius: 25px;
-    border-end-start-radius: 25px;
+    /* border-end-end-radius: 25px;
+    border-end-start-radius: 25px; */
     
 }
