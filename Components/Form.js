@@ -6,10 +6,10 @@ const Form = (props) => {
     return (
         <>
             <form className={styles.Form}>
-                {props.titles.map(([title, type, required]) => (
+                {props.titles.map(([title, type, isRequired]) => (
                     <>
-                        <label className={styles.Form__label} htmlFor={title}>{title} *</label>
-                        <input className={styles.Form__input} type={type} name={title} required={required} /><br />
+                        <label className={styles.Form__label} htmlFor={title}>{`${title} ${isRequired ? "*" : ""}`}</label>
+                        <input className={styles.Form__input} type={type} name={title} required={isRequired} /><br />
                     </>
                 ))}
                 <button className={styles.Form__button} type="Submit">{props.button}</button>
