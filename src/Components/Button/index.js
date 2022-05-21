@@ -5,11 +5,11 @@ import { setCardName } from '../../pages/Slices/card/cardSlice';
 
 
 
-const ButtonComponent = (nameOfCard) => {
+const ButtonComponentCard = (nameOfCard) => {
   const dispatch = useDispatch();
   return (
     <Link href="/Proyectos"><a className={Style.button} onClick={() => {dispatch(setCardName(nameOfCard)); }}>Ver detalles</a></Link>
   )
 }
 
-export default ButtonComponent;
+export default ButtonComponentCard;
