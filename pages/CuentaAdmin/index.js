@@ -1,11 +1,40 @@
+import Image from 'next/image';
 import Form from '../../components/Form.js';
+import Styles from '../../styles/CuentaAdmin.module.css';
 
 function CuentaAdmin() {
-    //TODO: add NavBar
+    //TODO: add NavBar (the component)
+    //TODO: add links for "Inicio" and "Sobre Nosotros" 
+    //TODO: add info in Footer
+    //TODO: fix gradient of the footer
     return (
         <>
+            <header>
+                <nav className={Styles.CA__nav}>
+                    <ul className={Styles.CA__nav__ul}>
+                        <li><img className={Styles.CA__nav__li} src='Logo_Icon.svg'/></li>
+                        <li className={Styles.CA__nav__li}><a href='#'>Inicio</a></li>
+                        <li className={Styles.CA__nav__li}><a href='#'>Sobre Nosotros</a></li>
+                    </ul>
+                </nav>
+                <h1 className={Styles.CA__h1}>Ingresa tus datos:</h1>
+                <h2 className={Styles.CA__h2}>Los campos con * son obligatorios.</h2>
+            </header>
+            <div>
+                <Image
+                    alt="Background"
+                    src="/Cuenta_Admin_Background.svg"
+                    layout="fill"
+                    objectFit="cover"
+                    quality={100}
+                />
+                <img className={Styles.CA__img} src='Logo.svg'/>
+            </div>
             <Form titles= {[["Cedula", "text"], ["Email", "email"], ["Teléfono", "tel"], ["Nombre", "text"], 
                 ["Contraseña", "password"], ["Confirmar Contraseña", "password"]]} button = "CONFIRMAR"/>
+            <footer className={Styles.CA__footer}>
+
+            </footer>
         </>
     );
 }

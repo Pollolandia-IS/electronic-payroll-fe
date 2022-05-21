@@ -3,7 +3,6 @@ import Styles from '../styles/Form.module.css';
 
 function Form(props) {
     //TODO: create method that handles the response
-    //TODO: add styling to the page
     return (
         <>
             <form className={Styles.Form}>
