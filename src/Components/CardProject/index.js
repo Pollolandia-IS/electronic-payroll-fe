@@ -1,9 +1,27 @@
-import React, {Component} from 'react';
+import {Component} from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
 import { BsPersonCircle } from 'react-icons/bs';
 import Styles from '../../styles/CardProject.module.css';
 import ButtonComponent from '../Button';
+import { setCardName } from '../../pages/Slices/card/cardSlice';
+
+
+
+
 
 export default function CardProject({projects}){
+
+  const cardValue = useSelector(
+    (state) => state.card.cardName
+  );
+  const cardID = useSelector(
+    (state) => state.card.cardNumber
+  );
+
+  const dispatch = useDispatch();
+
     return (
       <section className={Styles.section}>
         <div className={Styles.proyectos}>
@@ -27,7 +45,7 @@ export default function CardProject({projects}){
               <span className={Styles.headerItem}>Total Salario Neto: {projects.salary}</span>
             </div>
             <div className={Styles.bodyRight}>
-              <ButtonComponent/>
+              <ButtonComponent nameOfCard={projects.typeOfContract}/>
               <span className={Styles.headerItem}>Frecuencia de pago: {projects.frecuency}</span>
             </div>
           </div>

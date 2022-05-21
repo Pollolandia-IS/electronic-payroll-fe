@@ -3,6 +3,7 @@ import { BsCardText, BsGearFill, BsArrowCounterclockwise, BsPersonCircle, BsFill
 import styles from '../../styles/Sidebar.module.css';
 
 
+
 const SidebarItem = [
     {
         title: 'Nomina',

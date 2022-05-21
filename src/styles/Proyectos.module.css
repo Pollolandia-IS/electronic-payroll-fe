@@ -6,14 +6,14 @@
 }
 
 .sidebar {
-  display: flex;
+  /* display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 25%;
-  height: 100%;
-  background-color: #F53D3D;
-  margin-right: 2rem;
+  justify-content: center; */
+  /* width: 25%; */
+  /* height: 100%; */
+  /* background-color: #F53D3D;
+  margin-right: 2rem; */
 }
 
 .centerContent {
