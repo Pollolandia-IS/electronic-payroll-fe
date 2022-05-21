@@ -1,14 +1,12 @@
 
 .subtitle{
     color: #FE3D2B;
-    font-family: 'Open Sans Hebrew Condensed';
 	font-style: normal;
 	font-weight: 700;
 	font-size: 32px;
 }
 
 .Formsubtitle {
-	font-family: 'Open Sans Hebrew Condensed';
 	font-style: normal;
 	font-weight: 700;
 	font-size: 24px;
@@ -29,20 +27,26 @@
 }
 
 .InputElement{
-	padding: 20px;
+	padding-bottom: 20px;
 }
 
 .InputLabel{
-	font-family: 'Roboto Slab';
 	font-style: normal;
 	font-weight: 700;
 	font-size: 18px;
-	margin-right: 20px;
 }
 
 .InputTextBox{
-	width: 250px;
+	padding-top: 6px;
+	border-width: 0 0 1px;
+	margin-right: 60px;
+	width: 280px;
 	float: right;
+}
+
+.ButtonPosition{
+	float: right; 
+	padding-right: 60px;
 }
 
 .sideBar{
