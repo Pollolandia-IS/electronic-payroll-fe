@@ -7,9 +7,6 @@ import { BsCardText, BsGearFill, BsArrowCounterclockwise, BsPersonCircle, BsFill
 export default function Home() {
   return (
     <>
-      <div className={styles.navbar}> 
-        <p>Nomina</p>
-      </div>
       <Sidebar SidebarItem = {[{ title: 'Nomina', icon: <BsCardText/>, link: '/'},{ title: 'Ajustes', icon: <BsGearFill/>, link: '/Proyecto'},]}/>
     </>
 
