@@ -30,9 +30,9 @@ function CuentaAdmin() {
                 />
                 <img className={styles.CA__img} src='Logo.svg'/>
             </div>
-            <Form titles= {[["Cedula", "text", "true"], ["Email", "email", "true"], ["Teléfono", "tel", "true"], 
-                ["Nombre", "text", "true"], ["Contraseña", "password", "true"], ["Confirmar Contraseña", "password", 
-                    "true"]]} button = "CONFIRMAR"/>
+            <Form titles= {[["Cedula", "text", true], ["Email", "email", true], ["Teléfono", "tel", true], 
+                ["Nombre", "text", true], ["Contraseña", "password", true], ["Confirmar Contraseña", "password", 
+                    true]]} button = "CONFIRMAR"/>
             <footer className={styles.CA__footer}>
 
             </footer>
