@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
-import Styles from '../styles/Form.module.css';
+import styles from '../styles/Form.module.css';
 
-function Form(props) {
+const Form = (props) => {
     //TODO: create method that handles the response
     return (
         <>
-            <form className={Styles.Form}>
-                {props.titles.map(([title, type]) => (
+            <form className={styles.Form}>
+                {props.titles.map(([title, type, required]) => (
                     <>
-                        <label className={Styles.Form__label} htmlFor={title}>{title} *</label>
-                        <input className={Styles.Form__input} type={type} name={title} id={title} required /><br />
+                        <label className={styles.Form__label} htmlFor={title}>{title} *</label>
+                        <input className={styles.Form__input} type={type} name={title} required={required} /><br />
                     </>
                 ))}
-                <button className={Styles.Form__button} type="Submit">{props.button}</button>
+                <button className={styles.Form__button} type="Submit">{props.button}</button>
             </form>
         </>
     );
