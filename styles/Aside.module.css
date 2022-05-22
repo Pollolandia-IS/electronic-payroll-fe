@@ -3,6 +3,8 @@
     height: 100vh;
     width: 177px;
     padding-top: 74px;
+    position: fixed;
+    top: 85px;
 }
 
 .aside__list {
