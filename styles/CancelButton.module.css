@@ -1,0 +1,18 @@
+
+.CancelButton{
+    background: #848484;
+	border-radius: 12px;
+
+	width: 144px;
+	height: 48px;
+	border: none;
+
+	color: white;
+
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.CancelButton:hover{
+    background: red;
+}

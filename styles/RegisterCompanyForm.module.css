@@ -1,23 +1,24 @@
 
 .subtitle{
-    color: #FE3D2B;
+    color: black;
 	font-style: normal;
-	font-weight: 700;
-	font-size: 32px;
-}
-
-.Formsubtitle {
-	font-style: normal;
-	font-weight: 700;
+	font-weight: bold;
 	font-size: 24px;
-
-	margin-top: 20px;
-    color: #FE3D2B;
 }
 
 .formLayer{
 	margin-left: 16%;
 	padding: 30px 50px;
+}
+
+.Formsubtitle {
+	font-style: normal;
+	font-weight: bold;
+	font-size: 20px;
+
+	margin-top: 40px;
+	margin-bottom: 20px;
+    color: #FE3D2B;
 }
 
 .SubEntry {
@@ -28,25 +29,30 @@
 
 .InputElement{
 	padding-bottom: 20px;
+	margin-bottom: 15px;
 }
 
 .InputLabel{
 	font-style: normal;
-	font-weight: 700;
-	font-size: 18px;
+	font-weight: bold;
+	font-size: 17px;
 }
 
 .InputTextBox{
 	padding-top: 6px;
 	border-width: 0 0 1px;
 	margin-right: 60px;
-	width: 280px;
+	width: 260px;
 	float: right;
 }
 
-.ButtonPosition{
+.AcceptButtonPosition{
 	float: right; 
 	padding-right: 60px;
+}
+
+.CancelButtonPosition{
+	float: left;
 }
 
 .sideBar{

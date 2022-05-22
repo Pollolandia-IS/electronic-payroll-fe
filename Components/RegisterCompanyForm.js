@@ -1,5 +1,6 @@
-import Button from '../ButtonMedium'
-import Styles from '../../styles/RegisterCompanyForm.module.css';
+import Button from './ButtonMedium'
+import CancelButton from './CancelButton'
+import Styles from '../styles/RegisterCompanyForm.module.css';
 
 function RegisterCompanyInput(props){
     const required = props.required
@@ -53,8 +54,13 @@ function RegisterCompanyForm (){
                         <RegisterCompanyInput name="Phone" type="text" tag="Teléfono: *" required={true} />
                         <RegisterCompanyInput name="Website" type="text" tag="Página Web:" required={false} />
                     </div>
-                    <div className={Styles.ButtonPosition}>
-                        <Button ButtonText="Enviar "> </Button>
+
+                    <div className={Styles.CancelButtonPosition}>
+                        <CancelButton ButtonText="Cancelar"> </CancelButton>
+                    </div>
+
+                    <div className={Styles.AcceptButtonPosition}>
+                        <Button ButtonText="Enviar"> </Button>
                     </div>
                 </form>
             </div>

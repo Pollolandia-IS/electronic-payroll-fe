@@ -1,4 +1,4 @@
-import Styles from '../../styles/ButtonMedium.module.css';
+import Styles from '../styles/ButtonMedium.module.css';
 
 function ButtonMedium(props){
 
