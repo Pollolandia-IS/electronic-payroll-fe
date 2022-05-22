@@ -3,4 +3,21 @@ const nextConfig = {
   reactStrictMode: true,
 }
 
-module.exports = nextConfig
+const path = require('path');
+
+module.exports = {
+  webpack(config) {
+    config.resolve.alias['~'] = path.resolve(__dirname);
+    config.module.rules.push({
+      test: /\.(woff|ttf|svg)$/,
+      use: {
+        loader: 'url-loader',
+        options: {
+          limit: 100000,
+        },
+      },
+    });
+    return config;
+   },
+  nextConfig
+}
