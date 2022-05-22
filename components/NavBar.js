@@ -15,10 +15,10 @@ function NavBar(props) {
       </>
     ))
   }
-  
+
   return ( 
     <header className={styles.header}>
-      <Image className={styles.header__img} src={logo} layout="raw"/>
+      <Image className={styles.header__img} src={logo} alt="Pollolandia Logo" layout="raw"/>
       <nav className={styles.nav}>
         {createNavLinks()}
       </nav>
