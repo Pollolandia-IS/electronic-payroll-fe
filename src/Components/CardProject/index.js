@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { BsPersonCircle } from 'react-icons/bs';
 import Styles from '../../styles/CardProject.module.css';
-import ButtonComponentCard from '../Button';
+import ButtonComponentCard from '../ButtonCard';
 
 
 
@@ -42,7 +42,7 @@ export default function CardProject({projects}){
               <span className={Styles.headerItem}>Total Salario Neto: {projects.salary}</span>
             </div>
             <div className={Styles.bodyRight}>
-              <ButtonComponentCard nameOfCard = {projects.typeOfContract}/>
+              <ButtonComponentCard element = {projects}/>
               <span className={Styles.headerItem}>Frecuencia de pago: {projects.frecuency}</span>
             </div>
           </div>

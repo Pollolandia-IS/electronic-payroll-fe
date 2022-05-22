@@ -3,16 +3,14 @@ import { createSlice } from "@reduxjs/toolkit";
 const cardSlice = createSlice({
     name: 'card',
     initialState: {
-        cardName: 'Firts Name',
-        cardNumber: '',
-        theme: "light",
+        cardObject: {},
         itemsCount: 0,
         card: [],
     },
     reducers: {
         setCardName: (state, action) => {
-            state.cardName = action.payload.nameOfCard;
-            console.log(state.cardName);
+            state.cardObject = action.payload;
+            // console.log(state.cardObject);
         },
         setCardNumber: (state, action) => {
             state.cardNumber = action.payload.number;

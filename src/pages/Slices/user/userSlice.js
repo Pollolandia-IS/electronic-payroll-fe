@@ -6,6 +6,7 @@ const userSlice = createSlice({
         userName: 'Firts Name',
         userEmail: '',
         isLogged: false,
+        nameOfBusiness: 'PL Solutions',
         userProjects: [],
     },
     reducers: {
