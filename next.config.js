@@ -6,6 +6,8 @@ const nextConfig = {
 const path = require('path');
 
 module.exports = {
+  experimental: { images: { layoutRaw: true } },
+  nextConfig,
   webpack(config) {
     config.resolve.alias['~'] = path.resolve(__dirname);
     config.module.rules.push({
@@ -18,6 +20,5 @@ module.exports = {
       },
     });
     return config;
-   },
-  nextConfig
-}
+  },
+};
