@@ -1,11 +1,9 @@
 
 import Sidebar from "../../Components/Sidebar";
-import Navbar from "../../Components/Navbar";
 
 const Empleados = () => {
     return (
         <div>
-            <Navbar />
             <Sidebar />
         <h1>Empleados</h1>
         <p>

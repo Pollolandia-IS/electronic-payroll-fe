@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
 import Sidebar from "../../Components/Sidebar";
-import Navbar from "../../Components/Navbar";
 import Styles from '../../styles/ProjectModule.module.css';
 import CardEmploy from '../../Components/CardEmploy';
 import CardReport from '../../Components/CardReport';
@@ -27,7 +26,6 @@ const ProjectModule = () => {
 
     return (
       <>
-        <Navbar />
         <div className={Styles.container}>
           <Sidebar/>
           <div className={Styles.content}>

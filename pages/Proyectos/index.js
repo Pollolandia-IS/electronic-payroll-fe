@@ -1,4 +1,4 @@
-import Navbar from "../../Components/Navbar";
+
 import Sidebar from "../../Components/Sidebar";
 import CardProject from "../../Components/CardProject";
 import Styles from "../../styles/Proyectos.module.css";
@@ -76,7 +76,6 @@ const Proyectos = () => {
   return (
     <div className={Styles.proyectos}>
       <div>
-        <Navbar />
       </div>
       <div className={Styles.centerContent}>
         <Sidebar />
