@@ -1,0 +1,37 @@
+.asideItem {
+  margin-bottom: 29px;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.asideItem--open{
+  margin: 0;
+}
+
+.asideItem--non-dropable {
+  justify-content: left;
+  column-gap: 15px;
+}
+
+.asideItem__name {
+  color: white;
+  font-family: 'Roboto Slab', serif;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.asideItem__icon {
+  align-self: center;
+}
+
+.asideItem__icon--left {
+  margin-left: 12px;
+  font-size: 24px;
+}
+
+.asideItem__icon--right {
+  margin-top: 5px;
+  margin-right: 13px;
+}
