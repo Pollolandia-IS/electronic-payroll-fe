@@ -3,9 +3,7 @@ import styles from '../styles/AsideDropdown.module.css';
 
 const AsideDropdown = (props) => {
     const createItems = () => {
-      console.log(props.items);
         return props.items.map(([name, href], index) => {
-          console.log(name, href);
             return (
             <li key={index}>
                 <Link href={href}>
