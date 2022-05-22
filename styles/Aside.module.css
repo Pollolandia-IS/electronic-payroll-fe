@@ -1,0 +1,12 @@
+.aside {
+    background: linear-gradient(179.81deg,#F53D3D -7.75%, rgba(138, 21, 21, 0.887148) 140.76%);
+    height: 100vh;
+    width: 177px;
+    padding-top: 74px;
+}
+
+.aside__list {
+    margin: 0;
+    padding: 0;
+}
+
