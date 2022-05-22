@@ -4,9 +4,6 @@ import Styles from '../../styles/CardEmploy.module.css';
 import { BsPersonCircle } from 'react-icons/bs';
 
 
-
-
-
 export default function CardProject(props){
 
     return (
@@ -28,5 +25,3 @@ export default function CardProject(props){
       </section>
     );
 };
-
-

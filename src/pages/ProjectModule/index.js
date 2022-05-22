@@ -3,6 +3,7 @@ import Sidebar from "../../Components/Sidebar";
 import Navbar from "../../Components/Navbar";
 import Styles from '../../styles/ProjectModule.module.css';
 import CardEmploy from '../../Components/CardEmploy';
+import CardReport from '../../Components/CardReport';
 
 const ProjectModule = () => {
 
@@ -48,7 +49,23 @@ const ProjectModule = () => {
               
             </div>
             <h1 className={Styles.title}>Empleados</h1>
-            <CardEmploy/>
+            <div className={Styles.cardScroll}>
+              <CardEmploy/>
+              <CardEmploy/>
+              <CardEmploy/>
+              <CardEmploy/>
+            </div>
+            
+
+            <h1 className={Styles.title}>Reportes</h1>
+
+            <div className={Styles.cardScroll}>
+              <CardReport/>
+              <CardReport/>
+              <CardReport/>
+              <CardReport/>
+            </div>
+            
           </div>
         </div>
         

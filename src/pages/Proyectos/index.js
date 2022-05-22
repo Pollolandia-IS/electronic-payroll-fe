@@ -37,6 +37,39 @@ const projects = [
     endDate: '01/01/2021',
     typeOfContract: 'Empleados por hora'
   },
+  {
+    id: 3,
+    numberOfEmploys: 99,
+    moneda: 'USD',
+    state: 'Pendiente',
+    salary: 100000000,
+    frecuency: 'Mensual',
+    startDate: '01/01/2020',
+    endDate: '01/01/2021',
+    typeOfContract: 'Empleados por hora'
+  },
+  {
+    id: 3,
+    numberOfEmploys: 99,
+    moneda: 'USD',
+    state: 'Pendiente',
+    salary: 100000000,
+    frecuency: 'Mensual',
+    startDate: '01/01/2020',
+    endDate: '01/01/2021',
+    typeOfContract: 'Empleados por hora'
+  },
+  {
+    id: 3,
+    numberOfEmploys: 99,
+    moneda: 'USD',
+    state: 'Pendiente',
+    salary: 100000000,
+    frecuency: 'Mensual',
+    startDate: '01/01/2020',
+    endDate: '01/01/2021',
+    typeOfContract: 'Empleados por hora'
+  },
 ]
 
 const Proyectos = () => {

@@ -2,18 +2,6 @@
 .proyectos {
   background-color: #f5f5f5;
   
-  
-}
-
-.sidebar {
-  /* display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center; */
-  /* width: 25%; */
-  /* height: 100%; */
-  /* background-color: #F53D3D;
-  margin-right: 2rem; */
 }
 
 .centerContent {
@@ -24,7 +12,18 @@
 
 .proyectoBody {
     margin-top: 3rem;
-    padding-left: 1rem;
+    margin-left: 8rem;
+}
+
+.proyectoBodyTable {
+    display: block;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 750px;
+    height: 500px;
+    overflow-y:scroll;
+    
 }
 
 

@@ -42,3 +42,13 @@
 .bolded { 
     font-weight: 700;
 }
+
+.cardScroll{
+    display: block;
+    flex-direction: column;
+    justify-content: center;
+    height: 200px;
+    width: 750px;
+    overflow-y:scroll;
+}
+
