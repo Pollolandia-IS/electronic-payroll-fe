@@ -16,7 +16,11 @@ const buttonAddSelection =  (props) => {
     return (
         <div className={Styles.content}> 
             <ThemeProvider theme={theme}> 
-                <Button color="neutral" variant="contained"><span className={Styles.nameButton}>{props.text}</span></Button>
+                <Button color="neutral" variant="contained" 
+                sx={{
+                  textTransform: 'none',
+                  borderRadius: '10px',
+                }}><span className={Styles.nameButton}>{props.text}</span></Button>
             </ThemeProvider>
         </div>
     );
