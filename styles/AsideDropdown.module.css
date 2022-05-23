@@ -1,0 +1,12 @@
+.asideDropdown {
+  display: block;
+  list-style: none;
+  margin-bottom: 10px;
+}
+
+.asideDropdown__link {
+  color: white;
+  font-family: 'Roboto Slab', serif;
+  font-weight: 700;
+  font-size: 14px;
+}

@@ -3,4 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
 }
 
-module.exports = nextConfig
+module.exports = {
+  experimental: { images: { layoutRaw: true } },
+  nextConfig,
+};
