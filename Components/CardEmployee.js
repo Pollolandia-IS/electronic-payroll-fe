@@ -11,7 +11,6 @@ const CardEmployee = (props) => {
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
-    console.log(isChecked);
   };
 
     return (
@@ -22,6 +21,8 @@ const CardEmployee = (props) => {
               className={styles.card__image}
               src={props.cardItems.srcImg}
               alt={props.cardItems.name}
+              width={202}
+              height={189}
               layout="raw"
             />
           </div>
@@ -32,7 +33,7 @@ const CardEmployee = (props) => {
                   onChange={handleChange}
                   checked={isChecked}
                   sx={{
-                    color: "#FE3D2B",
+                    color: "#000000",
                     "&.Mui-checked": { color: "#FE3D2B" },
                   }}
                 />
