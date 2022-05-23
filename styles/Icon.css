@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'pollolandia-icons';
   src:
-    url('/fonts/pollolandia-icons.ttf?7fqzg9') format('truetype'),
-    url('/fonts/pollolandia-icons.woff?7fqzg9') format('woff'),
-    url('/fonts/pollolandia-icons.svg?7fqzg9#pollolandia-icons') format('svg');
+    url('/fonts/pollolandia-icons.ttf?q0i1q8') format('truetype'),
+    url('/fonts/pollolandia-icons.woff?q0i1q8') format('woff'),
+    url('/fonts/pollolandia-icons.svg?q0i1q8#pollolandia-icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -24,6 +24,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.PL-close:before {
+  content: "\e908";
+  color: #fff;
+}
 .PL-mail:before {
   content: "\e906";
   color: #fff;
@@ -57,6 +61,6 @@
   color: #fff;
 }
 .inverted {
-    display: inline-block;
-    transform: rotate(180deg);
+  display: inline-block;
+  transform: rotate(180deg);
 }
