@@ -44,11 +44,11 @@ function RegisterCompanyForm (){
                 </div>
 
                 <div className={styles.CancelButtonPosition}>
-                    <Button styleClass="btn__cancel" type="button" OnClick={'/'} ButtonText="Cancelar"/>
+                    <Button BaseClass={"btn__medium"} SecundaryClass={"btn__medium__cancel"} type="button" OnClick={'/'} ButtonText="Cancelar"/>
                 </div>
 
                 <div className={styles.AcceptButtonPosition}>
-                    <Button styleClass="btn__medium" type="button" Onclick={openRegisterCompanyModal} ButtonText="Enviar"/>
+                    <Button BaseClass={"btn__medium"} SecundaryClass={"btn__primaryColor"} type="button" Onclick={openRegisterCompanyModal} ButtonText="Enviar"/>
                 </div>
             </form>
         </div>
