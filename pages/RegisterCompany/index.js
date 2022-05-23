@@ -14,12 +14,12 @@ const navItems = [
 const AsideItems = [
     {
       name: 'Perfil',
-      icon: 'user',
+      icon: 'profile',
       dropDown: [],
     },
     {
       name: 'Cerrar Sesión',
-      icon: 'out',
+      icon: 'logout',
       dropDown: [],
     },
   ];
