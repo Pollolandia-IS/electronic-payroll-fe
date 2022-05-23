@@ -1,8 +1,4 @@
-.CA__header {
-    margin-bottom: 0px;
-}
-
-.CA__h1 {
+.SignUp__title {
     margin-bottom: -5px;
     width: 500px;
     position: relative;
@@ -14,11 +10,10 @@
     display: block;
     left: 590px;
     margin-top: 105px;
-
     color: #000000;
 }
 
-.CA__h2 {
+.SignUp__subtitle {
     margin-top: -10px;
     width: 500px;
     position: relative;
@@ -30,11 +25,10 @@
     display: block;
     left: 590px;
     top: auto;
-
     color: rgba(0, 0, 0, 0.66);
 }
 
-.CA__footer {
+.SignUp__footer {
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -42,7 +36,7 @@
     background-color: #C20000;
 }
 
-.CA__img {
+.SignUp__logo {
     width: auto;
     display: block;
     position: absolute;
@@ -50,13 +44,13 @@
     left: 150px;
 }
 
-.CA__backG__img {
+.SignUp__background {
     object-position: top;
     z-index: -10000;
     position: relative;
 }
 
-.CA__footer__p {
+.SignUp__footer__info {
     font-family: 'Open Sans Hebrew Condensed';
     font-style: normal;
     font-weight: 400;
@@ -64,14 +58,14 @@
     line-height: 29px;
     margin-left: 72px;
     margin-top: 30px;
-    
     color: #FFFFFF;
 }
 
-.CA__footer__span {
+.SignUp__footer__icons {
     margin-right: 10px;
+    font-size: 15px;
 }
 
-.CA__footer__span:first-child {
-    margin-right: 27px;
+.SignUp__footer__icons:first-child {
+    margin-right: 22px;
 }
