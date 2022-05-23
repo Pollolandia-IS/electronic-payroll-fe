@@ -1,17 +1,22 @@
 
-.subtitle{
-    color: black;
-	font-style: normal;
-	font-weight: bold;
-	font-size: 24px;
+.formLayer{
+	margin-top: 105px;
+	margin-left: 177px;
+	padding: 30px 70px;
+	position: fixed;
 }
 
-.formLayer{
-	margin-left: 16%;
-	padding: 30px 50px;
+.subtitle{
+	font-family: 'Open Sans Hebrew Condensed';
+    font-style: normal;
+	font-weight: bold;
+	font-size: 24px;
+
+	color: black;
 }
 
 .Formsubtitle {
+	font-family: 'Open Sans Hebrew Condensed';
 	font-style: normal;
 	font-weight: bold;
 	font-size: 20px;
@@ -22,6 +27,7 @@
 }
 
 .SubEntry {
+	font-family: 'Roboto Slab';
 	height: 140px;
     width: 50%;
     float: left;
@@ -53,20 +59,4 @@
 
 .CancelButtonPosition{
 	float: left;
-}
-
-.sideBar{
-	display: block;
-	color: #ffff;
-	background: linear-gradient(179.81deg, #F53D3D -7.75%, rgba(138, 21, 21, 0.887148) 140.76%);
-	width:16%;
-	height: 100%;
-	overflow: auto;
-	position: fixed;
-}
-
-.navBar{
-	width: 100%;
-	height: 64px;
-	background-color: lightgray;
 }
