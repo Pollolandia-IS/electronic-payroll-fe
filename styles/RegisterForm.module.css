@@ -1,0 +1,52 @@
+.RegisterForm {
+    width: 300px;
+    margin-top: auto;
+}
+
+.Form__container{
+    border: solid 1px #ccc;
+    position: relative;
+}
+
+.Form__border {
+    display: block;
+    position: relative;
+    width: 407px;
+    height: 0px;
+    left: 581px;
+    /*top: 372.72px;*/
+    border: 1px solid #848484;
+}
+
+.Form__input {
+    /*margin-top: auto;*/
+    display: block;
+    position: relative;
+    width: 293.22px;
+    height: 29.75px;
+    left: 581px;
+    font-family: 'Roboto Slab';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 26.38px;
+    color: #848484;
+    
+    background: transparent;
+    border: none;
+
+}
+
+.Form__input:focus {
+    outline: none;
+}
+
+.Form__button {
+    position: relative;
+    width: 51px;
+    height: 50.92px;
+    left: 809px;
+    border-radius: 50px;
+    background: #FE3D2B;
+    border: none;
+}
