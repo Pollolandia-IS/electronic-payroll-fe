@@ -7,11 +7,6 @@ import Checkbox from '@mui/material/Checkbox';
 
 const CardEmployee = (props) => {
 
-  //   const [isChecked, setChecked] = useState(false);
-
-  // const handleChange = (event) => {
-  //   setChecked(event.target.checked);
-  // };
     return (
       <>
         <div className={styles.card}>
