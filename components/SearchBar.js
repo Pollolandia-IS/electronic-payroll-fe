@@ -8,7 +8,7 @@ const SearchBar = (props) => {
         <div className={styles.searchIcon}>
           <BsSearch />
         </div>
-        <input className={styles.test}
+        <input
           type="text"
           placeholder={props.placeholder}
         />
