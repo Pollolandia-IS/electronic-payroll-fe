@@ -1,0 +1,25 @@
+
+.btn__medium{
+	border-radius: 12px;
+
+	width: 144px;
+	height: 48px;
+	border: none;
+
+	color: white;
+
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.btn__primaryColor{
+	background: #FE3D2B;
+}
+
+.btn__medium__cancel{
+    background: #848484;
+}
+
+.btn__medium__cancel:hover{
+    background: red;
+}

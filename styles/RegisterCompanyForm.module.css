@@ -1,0 +1,59 @@
+.formLayer{
+	margin-top: 105px;
+	margin-left: 177px;
+	padding: 30px 70px;
+	position: fixed;
+}
+
+.subtitle{
+	font-family: 'Open Sans Hebrew Condensed';
+    font-style: normal;
+	font-weight: bold;
+	font-size: 24px;
+	color: black;
+}
+
+.Formsubtitle {
+	font-family: 'Open Sans Hebrew Condensed';
+	font-style: normal;
+	font-weight: bold;
+	font-size: 20px;
+	margin-top: 40px;
+	margin-bottom: 20px;
+    color: #FE3D2B;
+}
+
+.SubEntry {
+	font-family: 'Roboto Slab';
+	height: 140px;
+    width: 50%;
+    float: left;
+}
+
+.InputElement{
+	padding-bottom: 20px;
+	margin-bottom: 15px;
+}
+
+.InputLabel{
+	font-style: normal;
+	font-weight: bold;
+	font-size: 17px;
+}
+
+.InputTextBox{
+	padding-top: 6px;
+	border-width: 0 0 1px;
+	margin-right: 60px;
+	width: 260px;
+	float: right;
+}
+
+.AcceptButtonPosition{
+	float: right; 
+	padding-right: 60px;
+}
+
+.CancelButtonPosition{
+	float: left;
+}
