@@ -1,15 +1,15 @@
 import ButtonAddSelection from './ButtonAddSelection';
 import SearchBar from './SearchBar';
-import Styles from "../styles/HeaderEmployeeCard.module.css";
+import styles from "../styles/HeaderEmployeeCard.module.css";
 
 const HeaderEmployeeCard = (props) => {
     return (
-        <div className={Styles.content}>
-            <div className={Styles.top}> 
+        <div className={styles.content}>
+            <div className={styles.top}> 
                 <SearchBar placeholder={props.placeText}/>
-                <ButtonAddSelection className={Styles.button} text={props.buttonText} textSecondary={"5 Seleccionados"}/>
+                <ButtonAddSelection className={styles.button} text={props.buttonText} textSecondary={"5 Seleccionados"}/>
             </div>
-            <div className={Styles.bottom}> 
+            <div className={styles.bottom}> 
                 <span>{props.textSecondary}</span>
             </div>
         </div>
