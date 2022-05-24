@@ -7,12 +7,11 @@ import Checkbox from '@mui/material/Checkbox';
 
 const CardEmployee = (props) => {
 
-    const [isChecked, setChecked] = useState(false);
+  //   const [isChecked, setChecked] = useState(false);
 
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
-  };
-
+  // const handleChange = (event) => {
+  //   setChecked(event.target.checked);
+  // };
     return (
       <>
         <div className={styles.card}>
@@ -24,14 +23,16 @@ const CardEmployee = (props) => {
               width={202}
               height={189}
               layout="raw"
+              quality={100}
             />
           </div>
           <div className={styles.card__info}>
             <div className={styles.card__info__head}>
               <div className={styles.card__info__check}>
                 <Checkbox
-                  onChange={handleChange}
-                  checked={isChecked}
+                  onChange={props.handleCheckbox}
+                  name={props.cardItems.name}
+                  checked={props.checkedBoxValue}
                   sx={{
                     color: "#000000",
                     "&.Mui-checked": { color: "#FE3D2B" },
