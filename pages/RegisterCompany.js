@@ -27,7 +27,6 @@ const AsideItems = [
 function RegisterForm(){
     return (
         <>
-          <Navbar navItems={navItems}/>
           <Aside items={AsideItems}/>
           <RegisterCompanyForm/>
         </>

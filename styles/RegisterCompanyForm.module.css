@@ -57,3 +57,26 @@
 .CancelButtonPosition{
 	float: left;
 }
+
+.ModalContainer{
+	width: 957px;
+	padding: 0 49px 22px 35px;
+}
+
+.ModalSubEntry {
+	font-family: 'Roboto Slab';
+}
+
+.InputText{
+	width: 416px;
+	display: inline-block;
+}
+
+.ModalButtonPosition{
+	text-align: right;
+}
+
+#SectionOne{
+	margin-top: -5.7px;
+	margin-bottom: 16px;
+}
