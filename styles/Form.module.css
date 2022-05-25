@@ -51,3 +51,23 @@
     text-align: center;
     color: #FFFFFF;
 }
+
+.Form__modal__info {
+    border-top: 1px solid #AAA9A9;
+    border-bottom: 1px solid #AAA9A9;
+    padding: 35px 100px;
+    height: 148px;
+    font-family: 'Roboto Slab';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 26px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #000000;
+}
+
+.Form__modal__info p {
+    width: 413px;
+}
