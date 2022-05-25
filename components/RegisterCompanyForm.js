@@ -1,107 +1,166 @@
 import styles from '../styles/RegisterCompanyForm.module.css';
-import Router from 'next/router'
 import Button from './Button'
 import Modal from './Modal'
 import { useState } from 'react'
 
 const RegisterCompanyInput = (props) => {
-
-    const handleChange = (e) => {
-        props.handleChange(e.target.id,e.target.value);
-    }
-
+    const {label, onChange, errorMessage, id, ...inputProps} = props
     return(
-        <div className={styles.InputElement}>
-            <label className={styles.InputLabel} forhtml={props.name}>  {props.tag} </label>
-            <input className={styles.InputTextBox} type={props.type} id={props.name}
-                required={props.required} onChange={handleChange}/>
+        <div className={styles.RegisterCompanyInput}>
+            <label className={styles.InputLabel}> {label} </label>
+            <input className={styles.InputTextBox} {...inputProps}onChange={onChange}/>
+            <span className={styles.ErrorMessage}> {errorMessage} </span>
         </div>
     );
-}
+};
 
 const RegisterCompanyForm = () => {
-    const initialValues = {Name: "", BusinessName: "", LegalId: "", PhysicalAddress:"", Email:"", Phone:"", Website:""}
-
     const [modalOpened, setModalOpened] = useState(false);
-    const [formValues, setFormValues] = useState(initialValues);
+    const [Values, setValues] = useState({
+        name: "",
+        businessname: "",
+        legalid: "",
+        physicaladdress: "",
+        email: "",
+        phone: "",
+        website: "",
+    });
+
+    const inputsSectorOne = [
+    {
+        id: 1,
+        name: "name",
+        type: "text",
+        label: "Nombre  *",
+        required: true,
+    },
+    {
+        id: 2,
+        name: "legalid",
+        type: "text",
+        label: "Cédula Jurídica: *",
+        required: true,
+    },
+    {
+        id: 3,
+        name: "businessname",
+        type: "text",
+        label: "Razón Social: *",
+        required: true,
+    },
+    ];
+
+    const inputsSectorTwo = [
+    {
+        id: 4,
+        name: "physicaladdress",
+        type: "text",
+        label: "Dirección Física: *",
+        required: true,
+        maxlength: "60",
+    },
+    {
+        id: 5,
+        name: "phone",
+        type: "text",
+        label: "Teléfono: *",
+        required: true,
+        size: "8",
+    },
+    {
+        id: 6,
+        name: "email",
+        type: "text",
+        label: "Correo Electrónico: *",
+        required: true,
+    },
+    {
+        id: 7,
+        name: "website",
+        type: "text",
+        label: "Página Web: ",
+    },
+    ];
 
     const openModal = () => {
         setModalOpened(true)
     }
 
-    const handleChange = (id,value) =>{
-        setFormValues({...formValues, [id]: value});
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        openModal();
     }
 
-    const handleSubmit = () => {
+    const onChange = (e) => {
+        setValues({ ...Values, [e.target.name]: e.target.value });
+        console.log(JSON.stringify(Values.Name))
+    };
 
+    const handleDataConfirmation = () => {
+
+    }
+
+    const handleCancel = () => {
+        window.location.href='http://localhost:3000'
     }
 
     return(
         <div className={styles.formLayer}>
             <p className={styles.subtitle}> Ingresa los datos de tu Empresa </p>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <p className={styles.Formsubtitle}> Datos de Empresa</p>
-
-                <div className={styles.SubEntry}>
-                    <RegisterCompanyInput name="Name" type="text" tag="Nombre: *" required={true} handleChange={handleChange}/>
-                    <RegisterCompanyInput name="BusinessName" type="text" tag="Razón Social: *" required={true} handleChange={handleChange}/>
-                </div>
-
-                <div className={styles.SubEntry}>
-                    <RegisterCompanyInput name="LegalId" type="text" tag="Cédula Jurídica: *" required={true} handleChange={handleChange}/>
-                </div>
-
+                {inputsSectorOne.map((input) => (
+                    <RegisterCompanyInput
+                        key={input.id}
+                        {...input}
+                        value={Values[input.name]}
+                        onChange={onChange}
+                    />
+                ))}
                 <p className={styles.Formsubtitle}> Contacto de Empresa </p>
-
-                <div className={styles.SubEntry}>
-                    <RegisterCompanyInput name="PhysicalAddress" type="text" tag="Dirección Física: *" required={true} handleChange={handleChange} />
-                    <RegisterCompanyInput name="Email" type="text" tag="Correo Electrónico: *" required={true} handleChange={handleChange}/>
-                </div>
-
-                <div className={styles.SubEntry}>
-                    <RegisterCompanyInput name="Phone" type="text" tag="Teléfono: *" required={true} handleChange={handleChange}/>
-                    <RegisterCompanyInput name="Website" type="text" tag="Página Web:" required={false} handleChange={handleChange}/>
-                </div>
-
+                {inputsSectorTwo.map((input) => (
+                    <RegisterCompanyInput
+                        key={input.id}
+                        {...input}
+                        value={Values[input.name]}
+                        onChange={onChange}
+                    />
+                ))}
+                
                 <div className={styles.CancelButtonPosition}>
-                    <Button BaseClass={"btn__medium"} SecundaryClass={"btn__medium__cancel"} type="button" ButtonText="Cancelar"/>
+                    <Button BaseClass={"btn__medium"} SecundaryClass={"btn__medium__cancel"} handleClick={handleCancel} type="button" ButtonText="Cancelar"/>
                 </div>
 
                 <div className={styles.AcceptButtonPosition}>
-                    <Button BaseClass={"btn__medium"} SecundaryClass={"btn__primaryColor"} type="button" handleClick={openModal} ButtonText="Enviar"/>
+                    <Button BaseClass={"btn__medium"} SecundaryClass={"btn__primaryColor"} type="submit" ButtonText="Enviar"/>
                 </div>
             </form>
-            
             <Modal title="Confirmar Datos" modalOpened={modalOpened} setModalOpened={setModalOpened}>
-                <div className={styles.ModalContainer}>
+            <div className={styles.ModalContainer}>
                     <div>
                         <p className={styles.Formsubtitle} id={styles.SectionOne}> Datos de Empresa</p>
                         <div className={styles.ModalSubEntry}>
-                            <p className={styles.InputText}> <b>Nombre: </b>{JSON.stringify(formValues.Name).slice(1, JSON.stringify(formValues.Name).length - 1)} </p>
-                            <p className={styles.InputText}> <b>Cédula Jurídica: </b>{JSON.stringify(formValues.LegalId).slice(1, JSON.stringify(formValues.LegalId).length - 1)} </p>
-                            <p className={styles.InputText}> <b>Razón Social: </b>{JSON.stringify(formValues.BusinessName).slice(1, JSON.stringify(formValues.BusinessName).length - 1)} </p>
-                        
+                            <p className={styles.InputText}> <b>Nombre: </b>{JSON.stringify(Values.name).slice(1, JSON.stringify(Values.name).length - 1)} </p>
+                            <p className={styles.InputText}> <b>Cédula Jurídica: </b>{JSON.stringify(Values.legalid).slice(1, JSON.stringify(Values.legalid).length - 1)} </p>
+                            <p className={styles.InputText}> <b>Razón Social: </b>{JSON.stringify(Values.businessname).slice(1, JSON.stringify(Values.businessname).length - 1)} </p>
                         </div>
                     </div>
                     <div>
-                        <p className={styles.Formsubtitle} id={styles.SectionOne}> Contacto de Empresa</p>
+                        <p className={styles.Formsubtitle} id={styles.SectionTwo}> Contacto de Empresa</p>
                         <div className={styles.ModalSubEntry}>
-                            <p className={styles.InputText}> <b>Dirección Física: </b> {JSON.stringify(formValues.PhysicalAddress).slice(1, JSON.stringify(formValues.PhysicalAddress).length - 1)} </p>
-                            <p className={styles.InputText}> <b>Correo Electrónico: </b> {JSON.stringify(formValues.Email).slice(1, JSON.stringify(formValues.Email).length - 1)}</p>
+                            <p className={styles.InputText}> <b>Dirección Física: </b> {JSON.stringify(Values.physicaladdress).slice(1, JSON.stringify(Values.physicaladdress).length - 1)} </p>
+                            <p className={styles.InputText}> <b>Correo Electrónico: </b> {JSON.stringify(Values.email).slice(1, JSON.stringify(Values.email).length - 1)}</p>
                         </div>
                         <div className={styles.ModalSubEntry}>
-                            <p className={styles.InputText}> <b>Teléfono: </b> {JSON.stringify(formValues.Phone).slice(1, JSON.stringify(formValues.Phone).length - 1)}</p>
-                            <p className={styles.InputText}> <b>Página Web: </b> {formValues.Website ? JSON.stringify(formValues.Website).slice(1, JSON.stringify(formValues.Website).length - 1): "" }</p>
+                            <p className={styles.InputText}> <b>Teléfono: </b> {JSON.stringify(Values.phone).slice(1, JSON.stringify(Values.phone).length - 1)}</p>
+                            <p className={styles.InputText}> <b>Página Web: </b> {Values.Website ? JSON.stringify(Values.website).slice(1, JSON.stringify(Values.website).length - 1): "" }</p>
                         </div>
                     </div>
 
                     <div className={styles.ModalButtonPosition}>
-                        <Button BaseClass={"btn__medium"} SecundaryClass={"btn__primaryColor"} type="submit" handleClick={handleSubmit} ButtonText="Confirmar"/>
+                        <Button BaseClass={"btn__medium"} SecundaryClass={"btn__primaryColor"} type="button" handleClick={handleDataConfirmation} ButtonText="Confirmar"/>
                     </div>
                 </div>
-                
-                
             </Modal>
         </div>
     );
