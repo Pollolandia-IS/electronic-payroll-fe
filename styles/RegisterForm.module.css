@@ -3,23 +3,16 @@
     margin-top: auto;
 }
 
-.Form__container{
-    border: solid 1px #ccc;
-    position: relative;
-}
-
 .Form__border {
     display: block;
     position: relative;
     width: 407px;
     height: 0px;
     left: 581px;
-    /*top: 372.72px;*/
     border: 1px solid #848484;
 }
 
 .Form__input {
-    /*margin-top: auto;*/
     display: block;
     position: relative;
     width: 293.22px;
@@ -31,10 +24,8 @@
     font-size: 20px;
     line-height: 26.38px;
     color: #848484;
-    
     background: transparent;
     border: none;
-
 }
 
 .Form__input:focus {
