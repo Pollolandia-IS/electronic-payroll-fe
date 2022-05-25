@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model administra {
+  cedulaJuridiica Int
+  cedula          Int
+  telefono        Int?
+  direccion       String?   @db.VarChar(50)
+  razonSocial     String?   @db.Text
+  paginaWeb       String?   @db.VarChar(50)
+  email           String?   @db.VarChar(50)
+  empleador       empleador @relation(fields: [cedula], references: [cedula], onUpdate: NoAction, map: "FK__administr__cedul__4D94879B")
+  empresa         empresa   @relation(fields: [cedulaJuridiica], references: [cedulaJuridica], onUpdate: NoAction, map: "FK__administr__cedul__4CA06362")
+
+  @@id([cedulaJuridiica, cedula], map: "PK__administ__49353E512F04FAA7")
+}
+
+model credenciales {
+  email       String   @id(map: "PK__credenci__AB6E61653AF14076") @db.VarChar(50)
+  contrasenna String?  @db.VarChar(250)
+  cedula      Int?
+  persona     persona? @relation(fields: [cedula], references: [cedula], onDelete: NoAction, onUpdate: NoAction, map: "FK__credencia__cedul__4222D4EF")
+}
+
+model deduccionObligatoria {
+  nombre     String @id(map: "PK__deduccio__72AFBCC7D9BCC0A7") @db.VarChar(50)
+  procentaje Int?
+}
+
+model deduccionVoluntaria {
+  cedulaJuridica Int
+  nombreProyecto String   @db.VarChar(50)
+  nombre         String   @db.VarChar(50)
+  proyecto       proyecto @relation(fields: [cedulaJuridica, nombreProyecto], references: [cedulaJuridica, nombre], onUpdate: NoAction, map: "FK__deduccionVolunta__534D60F1")
+
+  @@id([cedulaJuridica, nombreProyecto, nombre], map: "PK__deduccio__019D6DCD70CBC037")
+}
+
+model empleado {
+  cedula       Int            @id(map: "PK__empleado__415B7BE4728A3BCF")
+  persona      persona        @relation(fields: [cedula], references: [cedula], onUpdate: NoAction, map: "FK__empleado__cedula__44FF419A")
+  esContratado esContratado[]
+}
+
+model empleador {
+  cedula     Int          @id(map: "PK__empleado__415B7BE42DCD152C")
+  persona    persona      @relation(fields: [cedula], references: [cedula], onUpdate: NoAction, map: "FK__empleador__cedul__47DBAE45")
+  administra administra[]
+}
+
+model empresa {
+  cedulaJuridica Int          @id(map: "PK__empresa__DD9A4FB57A6F4F9B")
+  telefono       Int?
+  direccion      String?      @db.VarChar(50)
+  razonSocial    String?      @db.Text
+  paginaWeb      String?      @db.VarChar(50)
+  email          String?      @db.VarChar(50)
+  administra     administra[]
+  proyecto       proyecto[]
+}
+
+model esContratado {
+  cedulaJuridica Int
+  nombreProyecto String    @db.VarChar(50)
+  cedula         Int
+  montoPago      Int?
+  tipoEmpleado   String?   @db.VarChar(50)
+  puesto         String?   @db.VarChar(50)
+  fechaInicio    DateTime? @db.Date
+  fechaFin       DateTime? @db.Date
+  jornada        String?   @db.VarChar(50)
+  empleado       empleado  @relation(fields: [cedula], references: [cedula], onUpdate: NoAction, map: "FK__esContrat__cedul__5629CD9C")
+  proyecto       proyecto  @relation(fields: [cedulaJuridica, nombreProyecto], references: [cedulaJuridica, nombre], onUpdate: NoAction, map: "FK__esContratado__571DF1D5")
+
+  @@id([cedulaJuridica, nombreProyecto, cedula], map: "PK__esContra__22AE990A70A42384")
+}
+
+model persona {
+  cedula       Int            @id(map: "PK__persona__415B7BE4E3499318")
+  nombre       String?        @db.VarChar(50)
+  usuario      String?        @db.VarChar(50)
+  telefono     Int?
+  foto         Bytes?         @db.Binary(1)
+  credenciales credenciales[]
+  empleado     empleado?
+  empleador    empleador?
+}
+
+model proyecto {
+  cedulaJuridica           Int
+  nombre                   String                @db.VarChar(50)
+  cantidadMaximaBeneficios Int?
+  montoMaximoBeneficio     Int?
+  frecuenciaPago           String?               @db.VarChar(50)
+  empresa                  empresa               @relation(fields: [cedulaJuridica], references: [cedulaJuridica], onUpdate: NoAction, map: "FK__proyecto__cedula__5070F446")
+  deduccionVoluntaria      deduccionVoluntaria[]
+  esContratado             esContratado[]
+
+  @@id([cedulaJuridica, nombre], map: "PK__proyecto__BAB0B479208A68EF")
+}
