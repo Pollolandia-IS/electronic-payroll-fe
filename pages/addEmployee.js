@@ -4,6 +4,7 @@ import HeaderEmployeeCard from "../components/HeaderEmployeeCard.js";
 import CardEmployee from "../components/CardEmployee.js";
 import Styles from "../styles/AddEmployee.module.css";
 import { useState } from "react";
+import { PrismaClient } from '@prisma/client'
 
 const AsideItems = [
     {
@@ -70,9 +71,28 @@ const userTest = [
     },
 ];
 
-const AddEmployee = () => {
-    const [employees, setEmployees] = useState(userTest.map(u => ({ name: u.name, checked: false })));
+const prisma = new PrismaClient();
 
+export async function getServerSideProps({req}){
+
+    const employees = await prisma.empleado.findMany({
+        include: {
+            persona: true
+        }
+    });
+
+    return {
+        props: {
+           employees 
+        }
+    }
+}
+
+const AddEmployee = ({employees: employeesBD}) => {
+    const [employees, setEmployees] = useState(userTest.map(u => ({ name: u.name, checked: false })));
+    const [test, setTest] = useState('hola');
+
+    console.log(employeesBD);
     const handleChange = (event) => {
         const { name, checked } = event.target;
 
