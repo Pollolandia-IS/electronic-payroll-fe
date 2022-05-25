@@ -8,6 +8,9 @@ const Form = (props) => {
     const verifySubmittedInfo = () => {
         setSubmittedTrue(true);
     };
+    const unVerifySubmittedInfo = () => {
+        setSubmittedTrue(false);
+    };
     
     const [modalOpened, setModalOpened] = useState(false);
     const openModal = () => {
@@ -25,8 +28,13 @@ const Form = (props) => {
             ConfirmarContraseña: event.target["Confirmar Contraseña"].value
         }
         if (info) {
-            verifySubmittedInfo();
-            const infoJSON = JSON.stringify(info);
+            if (info.Contraseña == info.ConfirmarContraseña) {    
+                verifySubmittedInfo();
+                const infoJSON = JSON.stringify(info);
+                //TODO: Send submitted info to DB
+            } else {
+                unVerifySubmittedInfo();
+            }
         }
     };
 
@@ -46,6 +54,15 @@ const Form = (props) => {
                             <p>
                                 Hemos comprobado tus datos y todo parece estar en orden, 
                                 se ha creado tu cuenta de administrador.
+                            </p>
+                        </div>
+                    </Modal>
+                }
+                {!submitted &&
+                    <Modal title = "Error" modalOpened = {modalOpened} setModalOpened = {setModalOpened}>
+                        <div className={styles.Form__modal__info}>
+                            <p>
+                                Porfavor compruebe los datos ingresados. <br/>
                             </p>
                         </div>
                     </Modal>
