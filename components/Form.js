@@ -21,18 +21,18 @@ const Form = (props) => {
         setModalOpened(true);
     };
 
-    const submitInfo = async (event) => {
+    const submitInfo = (event) => {
         event.preventDefault();
         const info = {
-            Cedula: event.target.Cedula.value,
-            Email: event.target.Email.value,
-            Teléfono: event.target.Teléfono.value,
-            Nombre: event.target.Nombre.value,
-            Contraseña: event.target.Contraseña.value,
-            ConfirmarContraseña: event.target["Confirmar Contraseña"].value
+            id: event.target.Cedula.value,
+            email: event.target.Email.value,
+            phoneNumber: event.target.Teléfono.value,
+            name: event.target.Nombre.value,
+            password: event.target.Contraseña.value,
+            confirmPassword: event.target["Confirmar Contraseña"].value
         }
         if (info) {
-            if (info.Contraseña == info.ConfirmarContraseña) {  
+            if (info.password == info.confirmPassword) {  
                 if(!passwords) {
                     verifyPasswords();
                 }  
