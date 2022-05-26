@@ -1,9 +1,9 @@
-import Aside from "../components/Aside.js";
-import Navbar from "../components/Navbar.js";
-import CardEmployee from "../components/CardEmployee.js";
-import Styles from "../styles/Empleados.module.css";
+import Aside from "../../components/Aside.js";
+import Navbar from "../../components/Navbar.js";
+import CardEmployee from "../../components/CardEmployee.js";
+import Styles from "/styles/Empleados.module.css";
 import { prisma } from "/.db";
-import SearchBar from "../components/SearchBar.js";
+import SearchBar from "../../components/SearchBar.js";
 import { useState } from "react";
 
 const AsideItems = [
@@ -24,15 +24,9 @@ const AsideItems = [
   },
 ];
 
-const navItems = [
-  ["Inicio", false, "/"],
-  ["Proyectos", false, "/projects"],
-  ["Reportes", false, "/reports"],
-  ["Empleados", true, "/Employees"],
-  ["Deducciones", false, "/deductions"],
-  ["Beneficios", false, "/benefits"],
-];
-export async function getServerSideProps() {
+
+export async function getServerSideProps(context) {
+  const {companyID} = context.params;
   let employees = (
     await prisma.empleado.findMany({
       include: { persona: true },
@@ -42,10 +36,20 @@ export async function getServerSideProps() {
   return {
     props: {
       employees,
+      companyID
     },
   };
 }
-const Employees = ({ employees }) => {
+const Employees = ({ employees, companyID }) => {
+
+  const navItems = [
+    ["Proyectos", false, `/${companyID}/project`],
+    ["Reportes", false, "/reports"],
+    ["Empleados", true, `/${companyID}/Employees`],
+    ["Deducciones", false, "/deductions"],
+    ["Beneficios", false, "/benefits"],
+  ];
+
   const [searchText, setSearchText] = useState("");
 
   const handleTextChange = (event) => {

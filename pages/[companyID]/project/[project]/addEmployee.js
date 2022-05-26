@@ -1,12 +1,12 @@
-import Aside from "../components/Aside.js";
-import Navbar from "../components/Navbar.js";
-import HeaderEmployeeCard from "../components/HeaderEmployeeCard.js";
-import CardEmployee from "../components/CardEmployee.js";
-import Modal from "../components/Modal.js";
-import Styles from "../styles/AddEmployee.module.css";
+import Aside from "../../../../components/Aside.js";
+import Navbar from "../../../../components/Navbar.js";
+import HeaderEmployeeCard from "../../../../components/HeaderEmployeeCard.js";
+import CardEmployee from "../../../../components/CardEmployee.js";
+import Modal from "../../../../components/Modal.js";
+import Styles from "/styles/AddEmployee.module.css";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { prisma } from "../.db";
+import { prisma } from "/.db";
 
 
 const AsideItems = [
@@ -27,29 +27,12 @@ const AsideItems = [
   },
 ];
 
-const navItems = [
-  ["Inicio", false, "/"],
-  ["Proyectos", true, "/projects"],
-  ["Reportes", false, "/reports"],
-  ["Empleados", false, "/Employees"],
-  ["Deducciones", false, "/deductions"],
-  ["Beneficios", false, "/benefits"],
-];
-
 export async function getServerSideProps(context) {
-  if (!context.query.project || !context.query.cedula) {
-    return {
-      props: {
-        employees: [],
-        nombreProyecto: null,
-        cedulaJuridica: null,
-      },
-    };
-  }
+  const { companyID, project } = context.params;
 
   let employeesNotInThisProject = await prisma.esContratado.findMany({
     where: {
-      nombreProyecto: context.query.project,
+      nombreProyecto: project,
     },
     select: {
       cedulaEmpleado: true,
@@ -67,8 +50,8 @@ export async function getServerSideProps(context) {
   return {
     props: {
       employees,
-      nombreProyecto: context.query.project,
-      cedulaJuridica: context.query.cedula,
+      nombreProyecto: project,
+      cedulaJuridica: companyID,
     },
   };
 }
@@ -78,6 +61,15 @@ const AddEmployee = ({
   nombreProyecto,
   cedulaJuridica,
 }) => {
+
+  const navItems = [
+    ["Proyectos", true, `${cedulaJuridica}/project`],
+    ["Reportes", false, "/reports"],
+    ["Empleados", false, `${cedulaJuridica}/Employees`],
+    ["Deducciones", false, "/deductions"],
+    ["Beneficios", false, "/benefits"],
+  ];
+
   const getCleanInputs = () => {
     return {
       montoPago: "",
@@ -136,7 +128,7 @@ const AddEmployee = ({
     });
     setFormState(getCleanInputs());
     setModalOpen(false);
-    router.push(`/project?project=${nombreProyecto}&cedula=${cedulaJuridica}`);
+    router.push(`/${cedulaJuridica}/project/${nombreProyecto}`);
   };
 
   const handleInputChange = (event) => {
