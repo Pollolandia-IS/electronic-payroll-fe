@@ -1,0 +1,71 @@
+.card {
+  font-family: 'Open Sans Hebrew Condensed', sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+}
+
+.card-header {
+  width: 1019px;
+  height: 44px;
+  border-radius: 20px 20px 0 0;
+  background-color: #FF6C6C;
+  padding: 7px 2px 0 16px;
+  border: 1px solid #000000;
+}
+
+.card-header__title {
+  font-size: 26px;
+  font-weight: 400;
+  margin: 0 135px 0 345px;
+  display: inline-block;
+}
+
+.card-header__date {
+  display: inline-block;
+  width: 252px;
+  text-align: right;
+}
+
+.card-body {
+  height: 110px;
+  width: 1019px;
+  background-color: #FFF;
+  border-radius: 0 0 20px 20px;
+  border: 1px solid #000000;
+  padding: 15px 16px 9px 24px;
+}
+
+.card-body__element {
+  display: inline-block;
+  margin: 0;
+}
+
+.card-body__element span {
+  font-weight: 700;
+}
+
+.card-body__element--button {
+  width: 133px;
+  height: 34px;
+  background-color: #96989C;
+  border-radius: 20px;
+  font-family: 'Open Sans Hebrew Condensed', sans-serif;
+  font-size: 25px;
+  border: none;
+  cursor: pointer;
+}
+
+.card-body__element--button:hover {
+  background-color: #cdd0d5;
+  border: 1px solid #000000;
+}
+
+.card-body div {
+  width: 980px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-body div:first-child {
+  margin-bottom: 18px;
+}
