@@ -60,7 +60,7 @@ const Form = (props) => {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(dataForDB),
             });
-            await Router.push(`/${idParam}/RegisterCompany.js`);
+            await Router.push(`/employer/${idParam}/RegisterCompany`);
         } catch (error) {
             console.error(error);
         }
