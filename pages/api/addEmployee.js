@@ -22,10 +22,11 @@ async function addEmployeeToProject(req, res) {
         cedulaJuridica: parseInt(req.body.cedulaJuridica)
       },
     });
+    return res.status(200).json({ success: "OK" });
   }
  } catch (e) {
     return res.status(500).json({ e });
  }
     
-return res.status(200).json({ success: "OK" });
+
 }
