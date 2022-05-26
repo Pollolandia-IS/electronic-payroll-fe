@@ -1,0 +1,37 @@
+.card {
+  margin-left: 200px;
+  display: flex;
+  width: 286px;
+  height: 106px;
+}
+
+.card__image {
+  border-radius: 20px 0px 0px 20px;
+  border: 1px solid #000000;
+}
+
+.card__info {
+  display: inline-block;
+  height: 106px;
+  width: 172px;
+  padding: 12px 0 0 10px;
+  border: 1px solid #000000;
+  border-radius: 0px 20px 20px 0px;
+
+}
+.card__name {
+  font-family: 'Roboto Slab', serif;
+  font-size: 12px;
+  font-weight: normal;
+  margin: 0;
+}
+
+.card__name:first-child {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.card__name:nth-child(2) {
+  margin-bottom: 23px;
+}
