@@ -3,13 +3,17 @@ import styles from '../styles/Form.module.css';
 import Modal from '../components/Modal.js';
 
 const Form = (props) => {
-    //TODO: Handle submitted info to database
     const [submitted, setSubmittedTrue] = useState(false);
     const verifySubmittedInfo = () => {
         setSubmittedTrue(true);
     };
-    const unVerifySubmittedInfo = () => {
-        setSubmittedTrue(false);
+
+    const [passwords, setPasswordsTrue] = useState(true);
+    const unVerifyPasswords = () => {
+        setPasswordsTrue(false);
+    };
+    const verifyPasswords = () => {
+        setPasswordsTrue(true);
     };
     
     const [modalOpened, setModalOpened] = useState(false);
@@ -28,12 +32,15 @@ const Form = (props) => {
             ConfirmarContraseña: event.target["Confirmar Contraseña"].value
         }
         if (info) {
-            if (info.Contraseña == info.ConfirmarContraseña) {    
+            if (info.Contraseña == info.ConfirmarContraseña) {  
+                if(!passwords) {
+                    verifyPasswords();
+                }  
                 verifySubmittedInfo();
                 const infoJSON = JSON.stringify(info);
                 //TODO: Send submitted info to DB
             } else {
-                unVerifySubmittedInfo();
+                unVerifyPasswords();
             }
         }
     };
@@ -41,10 +48,11 @@ const Form = (props) => {
     return (
         <>
             <form className={styles.Form} onSubmit={submitInfo}>
-                {props.titles.map(([title, type, isRequired]) => (
+                {props.titles.map(([title, type, isRequired, max, pattern, helpText]) => (
                     <>
                         <label className={styles.Form__label} htmlFor={title}>{`${title} ${isRequired ? "*" : ""}`}</label>
-                        <input className={styles.Form__input} type={type} name={title} required={isRequired} /><br />
+                        <input className={styles.Form__input} type={type} name={title} required={isRequired} 
+                            maxLength={max} pattern={pattern} title={`${helpText ? helpText : ""}`}/><br />
                     </>
                 ))}
                 <button className={styles.Form__button} onClick={openModal} type="Submit">{props.button}</button>
@@ -58,11 +66,11 @@ const Form = (props) => {
                         </div>
                     </Modal>
                 }
-                {!submitted &&
-                    <Modal title = "Error" modalOpened = {modalOpened} setModalOpened = {setModalOpened}>
+                {!passwords &&
+                    <Modal title = "ERROR" modalOpened = {modalOpened} setModalOpened = {setModalOpened}>
                         <div className={styles.Form__modal__info}>
                             <p>
-                                Porfavor compruebe los datos ingresados. <br/>
+                                Porfavor compruebe que la contraseña ingresada sea correcta en ambos cuadros.
                             </p>
                         </div>
                     </Modal>
