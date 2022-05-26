@@ -31,7 +31,7 @@ const navItems = [
   ["Inicio", false, "/"],
   ["Proyectos", true, "/projects"],
   ["Reportes", false, "/reports"],
-  ["Empleados", false, "/Empleados"],
+  ["Empleados", false, "/Employees"],
   ["Deducciones", false, "/deductions"],
   ["Beneficios", false, "/benefits"],
 ];

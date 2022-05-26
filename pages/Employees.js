@@ -28,7 +28,7 @@ const navItems = [
   ["Inicio", false, "/"],
   ["Proyectos", false, "/projects"],
   ["Reportes", false, "/reports"],
-  ["Empleados", true, "/Empleados"],
+  ["Empleados", true, "/Employees"],
   ["Deducciones", false, "/deductions"],
   ["Beneficios", false, "/benefits"],
 ];
@@ -45,7 +45,7 @@ export async function getServerSideProps() {
     },
   };
 }
-const Empleados = ({ employees }) => {
+const Employees = ({ employees }) => {
   const [searchText, setSearchText] = useState("");
 
   const handleTextChange = (event) => {
@@ -86,4 +86,4 @@ const Empleados = ({ employees }) => {
   );
 };
 
-export default Empleados;
+export default Employees;
