@@ -4,89 +4,99 @@ import HeaderEmployeeCard from "../components/HeaderEmployeeCard.js";
 import CardEmployee from "../components/CardEmployee.js";
 import Modal from "../components/Modal.js";
 import Styles from "../styles/AddEmployee.module.css";
+import { useRouter } from "next/router";
 import { useState } from "react";
-import {prisma} from '../.db';
+import { prisma } from "../.db";
+
 
 const AsideItems = [
-    {
-        name: "Nómica",
-        icon: "payroll",
-        dropDown: [["- Crear Proyecto", "/projects/create"]],
-    },
-    {
-        name: "Ajustes",
-        icon: "config",
-        dropDown: [],
-    },
-    {
-        name: "Historial",
-        icon: "history",
-        dropDown: [],
-    },
+  {
+    name: "Nómica",
+    icon: "payroll",
+    dropDown: [["- Crear Proyecto", "/projects/create"]],
+  },
+  {
+    name: "Ajustes",
+    icon: "config",
+    dropDown: [],
+  },
+  {
+    name: "Historial",
+    icon: "history",
+    dropDown: [],
+  },
 ];
 
 const navItems = [
-    ["Inicio", false, "/"],
-    ["Proyectos", true, "/projects"],
-    ["Reportes", false, "/reports"],
-    ["Empleados", false, "/employees"],
-    ["Deducciones", false, "/deductions"],
-    ["Beneficios", false, "/benefits"],
+  ["Inicio", false, "/"],
+  ["Proyectos", true, "/projects"],
+  ["Reportes", false, "/reports"],
+  ["Empleados", false, "/Empleados"],
+  ["Deducciones", false, "/deductions"],
+  ["Beneficios", false, "/benefits"],
 ];
 
-function logSubmit(event){
-    event.preventDefault();
-    const form = event.target;
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
-    console.log(document.forms);
-}
-
-import { useRouter } from "next/router";
-export async function getServerSideProps(context){ 
-                                                  
-  //console.log(context);
-
-
-
-  if(!context.query.project) {
-      return {
-          props: {
-              employees: []
-          }
-      }
+export async function getServerSideProps(context) {
+  if (!context.query.project || !context.query.cedula) {
+    return {
+      props: {
+        employees: [],
+        nombreProyecto: null,
+        cedulaJuridica: null,
+      },
+    };
   }
 
-  let employeesNotInThisProject = (await prisma.esContratado.findMany(
-      {
-          where: {
-            nombreProyecto: context.query.project
-          },
-          select: {
-            cedulaEmpleado: true,
-          }
-      }
-));
+  let employeesNotInThisProject = await prisma.esContratado.findMany({
+    where: {
+      nombreProyecto: context.query.project,
+    },
+    select: {
+      cedulaEmpleado: true,
+    },
+  });
 
-let employees = (await prisma.empleado.findMany({include: {persona: true}})).filter(e => employeesNotInThisProject.every(ee => ee.cedulaEmpleado != e.cedula)).map((e) => e.persona);
+  let employees = (
+    await prisma.empleado.findMany({ include: { persona: true } })
+  )
+    .filter((e) =>
+      employeesNotInThisProject.every((ee) => ee.cedulaEmpleado != e.cedula)
+    )
+    .map((e) => e.persona);
 
   return {
     props: {
       employees,
+      nombreProyecto: context.query.project,
+      cedulaJuridica: context.query.cedula,
     },
   };
 }
 
-const AddEmployee = ({employees: employeesBD}) => {
-
-    const router = useRouter();
-    console.log(router.query);
+const AddEmployee = ({
+  employees: employeesBD,
+  nombreProyecto,
+  cedulaJuridica,
+}) => {
+  const getCleanInputs = () => {
+    return {
+      montoPago: "",
+      tipoEmpleado: "",
+      puesto: "",
+      fechaInicio: "",
+      fechaFin: "",
+      jornada: "",
+    };
+  };
 
   const [employees, setEmployees] = useState(
-    employeesBD.map((u) => ({ name: u.nombre, checked: false }))
+    employeesBD.map((u) => ({ cedula: u.cedula, checked: false }))
   );
   const [searchText, setSearchText] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [formState, setFormState] = useState(getCleanInputs);
+
+  const router = useRouter();
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -98,10 +108,9 @@ const AddEmployee = ({employees: employeesBD}) => {
 
   const handleChange = (event) => {
     const { name, checked } = event.target;
-
     setEmployees(
       employees.map((e) => {
-        if (e.name === name) {
+        if (String(e.cedula) === name) {
           return { ...e, checked };
         } else {
           return e;
@@ -109,7 +118,37 @@ const AddEmployee = ({employees: employeesBD}) => {
       })
     );
   };
-  //post
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const form = {
+      ...formState,
+      montoPago: parseInt(formState.montoPago),
+      fechaInicio: `${formState.fechaInicio}T00:00:00Z`,
+      fechaFin: `${formState.fechaInicio}T00:00:00Z`, fechaFin: `${formState.fechaFin}T00:00:00Z`};
+      
+    const selectedEmployees = filteredEmployees.map((e) => e.cedula);
+
+    const response = await fetch("/api/addEmployee", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ form, selectedEmployees, cedulaJuridica, nombreProyecto}),
+    });
+    setFormState(getCleanInputs());
+    setModalOpen(false);
+    router.push(`/project?project=${nombreProyecto}&cedula=${cedulaJuridica}`);
+  };
+
+  const handleInputChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+
+    setFormState((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const filteredEmployees = employees.filter((e) => e.checked == true);
   const filteredEmployeesLength = filteredEmployees.length;
 
@@ -117,7 +156,9 @@ const AddEmployee = ({employees: employeesBD}) => {
     employeesBD = employeesBD.filter(
       (e) =>
         e.nombre.toLowerCase().includes(searchText) ||
-        e.nombre.toUpperCase().includes(searchText.toUpperCase())
+        e.nombre.toUpperCase().includes(searchText.toUpperCase()) ||
+        e.cedula.toString().includes(searchText) ||
+        e.telefono.toString().includes(searchText)
     );
   }
 
@@ -131,38 +172,77 @@ const AddEmployee = ({employees: employeesBD}) => {
         modalOpened={modalOpen}
         setModalOpened={setModalOpen}
       >
-        <form className={Styles.form}>
+        <form className={Styles.form} onSubmit={handleSubmit}>
           <label className={Styles.label}>
             <span>Monto de pago: </span>
-            <input type="number" id="mPago" required />
+            <input
+              value={formState.montoPago}
+              onChange={handleInputChange}
+              type="number"
+              name="montoPago"
+              required
+            />
           </label>
           <label className={Styles.label}>
             <span>Tipo de Empleado: </span>
-            <input type="text" id="tEmpleado" required />
+            <input
+              value={formState.tipoEmpleado}
+              onChange={handleInputChange}
+              type="text"
+              name="tipoEmpleado"
+              required
+            />
           </label>
           <label className={Styles.label}>
             <span>Puesto: </span>
-            <input type="text" id="puesto" required />
+            <input
+              value={formState.puesto}
+              onChange={handleInputChange}
+              type="text"
+              name="puesto"
+              required
+            />
           </label>
           <label className={Styles.label}>
             <span>Fecha de inicio: </span>
-            <input type="date" id="fInicio" required />
+            <input
+              value={formState.fechaInicio}
+              onChange={handleInputChange}
+              type="date"
+              name="fechaInicio"
+              required
+            />
           </label>
           <label className={Styles.label}>
             <span>Fecha de finalizacion: </span>
-            <input type="date" id="fFinal" required />
+            <input
+              onChange={handleInputChange}
+              value={formState.fechaFin}
+              type="date"
+              name="fechaFin"
+              required
+            />
           </label>
           <label className={Styles.label}>
             <span>Jornada: </span>
-            <input type="text" id="jornada" required />
+            <input
+              onChange={handleInputChange}
+              value={formState.jornada}
+              type="text"
+              name="jornada"
+              required
+            />
           </label>
+
           <input className={Styles.submit} type="submit" value="Agregar" />
         </form>
       </Modal>
-
+      <h1 className={Styles.title}>Agregar Empleados</h1>
       <div className={Styles.container}>
+        
         <div className={Styles.head}>
           <HeaderEmployeeCard
+            isSelected={!filteredEmployeesLength}
             searchText={searchText}
             handleTextChange={handleTextChange}
             handleOpenModal={handleOpenModal}
@@ -177,9 +257,9 @@ const AddEmployee = ({employees: employeesBD}) => {
           {employeesBD.map((item, index) => (
             <CardEmployee
               cardItems={item}
-              key={index}
+              key={item.cedula}
               handleCheckbox={handleChange}
-              checkedBoxValue={employees[item.name]}
+              checkedBoxValue={employees[item.cedula]}
             />
           ))}
         </div>
@@ -187,4 +267,5 @@ const AddEmployee = ({employees: employeesBD}) => {
     </>
   );
 };
+
 export default AddEmployee;

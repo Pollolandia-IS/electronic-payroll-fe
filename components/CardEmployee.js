@@ -24,15 +24,17 @@ const CardEmployee = (props) => {
                 <div className={styles.card__info}>
                     <div className={styles.card__info__head}>
                         <div className={styles.card__info__check}>
+                            { !props.removeCheckbox &&
                             <Checkbox
                                 onChange={props.handleCheckbox}
-                                name={props.cardItems.nombre}
+                                name={String(props.cardItems.cedula)}
                                 checked={props.checkedBoxValue}
                                 sx={{
                                     color: "#000000",
                                     "&.Mui-checked": { color: "#FE3D2B" },
                                 }}
                             />
+                            }
                         </div>
                         <h3 className={styles.card__name}>
                             Nombre: {" "}
@@ -53,5 +55,9 @@ const CardEmployee = (props) => {
         </>
     );
 
+}
+
+CardEmployee.defaultProps = {
+    removeCheckbox: false
 }
 export default CardEmployee;

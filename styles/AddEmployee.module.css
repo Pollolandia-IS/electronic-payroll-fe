@@ -1,5 +1,5 @@
 .container {
-    margin-top: 149px;
+    margin-top: 50px;
     margin-left: 200px;
     width: 1103px;
     height: 511.84px;
@@ -52,7 +52,7 @@
 }
 
 .submit {
-    margin-top: 30px;
+    margin: 30px auto 0 auto;
     width: 147.97px;
     height: 38px;
     left: 865px;
@@ -64,4 +64,15 @@
     font-weight: 700;
     font-size: 15px;
     line-height: 20px;
+}
+
+.title {
+    margin-top: 149px;
+    margin-left: 200px;
+    font-family: 'Roboto Slab';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 34px;
+    color: #FE3D2B;
 }
