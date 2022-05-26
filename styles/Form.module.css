@@ -10,7 +10,6 @@
     width: 293.22px;
     height: 29.75px;
     left: 900px;
-    
     background: #C4C4C4;
     border-radius: 30px;
     border-style: none;
@@ -28,7 +27,6 @@
     font-weight: 400;
     font-size: 15px;
     line-height: 18px;
-
     color: #000000;
 }
 
@@ -41,7 +39,8 @@
     border-radius: 30px;    
     border-color: #FE3D2B;
     left: 900px;
-    
+    width: 148.65px;
+    height: 38px;
     font-family: 'Roboto Slab';
     font-style: normal;
     font-weight: 700;
@@ -50,6 +49,25 @@
     display: block;
     align-items: center;
     text-align: center;
-    
     color: #FFFFFF;
+}
+
+.Form__modal__info {
+    border-top: 1px solid #AAA9A9;
+    border-bottom: 1px solid #AAA9A9;
+    padding: 35px 100px;
+    height: 148px;
+    font-family: 'Roboto Slab';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 26px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #000000;
+}
+
+.Form__modal__info p {
+    width: 413px;
 }
