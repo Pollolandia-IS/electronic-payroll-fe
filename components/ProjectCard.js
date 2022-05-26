@@ -5,8 +5,10 @@ const ProjectCard = ({id, name, userCount, currency, frequency, startDate}) => {
   return (
     <section className={styles.card}>
       <div className={styles["card-header"]} >
+        <div>
           <span className="icon PL-user"></span>
           <span className={styles["card-header__users"]}>{userCount}</span>
+        </div>
         <h3 className={styles["card-header__title"]}>{name}</h3>
         <span className={styles["card-header__date"]}>{startDate}</span>
       </div>
