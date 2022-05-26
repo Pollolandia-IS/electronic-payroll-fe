@@ -1,6 +1,6 @@
-import Navbar from '../../components/NavBar'
-import Aside from '../../components/Aside'
-import RegisterCompanyForm from '../../components/RegisterCompanyForm'
+import Navbar from '../../../components/NavBar'
+import Aside from '../../../components/Aside'
+import RegisterCompanyForm from '../../../components/RegisterCompanyForm'
 
 const navItems = [
   ["Inicio", false, "/"],
