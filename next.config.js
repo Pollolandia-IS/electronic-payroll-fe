@@ -2,7 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
 }
+
 module.exports = {
   experimental: { images: { layoutRaw: true } },
   nextConfig,
-}
+};

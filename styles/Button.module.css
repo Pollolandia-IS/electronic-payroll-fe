@@ -1,13 +1,25 @@
-.button {
-    color: black;
-    text-decoration: none;
-    border-radius: 25px;
-    background-color: #96989C;
-    text-align: center;
-    padding: 2px 5px;
-    margin-bottom: 3px;
+
+.btn__medium{
+	border-radius: 12px;
+
+	width: 144px;
+	height: 48px;
+	border: none;
+
+	color: white;
+
+	font-size: 16px;
+	font-weight: bold;
 }
-  
-.button:hover {
-    background-color: #F53D3D;
+
+.btn__primaryColor{
+	background: #FE3D2B;
+}
+
+.btn__medium__cancel{
+    background: #848484;
+}
+
+.btn__medium__cancel:hover{
+    background: red;
 }
