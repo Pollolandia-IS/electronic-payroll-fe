@@ -3,7 +3,7 @@ import styles from '../styles/RegisterForm.module.css';
 const RegisterForm = (props) => {
     return (
         <>
-            <form className={styles.RegisterForm}>
+            <form className={styles.RegisterForm} onSubmit={props.submitInfo}>
                 {props.titles.map(([title, type, isRequired, isFile]) => (
                     <div>
                         {isFile ? (
@@ -19,7 +19,7 @@ const RegisterForm = (props) => {
                             </div>)}
                     </div>
                 ))}
-                <button className={styles.Form__button} type="Submit">{props.button}</button>
+                <button className={styles.Form__button} type="submit">{props.button}</button>
             </form>
         </>
     );
