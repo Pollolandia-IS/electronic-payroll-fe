@@ -9,6 +9,8 @@ const SearchBar = (props) => {
                     <BsSearch />
                 </div>
                 <input
+                    onChange={props.handleChange}
+                    value={props.searchText}
                     type="text"
                     placeholder={props.placeholder}
                 />
