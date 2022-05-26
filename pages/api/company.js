@@ -1,7 +1,6 @@
-//IMPORTAR CONEXION A LA BASE DE DATOS
+import {prisma} from '/.db'
 
 export default function handler(req, res){
-    console.log("API")
     if(req.method === "POST"){
         insertCompanytoDataBase(req, res);
     }
@@ -9,10 +8,20 @@ export default function handler(req, res){
 
 async function insertCompanytoDataBase(req, res){
     try{
-        console.log(req.body);
-        res.status(200);
+        const {legalid, businessname, physicaladdress,phone,companyemail,website} = req.body;
+        const result = await prisma.empresa.create({
+            data:{
+                cedulaJuridica : parseInt(legalid),
+                razonSocial : businessname,
+                direccion : physicaladdress,
+                telefono : parseInt(phone),
+                email : companyemail,
+                paginaWeb : website,
+            }
+        });
+        res.status(200).json(result)
     } catch(error){
         res.status(500);
         res.send(error.message);
     }
-} 
+}

@@ -23,7 +23,7 @@ const RegisterCompanyForm = () => {
         businessname: "",
         legalid: "",
         physicaladdress: "",
-        email: "",
+        companyemail: "",
         phone: "",
         website: "",
     });
@@ -71,7 +71,7 @@ const RegisterCompanyForm = () => {
     },
     {
         id: 6,
-        name: "email",
+        name: "companyemail",
         type: "text",
         label: "Correo Electrónico: *",
         required: true,
@@ -161,11 +161,11 @@ const RegisterCompanyForm = () => {
                         <p className={styles.Formsubtitle} id={styles.SectionTwo}> Contacto de Empresa</p>
                         <div className={styles.ModalSubEntry}>
                             <p className={styles.InputText}> <b>Dirección Física: </b> {JSON.stringify(Values.physicaladdress).slice(1, JSON.stringify(Values.physicaladdress).length - 1)} </p>
-                            <p className={styles.InputText}> <b>Correo Electrónico: </b> {JSON.stringify(Values.email).slice(1, JSON.stringify(Values.email).length - 1)}</p>
+                            <p className={styles.InputText}> <b>Correo Electrónico: </b> {JSON.stringify(Values.companyemail).slice(1, JSON.stringify(Values.companyemail).length - 1)}</p>
                         </div>
                         <div className={styles.ModalSubEntry}>
                             <p className={styles.InputText}> <b>Teléfono: </b> {JSON.stringify(Values.phone).slice(1, JSON.stringify(Values.phone).length - 1)}</p>
-                            <p className={styles.InputText}> <b>Página Web: </b> {Values.Website ? JSON.stringify(Values.website).slice(1, JSON.stringify(Values.website).length - 1): "" }</p>
+                            <p className={styles.InputText}> <b>Página Web: </b> {Values.website ? JSON.stringify(Values.website).slice(1, JSON.stringify(Values.website).length - 1): "" }</p>
                         </div>
                     </div>
 
