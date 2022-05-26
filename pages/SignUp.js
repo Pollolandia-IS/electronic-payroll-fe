@@ -8,13 +8,16 @@ function SignUp() {
         ["Inicio", false, "/"],
         ["Sobre Nosotros", false, "/"]
     ];
+    //[title, type, isRequired, maxLength, pattern, helpText]
+    const passwordHelpText = "Porfavor ingresar una constraseña con (por lo menos) una letra mayúscula, minúscula y un \
+        número, tiene que ser (por lo menos) 10 carácteres de largo, por ejemplo: 'holaSAS123'";
     const titles = [
-        ["Cedula", "text", true], 
+        ["Cedula", "text", true, "11", "[0-9]{9,11}","Una combinación de 9 a 11 dígitos"], 
         ["Email", "email", true], 
-        ["Teléfono", "tel", true], 
+        ["Teléfono", "tel", true, "8", "[0-9]{8}","Un número de teléfono válido, por ejemplo: '12345678'"], 
         ["Nombre", "text", true], 
-        ["Contraseña", "password", true], 
-        ["Confirmar Contraseña", "password", true]
+        ["Contraseña", "password", true, , "[a-z-A-Z-0-9]{10}", passwordHelpText], 
+        ["Confirmar Contraseña", "password", true, , "[a-z-A-Z-0-9]{10}", passwordHelpText]
     ]
 
     return (
