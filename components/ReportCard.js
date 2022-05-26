@@ -21,8 +21,12 @@ const ReportCard = ({name, date, hours, status, photo}) => {
         <h3 className={`${styles.card__text} ${styles.card__hours}`}>{hours} horas</h3>
         <h3 className={`${styles.card__text} ${styles.card__status}`}>{status}</h3>
       </section>
-      <button className={styles.card__button}><span className="icon PL-close"></span></button>
-      <button className={styles.card__button}><span className="icon PL-check"></span></button>
+      {status === 'Pendiente' && 
+      <>
+        <button className={styles.card__button}><span className="icon PL-close"></span></button>
+        <button className={styles.card__button}><span className="icon PL-check"></span></button>
+      </>
+      }
     </div>
   );
 }
