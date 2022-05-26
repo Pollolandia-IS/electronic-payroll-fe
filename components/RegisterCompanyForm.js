@@ -1,6 +1,7 @@
 import styles from '../styles/RegisterCompanyForm.module.css';
 import Button from './Button'
 import Modal from './Modal'
+import Router from 'next/router';
 import { useState } from 'react'
 
 const RegisterCompanyInput = (props) => {
@@ -16,12 +17,13 @@ const RegisterCompanyInput = (props) => {
 
 const RegisterCompanyForm = () => {
     const [modalOpened, setModalOpened] = useState(false);
+
     const [Values, setValues] = useState({
         name: "",
         businessname: "",
         legalid: "",
         physicaladdress: "",
-        email: "",
+        companyemail: "",
         phone: "",
         website: "",
     });
@@ -57,7 +59,7 @@ const RegisterCompanyForm = () => {
         type: "text",
         label: "Dirección Física: *",
         required: true,
-        maxlength: "60",
+        maxLength: "60",
     },
     {
         id: 5,
@@ -69,7 +71,7 @@ const RegisterCompanyForm = () => {
     },
     {
         id: 6,
-        name: "email",
+        name: "companyemail",
         type: "text",
         label: "Correo Electrónico: *",
         required: true,
@@ -93,10 +95,20 @@ const RegisterCompanyForm = () => {
 
     const onChange = (e) => {
         setValues({ ...Values, [e.target.name]: e.target.value });
-        console.log(JSON.stringify(Values.Name))
     };
 
-    const handleDataConfirmation = () => {
+    const handleDataConfirmation = async (e) => {
+        e.preventDefault();
+        try {
+            await fetch('/api/company', {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(Values),
+            });
+            await Router.push('/'); //Where to go after call the api
+        } catch (error) {
+        console.error(error);
+        }
 
     }
 
@@ -136,7 +148,7 @@ const RegisterCompanyForm = () => {
                 </div>
             </form>
             <Modal title="Confirmar Datos" modalOpened={modalOpened} setModalOpened={setModalOpened}>
-            <div className={styles.ModalContainer}>
+                <div className={styles.ModalContainer}>
                     <div>
                         <p className={styles.Formsubtitle} id={styles.SectionOne}> Datos de Empresa</p>
                         <div className={styles.ModalSubEntry}>
@@ -149,11 +161,11 @@ const RegisterCompanyForm = () => {
                         <p className={styles.Formsubtitle} id={styles.SectionTwo}> Contacto de Empresa</p>
                         <div className={styles.ModalSubEntry}>
                             <p className={styles.InputText}> <b>Dirección Física: </b> {JSON.stringify(Values.physicaladdress).slice(1, JSON.stringify(Values.physicaladdress).length - 1)} </p>
-                            <p className={styles.InputText}> <b>Correo Electrónico: </b> {JSON.stringify(Values.email).slice(1, JSON.stringify(Values.email).length - 1)}</p>
+                            <p className={styles.InputText}> <b>Correo Electrónico: </b> {JSON.stringify(Values.companyemail).slice(1, JSON.stringify(Values.companyemail).length - 1)}</p>
                         </div>
                         <div className={styles.ModalSubEntry}>
                             <p className={styles.InputText}> <b>Teléfono: </b> {JSON.stringify(Values.phone).slice(1, JSON.stringify(Values.phone).length - 1)}</p>
-                            <p className={styles.InputText}> <b>Página Web: </b> {Values.Website ? JSON.stringify(Values.website).slice(1, JSON.stringify(Values.website).length - 1): "" }</p>
+                            <p className={styles.InputText}> <b>Página Web: </b> {Values.website ? JSON.stringify(Values.website).slice(1, JSON.stringify(Values.website).length - 1): "" }</p>
                         </div>
                     </div>
 
