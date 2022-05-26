@@ -8,8 +8,8 @@ const RegisterForm = (props) => {
                     <div>
                         {isFile ? (
                             <div>
-                                <input id="crotolamo" className={styles.Form__input__file} type={type} name={title} placeholder={title} required={isRequired} title= "" />
-                                <label className={styles.Form__label__file} placeholder={title} for="crotolamo">Foto</label>
+                                <input id="fileInput" className={styles.Form__input__file} type={type} name={title} placeholder={title} required={isRequired} title= "" />
+                                <label className={styles.Form__label__file} placeholder={title} htmlFor="fileInput">Foto</label>
                                 <hr className={styles.Form__border} />
                             </div>
                         ) : (

@@ -41,7 +41,6 @@
     border-radius: 30px;    
     border-color: #FE3D2B;
     left: 900px;
-    
     font-family: 'Roboto Slab';
     font-style: normal;
     font-weight: 700;
@@ -50,8 +49,8 @@
     display: block;
     align-items: center;
     text-align: center;
-    
     color: #FFFFFF;
+    cursor: pointer;
 }
 
 .Form__input__file {
