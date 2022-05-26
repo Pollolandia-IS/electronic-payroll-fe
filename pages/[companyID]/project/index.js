@@ -1,11 +1,10 @@
-import Aside from "../components/Aside";
-import NavBar from "../components/NavBar";
-import ProjectCard from "../components/projectCard";
-import styles from "../styles/Projects.module.css";
+import Aside from "/components/Aside";
+import NavBar from "/components/NavBar";
+import ProjectCard from "/components/projectCard";
+import styles from "/styles/Projects.module.css";
 
 const Projects = () => {
   const navItems = [
-    ["Inicio", false, "/"],
     ["Proyectos", true, "/RegisterCompany"],
     ["Reportes", false, "/RegisterCompany"],
     ["Empleados", false, "/RegisterCompany"],
