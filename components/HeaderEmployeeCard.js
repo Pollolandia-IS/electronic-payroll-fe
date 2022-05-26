@@ -6,8 +6,11 @@ const HeaderEmployeeCard = (props) => {
     return (
         <div className={styles.content}>
             <div className={styles.top}> 
-                <SearchBar placeholder={props.placeText}/>
-                <ButtonAddSelection className={styles.button} text={props.buttonText} textSecondary={"5 Seleccionados"}/>
+                <SearchBar
+                handleChange={props.handleTextChange}
+                searchText={props.searchText}
+                placeholder={props.placeText}/>
+                <ButtonAddSelection handleOpenModal={props.handleOpenModal} className={styles.button} text={props.buttonText} textSecondary={"5 Seleccionados"}/>
             </div>
             <div className={styles.bottom}> 
                 <span>{props.textSecondary}</span>

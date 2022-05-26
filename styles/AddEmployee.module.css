@@ -24,3 +24,44 @@
     border-bottom: 1px solid rgba(132, 132, 132, 0.5);
     margin-top: 30px;
 }
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 100%;
+    height: 100%;
+}
+
+.label {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 22px;
+    font-weight: bold;
+    margin-top: 30px; /*yA LO VI Nice*/ 
+}
+/*Estoy armando el form*/
+.label input {
+    border: 0cm;
+    outline: 0ch;
+}
+
+.label span {
+    margin-right: 10px;
+}
+
+.submit {
+    margin-top: 30px;
+    width: 147.97px;
+    height: 38px;
+    left: 865px;
+    top: 187px;
+    border-radius: 10px;
+    border: 0ch;
+    background-color: #FE3D2B;
+    color : white;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 20px;
+}

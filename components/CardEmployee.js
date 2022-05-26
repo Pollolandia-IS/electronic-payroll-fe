@@ -13,7 +13,7 @@ const CardEmployee = (props) => {
                 <div className={styles.card__head}>
                     <Image
                         className={styles.card__image}
-                        src={props.cardItems.srcImg}
+                        src="/../public/assets/img/employee3.png"
                         alt={props.cardItems.name}
                         width={202}
                         height={189}
@@ -26,7 +26,7 @@ const CardEmployee = (props) => {
                         <div className={styles.card__info__check}>
                             <Checkbox
                                 onChange={props.handleCheckbox}
-                                name={props.cardItems.name}
+                                name={props.cardItems.nombre}
                                 checked={props.checkedBoxValue}
                                 sx={{
                                     color: "#000000",
@@ -35,17 +35,17 @@ const CardEmployee = (props) => {
                             />
                         </div>
                         <h3 className={styles.card__name}>
-                            Total Salario Bruto{" "}
-                            <span className={styles.bolded}>{props.cardItems.salary}</span>
+                            Nombre: {" "}
+                            <span className={styles.bolded}>{props.cardItems.nombre}</span>
                         </h3>
                         <h3 className={styles.card__name}>
-                            {" "}
-                            {props.cardItems.typeOfWork}
+                            Cedula: {" "}
+                            {props.cardItems.cedula}
                         </h3>
                     </div>
                     <div className={styles.card__info__body}>
                         <h3 className={styles.card__name}>
-                            Fecha de ingreso {props.cardItems.date}
+                            Telefono {props.cardItems.telefono}
                         </h3>
                     </div>
                 </div>
