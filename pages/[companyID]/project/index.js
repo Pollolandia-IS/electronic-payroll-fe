@@ -1,7 +1,7 @@
 import Aside from "/components/Aside";
 import NavBar from "/components/NavBar";
 import ProjectCard from "/components/projectCard";
-import styles from "/styles/Projects.module.css";
+import styles from "/styles/project.module.css";
 
 const Projects = () => {
   const navItems = [
