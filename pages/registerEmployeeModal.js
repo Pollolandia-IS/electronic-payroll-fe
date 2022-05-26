@@ -5,15 +5,14 @@ import Modal from '../Components/Modal.js'
 import NavBar from '../Components/NavBar.js';
 import Aside from '../Components/Aside.js';
 import styles from '../styles/AgregarEmpleados.module.css';
-import { Router } from "@mui/icons-material";
+import { Router } from "next/router";
 function AgregarEmpleados(){
-    const handleDataConfirmation = async(e) => {
-      e.preventDefault();
+    const handleDataConfirmation = async(info) => {
       try {
         await fetch('/api/employees', {
           method: "POST",
           headers: { 'Content-Type': 'application/json'},
-          body: JSON.stringify(Values),
+          body: JSON.stringify(info),
         });
         await Router.push('/');
       } catch (error) {
@@ -33,7 +32,7 @@ function AgregarEmpleados(){
         const infoJSON = JSON.stringify(info);
         //todo: enviar a la base de datos
         console.log("Listo para enviar a la db")
-        //handleDataConfirmation()
+        handleDataConfirmation(info)
       }
     }
     const [modalOpened, setModalOpened] = useState(true);
