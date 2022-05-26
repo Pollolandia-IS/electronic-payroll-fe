@@ -1,0 +1,62 @@
+.main {
+  height: 522px;
+  width: 1053px;
+  overflow-y: scroll;
+  margin: 135px 0 60px 202px;
+}
+
+.main::-webkit-scrollbar {
+  width: 9px;
+}
+
+/* Track */
+/* .main::-webkit-scrollbar-track {
+  background: #f1f1f1;
+} */
+
+/* Handle */
+.main::-webkit-scrollbar-thumb {
+  background: #C4C4C4;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.main::-webkit-scrollbar-thumb:hover {
+  background: #a3a1a1;
+} 
+
+.modal {
+  font-family: 'Roboto Slab', serif;
+  font-weight: 700;
+  font-size: 20px;
+  text-align: center;
+}
+
+.modal__input {
+  display: block;
+  width: 407px;
+  height: 30px;
+  border: none;
+  border-bottom: 1px solid #848484;
+  font-family: 'Roboto Slab', serif;
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.modal__submit {
+  display: inline-block;
+  width: 133px;
+  height: 34px;
+  border: none;
+  background: #FE3D2B;
+  border-radius: 20px;
+  font-family: 'Roboto Slab', serif;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.modal__input::placeholder {
+  color: rgba(132, 132, 132, 0.57);
+}
