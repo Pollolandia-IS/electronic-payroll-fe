@@ -1,6 +1,7 @@
 import styles from '../styles/RegisterCompanyForm.module.css';
 import Button from './Button'
 import Modal from './Modal'
+import Router from 'next/router';
 import { useState } from 'react'
 
 const RegisterCompanyInput = (props) => {
@@ -16,6 +17,7 @@ const RegisterCompanyInput = (props) => {
 
 const RegisterCompanyForm = () => {
     const [modalOpened, setModalOpened] = useState(false);
+
     const [Values, setValues] = useState({
         name: "",
         businessname: "",
@@ -57,7 +59,7 @@ const RegisterCompanyForm = () => {
         type: "text",
         label: "Dirección Física: *",
         required: true,
-        maxlength: "60",
+        maxLength: "60",
     },
     {
         id: 5,
@@ -93,10 +95,20 @@ const RegisterCompanyForm = () => {
 
     const onChange = (e) => {
         setValues({ ...Values, [e.target.name]: e.target.value });
-        console.log(JSON.stringify(Values.Name))
     };
 
-    const handleDataConfirmation = () => {
+    const handleDataConfirmation = async (e) => {
+        e.preventDefault();
+        try {
+            await fetch('/api/company', {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(Values),
+            });
+            await Router.push('/'); //Where to go after call the api
+        } catch (error) {
+        console.error(error);
+        }
 
     }
 
@@ -136,7 +148,7 @@ const RegisterCompanyForm = () => {
                 </div>
             </form>
             <Modal title="Confirmar Datos" modalOpened={modalOpened} setModalOpened={setModalOpened}>
-            <div className={styles.ModalContainer}>
+                <div className={styles.ModalContainer}>
                     <div>
                         <p className={styles.Formsubtitle} id={styles.SectionOne}> Datos de Empresa</p>
                         <div className={styles.ModalSubEntry}>
