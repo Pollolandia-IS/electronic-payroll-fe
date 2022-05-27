@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import styles from '../styles/Form.module.css';
 import Modal from '../components/Modal.js';
+import Router from "next/router";
 
 const Form = (props) => {
     const [submitted, setSubmittedTrue] = useState(false);
@@ -29,19 +30,39 @@ const Form = (props) => {
             phoneNumber: event.target.Teléfono.value,
             name: event.target.Nombre.value,
             password: event.target.Contraseña.value,
-            confirmPassword: event.target["Confirmar Contraseña"].value
-        }
+            confirmPassword: event.target["Confirmar Contraseña"].value,
+        };
         if (info) {
             if (info.password == info.confirmPassword) {  
                 if(!passwords) {
                     verifyPasswords();
-                }  
+                };  
                 verifySubmittedInfo();
-                const infoJSON = JSON.stringify(info);
-                //TODO: Send submitted info to DB
+                sendData(info);
             } else {
                 unVerifyPasswords();
-            }
+            };
+        };
+    };
+
+    const sendData = async (info) => {
+        const idParam = info.id;
+        const dataForDB = {
+            id: info.id,
+            email: info.email,
+            phoneNumber: info.phoneNumber,
+            name: info.name,
+            password: info.password,
+        };
+        try {
+            await fetch ('/api/employer', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(dataForDB),
+            });
+            await Router.push(`/employer/${idParam}/RegisterCompany`);
+        } catch (error) {
+            console.error(error);
         }
     };
 

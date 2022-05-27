@@ -16,7 +16,7 @@ const buttonAddSelection =  (props) => {
     return (
         <div className={Styles.content}> 
             <ThemeProvider theme={theme}> 
-                <Button color="neutral" variant="contained" 
+                <Button onClick={props.handleOpenModal} color="neutral" variant="contained" disabled={props.isSelected}
                 sx={{
                   textTransform: 'none',
                   borderRadius: '10px',
