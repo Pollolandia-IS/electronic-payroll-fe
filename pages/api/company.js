@@ -13,28 +13,17 @@ async function insertCompanytoDataBase(req, res){
         
         const createCompany = await prisma.empresa.create({
             data:{
-                cedulaJuridica : parseInt(legalid),
+                cedulaJuridica : legalid,
                 razonSocial : businessname,
                 direccion : physicaladdress,
                 telefono : parseInt(phone),
                 email : companyemail,
                 paginaWeb : website,
+                cedula : employerId,
             }
         });
 
-        const createCompanyEmployer = await prisma.empresa.create({
-            data:{
-                cedulaJuridica : parseInt(legalid),
-                cedula : parseInt(employerId),
-                razonSocial : businessname,
-                direccion : physicaladdress,
-                telefono : parseInt(phone),
-                email : companyemail,
-                paginaWeb : website,
-            }
-        });
-
-        res.status(200).json({createCompany, createCompanyEmployer })
+        res.status(200).json({createCompany})
     } catch(error){
         res.status(500);
         res.send(error.message);
