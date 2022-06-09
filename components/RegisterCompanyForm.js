@@ -99,17 +99,18 @@ const RegisterCompanyForm = () => {
 
     const handleDataConfirmation = async (e) => {
         e.preventDefault();
+        const employerId = location.pathname.split('/');
+        const Data = {employerId, Values}
         try {
             await fetch('/api/company', {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(Values),
+                body: JSON.stringify(Data),
             });
             await Router.push('/'); //Where to go after call the api
         } catch (error) {
         console.error(error);
         }
-
     }
 
     const handleCancel = () => {

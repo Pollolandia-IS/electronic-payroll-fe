@@ -19,7 +19,7 @@ async function insertEmployer (req, res) {
         });
         const person = await prisma.persona.create({
             data: {
-                cedula: parseInt(id),
+                cedula: id,
                 nombre: name,
                 telefono: parseInt(phoneNumber),
                 foto: null,
@@ -27,13 +27,13 @@ async function insertEmployer (req, res) {
         });
         const uses = await prisma.hace_uso.create({
             data: {
-                cedula: parseInt(id),
+                cedula: id,
                 email: email,
             }
         });
         const employer = await prisma.empleador.create({
             data: {
-                cedula: parseInt(id),
+                cedula: id,
             }
         });
         result = [credentials, person, uses, employer];
