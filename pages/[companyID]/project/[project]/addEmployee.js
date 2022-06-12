@@ -40,7 +40,7 @@ export async function getServerSideProps(context) {
   });
 
   let employees = (
-    await prisma.empleado.findMany({ include: { persona: true } })
+    await prisma.empleado.findMany({where:{cedulaJuridica: companyID}, include: { persona: true } })
   )
     .filter((e) =>
       employeesNotInThisProject.every((ee) => ee.cedulaEmpleado != e.cedula)

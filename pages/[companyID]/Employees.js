@@ -29,6 +29,7 @@ export async function getServerSideProps(context) {
   const {companyID} = context.params;
   let employees = (
     await prisma.empleado.findMany({
+      where: { cedulaJuridica: companyID },
       include: { persona: true },
     })
   ).map((e) => e.persona);
