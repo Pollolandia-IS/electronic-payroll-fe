@@ -9,15 +9,16 @@ export default function handler (req, res) {
 
 async function insertProject (req, res) {
     try {
-        const {companyID, name, currency, amountBenefit, moneyBenefit, frequency} = req.body;
+        let {companyID, name, frequency, currency, amount, benefits, date} = req.body;
         const result = await prisma.proyecto.create({
             data: {
                 cedulaJuridica: parseInt(companyID),
                 nombre: name,
                 moneda: currency,
-                cantidadMaximaBeneficios: parseInt(amountBenefit),
-                montoMaximoBeneficio: parseInt(moneyBenefit),
+                cantidadMaximaBeneficios: parseInt(benefits),
+                montoMaximoBeneficio: parseInt(amount),
                 frecuenciaPago: frequency,
+                fechaInicio: date,
             }
         });
         console.log(result);
