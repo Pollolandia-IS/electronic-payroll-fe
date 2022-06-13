@@ -12,7 +12,7 @@ async function insertProject (req, res) {
         let {companyID, name, frequency, currency, amount, benefits, date} = req.body;
         const result = await prisma.proyecto.create({
             data: {
-                cedulaJuridica: parseInt(companyID),
+                cedulaJuridica: companyID,
                 nombre: name,
                 moneda: currency,
                 cantidadMaximaBeneficios: parseInt(benefits),

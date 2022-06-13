@@ -16,7 +16,7 @@ export async function getServerSideProps(context) {
 
   let projects = await prisma.proyecto.findMany({
     where: {
-      cedulaJuridica: parseInt(companyID)
+      cedulaJuridica: companyID
     },
     include: {
       _count: {
