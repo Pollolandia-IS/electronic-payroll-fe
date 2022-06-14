@@ -189,7 +189,7 @@ function HourModal(props) {
                {`Cancel`}
               </Link2>
            </Link1>
-           <Button variant="contained" size="medium" color="primary" disabled={props.hours === 0} onClick={props.handleSubmit}> Subir Reporte </Button>
+           <Button variant="contained" size="medium" color="primary" disabled={props.disableButton} onClick={props.handleSubmit}> Subir Reporte </Button>
          </Links>
        </Cta>
      </TypeQuest>

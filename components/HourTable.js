@@ -12,6 +12,6 @@ export default function HourTable(props) {
   //TODO - Remove sort or fix date sorting (add sortable: false to the columns)
 
   return (
-    <DataTable rows={props.rows} columns={columns} height={797} width={500} />
+    <DataTable rows={props.rows} columns={columns} height={797} width={502} />
   );
 }
