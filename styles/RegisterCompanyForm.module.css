@@ -18,21 +18,17 @@
 	font-style: normal;
 	font-weight: bold;
 	font-size: 20px;
-	margin-top: 40px;
+	margin-top: 20px;
 	margin-bottom: 20px;
     color: #FE3D2B;
 }
 
-.SubEntry {
+.RegisterCompanyInput{
 	font-family: 'Roboto Slab';
-	height: 140px;
-    width: 50%;
-    float: left;
-}
-
-.InputElement{
-	padding-bottom: 20px;
 	margin-bottom: 15px;
+	width: 520px;
+	height: 50px;
+	display: inline-block;
 }
 
 .InputLabel{
@@ -49,11 +45,53 @@
 	float: right;
 }
 
+.ErrorMessage{
+	font-size: 12px;
+	color: red;
+	display: none;
+}
+
+.InputTextBox:invalid ~ .ErrorMessage {
+	display: block;
+}
+
 .AcceptButtonPosition{
-	float: right; 
+	display: inline-block;
+	text-align: right;
+	width: 50%;
 	padding-right: 60px;
 }
 
 .CancelButtonPosition{
-	float: left;
+	display: inline-block;
+	text-align: left;
+	width: 50%;
+}
+
+.ModalContainer{
+	width: 957px;
+	padding: 0 49px 22px 35px;
+}
+
+.ModalSubEntry {
+	font-family: 'Roboto Slab';
+}
+
+.InputText{
+	width: 416px;
+	display: inline-block;
+}
+
+.ModalButtonPosition{
+	text-align: right;
+}
+
+#SectionOne{
+	margin-top: -5.7px;
+	margin-bottom: 16px;
+}
+
+#SectionTwo{
+	margin-top: 16px;
+	margin-bottom: 16px;
 }
