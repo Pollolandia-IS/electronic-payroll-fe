@@ -192,9 +192,9 @@ function ModalBeneficio(props) {
   const [projectCurrency, setprojectCurrency] = useState('');
   const [Values, setValues] = useState({
     companyID: props.companyID,
-    benefitName: "",
-    amount: "",
-    description: "",
+    benefitName: '',
+    amount: '',
+    description: '',
   });
 
   const handleChange = (e) => {
@@ -218,14 +218,13 @@ function ModalBeneficio(props) {
       amount: Values.amount,
       description: Values.description,
     }
-    console.log(Data);
     try {
       await fetch('/api/employerBenefit', {
           method: "POST",
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(Data),
       });
-      //await Router.push(`11111111111/benefits`); //Where to go after call the api
+      await Router.push(`${Values.companyID}/benefits`); //Where to go after call the api
     } catch (error) {
     console.error(error);
     }
