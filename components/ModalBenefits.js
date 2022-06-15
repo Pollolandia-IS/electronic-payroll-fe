@@ -188,6 +188,8 @@ const Cancelar = styled("div")(({ theme }) =>({
 }));
  
 function ModalBeneficio(props) {
+  const [projectName, setProjectName] = useState('');
+  const [projectCurrency, setprojectCurrency] = useState('');
   const [Values, setValues] = useState({
     benefitName: "",
     projectName: "",
@@ -195,8 +197,18 @@ function ModalBeneficio(props) {
     description: "",
   });
 
-  const onChange = (e) => {
+  const handleChange = (e) => {
     setValues({ ...Values, [e.target.id]: e.target.value });
+  };
+
+  const handleChangeProject = (e) => {
+    setProjectName(e.target.value);
+    props.projects.map((project) => {
+      if(project.nombreProyecto == e.target.value){
+        setprojectCurrency(project.moneda);
+      }
+    });
+    setValues({ ...Values, [projectName]: e.target.value });
   };
 
   const handleSubmit = async () => {
@@ -228,23 +240,22 @@ function ModalBeneficio(props) {
                 <X  src={'/assets/img/x.png'} alt={"x"}/>
               </FrameX>
             </Frame1>
-            <TextFieldStandard id="benefitName" variant="standard" size="small" label={`Nombre`} onChange={onChange} required={true} />
+            <TextFieldStandard id="benefitName" variant="standard" size="small" label={`Nombre`} onChange={handleChange} required={true} />
             <Frame11 >
               <FormControl>
                 <InputLabel id="select-label">Nombre de proyecto</InputLabel>
-                <TextFieldStandard1 id="projectName" value={Values.projectName} variant="standard" size="medium" onChange={onChange}>
-                <MenuItem option value="" disabled> Escoge tu proyecto </MenuItem>
+                <TextFieldStandard1 id="projectName" value={projectName} variant="standard" size="medium" onChange={handleChangeProject}>
                   {props.projects.map((project) => (
-                    <MenuItem key={project.cedulaJuridica} value={project.nombreProyecto}> {project.nombreProyecto} </MenuItem>
+                    <MenuItem key={project.nombreProyecto} value={project.nombreProyecto}> {project.nombreProyecto} </MenuItem>
                   ))}
                 </TextFieldStandard1>
               </FormControl>
-              <TextFieldStandard2 id="amount" value={Values.amount} variant="standard" size="medium" label={`Monto`} onChange={onChange} required={true}/>
+              <TextFieldStandard2 id="amount" value={Values.amount} variant="standard" size="medium" label={`Monto`} onChange={handleChange} required={true} disabled={!projectName}/>
               <Currency >
-                {`CRC`}
+                {projectCurrency}
               </Currency>
             </Frame11>
-            <TextFieldOutlined id="description" value={Values.description} variant="outlined" size="medium" multiline rows={4} label="Descripción" onChange={onChange} required={true}/>
+            <TextFieldOutlined id="description" value={Values.description} variant="outlined" size="medium" multiline rows={4} label="Descripción" onChange={handleChange} required={true}/>
           </Details>
         </Content>
         <Cta >
