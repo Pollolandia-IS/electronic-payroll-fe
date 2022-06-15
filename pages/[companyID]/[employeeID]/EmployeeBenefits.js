@@ -7,7 +7,6 @@ import styles from "/styles/Projects.module.css";
 import { prisma } from "/.db";
 import { TextField, Dialog, Select, FormControl, InputLabel, Button, MenuItem, Tooltip } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Router from "next/router";
 import safeJsonStringify from 'safe-json-stringify';
 
 const TextFieldStandard1 = styled(Select)({
@@ -25,23 +24,31 @@ export async function getServerSideProps(context) {
             nombre: true,
         }
     });
+    const hired = await prisma.esContratado.findMany({
+        where: {
+            cedulaJuridica: companyID,
+            cedulaEmpleado: employeeID,
+        }
+    });
+    const hiredIn = JSON.parse(safeJsonStringify(hired));
+    const projectsString = JSON.parse(safeJsonStringify(projects));
     return {
         props: {
             employeeID,
             companyID,
-            projects
+            projectsString,
+            hiredIn,
         },
     };
 }
 
-const EmployeeBenefits = ({ employeeID, companyID, projects }) => {
+const EmployeeBenefits = ({ employeeID, companyID, projectsString, hiredIn }) => {
     const [selectedBenefit, setSelectedBenefit] = useState("");
     const [isOpenAdd, setIsOpenAdd] = useState(false);
     const [isOpenRemove, setIsOpenRemove] = useState(false);
     const [projectName, setProjectName] = useState("");
     const [benefits, setBenefits] = useState([]);
     const [selectedBenefits, setSelectedBenefits] = useState([]);
-    const [isHired, setIsHired] = useState(false);
 
     const addBenefit = async () => {
         const dataForDB = {
@@ -118,40 +125,29 @@ const EmployeeBenefits = ({ employeeID, companyID, projects }) => {
         setSelectedBenefits(selectedBenefits);
     }
 
-    const checkIsHired = async (projectName) => {
-        if(projectName !== "") {
-            const reqBody = {
-                companyID: companyID,
-                projectName: projectName,
-                employeeID: employeeID,
+    const getProjects = () => {
+        var found = false;
+        return projectsString.map(project => {
+            found = false;
+            for(let i = 0; i < hiredIn.length && !found; i++) {
+                if(hiredIn[i].nombreProyecto === project.nombre) {
+                    found = true;
+                    return <MenuItem key={project.nombre} value={project.nombre}>{project.nombre}</MenuItem>
+                }
             }
-            const isHired = await (await fetch(`/api/isHired/`, {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(reqBody)
-            })).json();
-            if(isHired.length !== 0) {
-                setIsHired(true);
-            } else {
-                setIsHired(false);
-            }
-        }
+        })
     }
 
     const getBenefits = () => {
         let rows = [];
-        if(isHired) {
-            const benefits = parseBenefits();
-            for (let i = 0; i < benefits.length; i += 2) {
-                rows.push(
-                    <div key={i} className={styles.main__row}>
-                        {benefits[i]}
-                        {benefits[i + 1]}
-                    </div>
-                );
-            }
+        const benefits = parseBenefits();
+        for (let i = 0; i < benefits.length; i += 2) {
+            rows.push(
+                <div key={i} className={styles.main__row}>
+                    {benefits[i]}
+                    {benefits[i + 1]}
+                </div>
+            );
         }
         return rows;
     }
@@ -170,7 +166,6 @@ const EmployeeBenefits = ({ employeeID, companyID, projects }) => {
             body: JSON.stringify(reqBody)
         })).json();
         setBenefits(benefits);
-        checkIsHired(event.target.value);
         getSelectedBenefits(event.target.value);
     }
 
@@ -189,11 +184,7 @@ const EmployeeBenefits = ({ employeeID, companyID, projects }) => {
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            {projects.map(project => (
-                                <MenuItem key={project.nombre} value={project.nombre}>
-                                    {project.nombre}
-                                </MenuItem>
-                            ))}
+                            {getProjects()}
                         </TextFieldStandard1>
                     </FormControl>
                     <Search placeholder="Buscar beneficio..." />
