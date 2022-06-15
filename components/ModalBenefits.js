@@ -188,11 +188,11 @@ const Cancelar = styled("div")(({ theme }) =>({
 }));
  
 function ModalBeneficio(props) {
-  const [projectName, setProjectName] = useState('');
+  const [selectedProjectName, setSelectedProjectName] = useState('');
   const [projectCurrency, setprojectCurrency] = useState('');
   const [Values, setValues] = useState({
+    companyID: props.companyID,
     benefitName: "",
-    projectName: "",
     amount: "",
     description: "",
   });
@@ -202,24 +202,30 @@ function ModalBeneficio(props) {
   };
 
   const handleChangeProject = (e) => {
-    setProjectName(e.target.value);
+    setSelectedProjectName(e.target.value);
     props.projects.map((project) => {
-      if(project.nombreProyecto == e.target.value){
+      if(project.nombre == e.target.value){
         setprojectCurrency(project.moneda);
       }
     });
-    setValues({ ...Values, [projectName]: e.target.value });
   };
 
   const handleSubmit = async () => {
-    const Data = {Values}
+    const Data = {
+      companyID: Values.companyID,
+      benefitName: Values.benefitName,
+      projectName: selectedProjectName,
+      amount: Values.amount,
+      description: Values.description,
+    }
+    console.log(Data);
     try {
-      await fetch('/api/benefit', {
+      await fetch('/api/employerBenefit', {
           method: "POST",
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(Data),
       });
-      await Router.push('/benefits'); //Where to go after call the api
+      //await Router.push(`11111111111/benefits`); //Where to go after call the api
     } catch (error) {
     console.error(error);
     }
@@ -244,13 +250,13 @@ function ModalBeneficio(props) {
             <Frame11 >
               <FormControl>
                 <InputLabel id="select-label">Nombre de proyecto</InputLabel>
-                <TextFieldStandard1 id="projectName" value={projectName} variant="standard" size="medium" onChange={handleChangeProject}>
+                <TextFieldStandard1 id="projectName" value={selectedProjectName} variant="standard" size="medium" onChange={handleChangeProject}>
                   {props.projects.map((project) => (
-                    <MenuItem key={project.nombreProyecto} value={project.nombreProyecto}> {project.nombreProyecto} </MenuItem>
+                    <MenuItem key={project.nombre} value={project.nombre}> {project.nombre} </MenuItem>
                   ))}
                 </TextFieldStandard1>
               </FormControl>
-              <TextFieldStandard2 id="amount" value={Values.amount} variant="standard" size="medium" label={`Monto`} onChange={handleChange} required={true} disabled={!projectName}/>
+              <TextFieldStandard2 id="amount" value={Values.amount} variant="standard" size="medium" label={`Monto`} onChange={handleChange} required={true} disabled={!selectedProjectName}/>
               <Currency >
                 {projectCurrency}
               </Currency>
