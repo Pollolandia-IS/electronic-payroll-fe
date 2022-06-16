@@ -47,17 +47,28 @@ const TextFieldStandard1 = styled(Select)({
 const Benefits = ({companyID, benefitString, proyectString}) => {
   const projects = proyectString;
   const [modalOpened, setModalOpened] = useState(false);
+  const [searchText, setSearchText] = useState('');
   const [selectedProjectName, setSelectedProjectName] = useState('Todos');
 
   const getBenefits = () => {
     if(selectedProjectName == 'Todos'){
       return benefitString.map(benefit => {
-        return <BenefitsCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} amount={benefit.montoPago} description={benefit.descripcion} />
+        if(searchText == ''){
+          return <BenefitsCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} amount={benefit.montoPago} description={benefit.descripcion} />
+        } else {
+          if(benefit.nombreBeneficio.toLowerCase().includes(searchText.toLowerCase())){
+            return <BenefitsCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} amount={benefit.montoPago} description={benefit.descripcion} />
+          }
+        }
       });
     } else {
       return benefitString.map(benefit => {
-        if(selectedProjectName == benefit.nombreProyecto ){
+        if(searchText == ''){
           return <BenefitsCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} amount={benefit.montoPago} description={benefit.descripcion} />
+        } else {
+          if(benefit.nombreBeneficio.toLowerCase().includes(searchText.toLowerCase())){
+            return <BenefitsCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} amount={benefit.montoPago} description={benefit.descripcion} />
+          }
         }
       });
     }
@@ -67,7 +78,6 @@ const Benefits = ({companyID, benefitString, proyectString}) => {
     let rows = [];
     let benefits = getBenefits();
     benefits = benefits.filter(benefit => benefit != undefined);
-    console.log(benefits);
     for (let i = 0; i < benefits.length; i += 2) {
       rows.push(
         <div key={i} className={styles.main__row}>
@@ -83,7 +93,12 @@ const Benefits = ({companyID, benefitString, proyectString}) => {
     setSelectedProjectName(e.target.value);
     getRows();
   };
-  
+
+  const handleTextChange = (e) => {
+    setSearchText(e.target.value);
+    getRows();
+  };
+
   return(
     <>
       <NewBenefitModal isOpen={modalOpened} setIsOpen={setModalOpened} companyID={companyID} projects={projects}/>
@@ -99,7 +114,7 @@ const Benefits = ({companyID, benefitString, proyectString}) => {
             ))}
             </TextFieldStandard1>
           </FormControl>
-          <Search placeholder="Buscar beneficio..."/>
+          <Search handleSearch={handleTextChange}  searchText={searchText} placeholder="Buscar beneficio..."/>
           <IconBox action={() =>setModalOpened(true)} ><AddIcon fontSize="large" /></IconBox>
         </div>
         <div className={styles.main__content}>
