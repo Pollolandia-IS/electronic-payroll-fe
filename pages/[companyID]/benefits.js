@@ -1,3 +1,5 @@
+import { Select, FormControl, InputLabel, MenuItem} from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useState } from 'react'
 import {prisma} from "/.db";
 import styles from "/styles/Projects.module.css";
@@ -38,20 +40,34 @@ export async function getServerSideProps(context) {
   };
 }
 
+const TextFieldStandard1 = styled(Select)({  
+  width: `200px`,  
+});
+
 const Benefits = ({companyID, benefitString, proyectString}) => {
   const projects = proyectString;
   const [modalOpened, setModalOpened] = useState(false);
+  const [selectedProjectName, setSelectedProjectName] = useState('Todos');
 
   const getBenefits = () => {
-    return benefitString.map(benefit => {
-      return <BenefitsCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} amount={benefit.montoPago} description={benefit.descripcion} />
+    if(selectedProjectName == 'Todos'){
+      return benefitString.map(benefit => {
+        return <BenefitsCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} amount={benefit.montoPago} description={benefit.descripcion} />
+      });
+    } else {
+      return benefitString.map(benefit => {
+        if(selectedProjectName == benefit.nombreProyecto ){
+          return <BenefitsCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} amount={benefit.montoPago} description={benefit.descripcion} />
+        }
+      });
     }
-    )
   }
 
   const getRows = () => {
     let rows = [];
-    const benefits = getBenefits();
+    let benefits = getBenefits();
+    benefits = benefits.filter(benefit => benefit != undefined);
+    console.log(benefits);
     for (let i = 0; i < benefits.length; i += 2) {
       rows.push(
         <div key={i} className={styles.main__row}>
@@ -62,22 +78,36 @@ const Benefits = ({companyID, benefitString, proyectString}) => {
     }
     return rows;
   }
-    return(
-      <>
-        <NewBenefitModal isOpen={modalOpened} setIsOpen={setModalOpened} companyID={companyID} projects={projects}/>
-        <Sidebar selected={6} username="Axel Matus" />
-        <main className={styles.main}>
-          <div className={styles.main__header}>
-            <Search placeholder="Buscar proyecto..."/>
-            <IconBox action={() =>setModalOpened(true)} ><AddIcon fontSize="large" /></IconBox>
-          </div>
-          <div className={styles.main__content}>
-            {getRows()}
-          </div>
-        </main>
-      </>
 
-    );
+  const handleChangeProject = (e) => {
+    setSelectedProjectName(e.target.value);
+    getRows();
+  };
+  
+  return(
+    <>
+      <NewBenefitModal isOpen={modalOpened} setIsOpen={setModalOpened} companyID={companyID} projects={projects}/>
+      <Sidebar selected={6} username="Axel Matus" />
+      <main className={styles.main}>
+        <div className={styles.main__header}>
+          <FormControl>
+            <InputLabel id="select-label">Nombre de proyecto</InputLabel>
+            <TextFieldStandard1 id="projectName" value={selectedProjectName} variant="standard" size="medium" onChange={handleChangeProject}>
+            <MenuItem key={""} value={'Todos'}> Todos los Proyectos </MenuItem>
+            {projects.map((project) => (
+              <MenuItem key={project.nombre} value={project.nombre}> {project.nombre} </MenuItem>
+            ))}
+            </TextFieldStandard1>
+          </FormControl>
+          <Search placeholder="Buscar beneficio..."/>
+          <IconBox action={() =>setModalOpened(true)} ><AddIcon fontSize="large" /></IconBox>
+        </div>
+        <div className={styles.main__content}>
+          {getRows()}
+        </div>
+      </main>
+    </>
+  );
 }
 
 export default Benefits;
