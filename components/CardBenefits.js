@@ -15,7 +15,7 @@
 import { styled } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 
  
 const TypeEmpleador = styled("div")(({ theme }) =>({  
@@ -69,18 +69,23 @@ const Frame1 = styled("div")({
   width: `455px`,  
 });
   
-const Role = styled("div")(({ theme }) =>({  
-  textAlign: `left`,  
-  whiteSpace: `pre-wrap`,  
-  color: `rgba(0, 0, 0, 0.87)`,  
-  fontStyle: `normal`,  
-  fontFamily: `Heebo`,  
-  fontWeight: `700`,  
-  fontSize: `24px`,  
-  letterSpacing: `0px`,  
-  textDecoration: `none`,  
-  textTransform: `none`,  
-}));
+const Role = styled("div")(({ theme }) => ({
+  textAlign: `left`,
+  whiteSpace: `nowrap`,
+  color: `rgba(0, 0, 0, 0.87)`,
+  fontStyle: `normal`,
+  fontFamily: `Heebo`,
+  fontWeight: `700`,
+  fontSize: `24px`,
+  letterSpacing: `0px`,
+  textDecoration: `none`,
+  textTransform: `none`,
+  width: `441px`,
+  lineHeight: `35px`,
+  overflow: `hidden`,
+  minHeight: `35px`,
+  textOverflow: `ellipsis`,
+})); 
   
 const Monto = styled("div")({  
   display: `flex`,  
@@ -148,36 +153,38 @@ const Stats = styled("div")({
 function BeneficiosCard(props) {
   return (
     <TypeEmpleador >
-       <Right >
-         <Details >
-           <Frame1 >
-             <Role >
-               {props.name}
-                 </Role>
-           </Frame1>
-           <Monto >
-             <MontoText >
-               {`Monto:`}
-                 </MontoText>
-             <Valor >
-               {props.amount}
-                 </Valor>
-           </Monto>
-           <Description >
-             {props.description}
-               </Description>
-         </Details>
-         <Stats >
-            <IconButton size="small" color="primary" >
-              <EditIcon />
-            </IconButton>
-            <IconButton size="small" color="error" >
-              <DeleteIcon />
-            </IconButton>
-         </Stats>
-       </Right>
-     </TypeEmpleador>
-   );
+      <Right >
+        <Details >
+          <Frame1 >
+            <Tooltip title={props.name} arrow enterDelay={1069} placement= "top-start">
+              <Role >
+                {props.name}
+              </Role>
+            </Tooltip>
+          </Frame1>
+          <Monto >
+            <MontoText >
+              {`Monto:`}
+            </MontoText>
+            <Valor >
+              {props.amount}
+            </Valor>
+          </Monto>
+          <Description >
+            {props.description}
+          </Description>
+        </Details>
+        <Stats >
+          <IconButton size="small" color="primary" >
+            <EditIcon />
+          </IconButton>
+          <IconButton size="small" color="error" >
+            <DeleteIcon />
+          </IconButton>
+        </Stats>
+      </Right>
+    </TypeEmpleador>
+  );
 }
 
 export default BeneficiosCard;
