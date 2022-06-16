@@ -63,11 +63,13 @@ const Benefits = ({companyID, benefitString, proyectString}) => {
       });
     } else {
       return benefitString.map(benefit => {
-        if(searchText == ''){
-          return <BenefitsCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} amount={benefit.montoPago} description={benefit.descripcion} />
-        } else {
-          if(benefit.nombreBeneficio.toLowerCase().includes(searchText.toLowerCase())){
+        if(selectedProjectName == benefit.nombreProyecto ){
+          if(searchText == ''){
             return <BenefitsCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} amount={benefit.montoPago} description={benefit.descripcion} />
+          } else {
+            if(benefit.nombreBeneficio.toLowerCase().includes(searchText.toLowerCase())){
+              return <BenefitsCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} amount={benefit.montoPago} description={benefit.descripcion} />
+            }
           }
         }
       });
