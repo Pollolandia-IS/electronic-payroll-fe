@@ -22,6 +22,8 @@ export async function getServerSideProps(context) {
         },
         select: {
             nombre: true,
+            cantidadMaximaBeneficios: true,
+            montoMaximoBeneficio: true,
         }
     });
     const hired = await prisma.esContratado.findMany({
@@ -46,27 +48,56 @@ const EmployeeBenefits = ({ employeeID, companyID, projectsString, hiredIn }) =>
     const [selectedBenefit, setSelectedBenefit] = useState("");
     const [isOpenAdd, setIsOpenAdd] = useState(false);
     const [isOpenRemove, setIsOpenRemove] = useState(false);
+    const [isOpenError, setIsOpenError] = useState(false);
     const [projectName, setProjectName] = useState("");
     const [benefits, setBenefits] = useState([]);
     const [selectedBenefits, setSelectedBenefits] = useState([]);
 
+    const checkBenefitAmount = () => {
+        const currentProject = projectsString.find(project => project.nombre === projectName);
+        const maxAmountBenefits = parseInt(currentProject.cantidadMaximaBeneficios);
+        const maxAmountSum = parseInt(currentProject.montoMaximoBeneficio);
+        const currentAmountBenefits = selectedBenefits.length;
+        const currentAmountSum = 0;
+        if(selectedBenefits.length === 0){
+            const benefitToAdd = benefits.find(benefit => benefit.nombreBeneficio === selectedBenefit);
+            currentAmountSum += parseInt(benefitToAdd.montoPago);
+        } else {
+            for(let i = 0; i < selectedBenefits.length; i++) {  
+                const benefitToAdd = benefits.find(benefit => benefit.nombreBeneficio 
+                    === selectedBenefits[i].nombreBeneficio);
+                currentAmountSum += parseInt(benefitToAdd.montoPago);
+            }
+        }
+        if (currentAmountBenefits < maxAmountBenefits && currentAmountSum < maxAmountSum) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     const addBenefit = async () => {
-        const dataForDB = {
-            employeeID: employeeID,
-            companyID: companyID,
-            projectName: projectName,
-            benefitName: selectedBenefit,
-        };
-        try {
-            await fetch (`/api/selectBenefit/`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(dataForDB),
-            });
-            handleProjectChange({target: {value: projectName}});
+        if(checkBenefitAmount()){
+            const dataForDB = {
+                employeeID: employeeID,
+                companyID: companyID,
+                projectName: projectName,
+                benefitName: selectedBenefit,
+            };
+            try {
+                await fetch (`/api/selectBenefit/`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(dataForDB),
+                });
+                handleProjectChange({target: {value: projectName}});
+                setIsOpenAdd(false);
+            } catch (error) {
+                console.error(error);
+            }
+        } else {
             setIsOpenAdd(false);
-        } catch (error) {
-            console.error(error);
+            setIsOpenError(true);
         }
     }
     const removeBenefit = async () => {
@@ -175,6 +206,8 @@ const EmployeeBenefits = ({ employeeID, companyID, projectsString, hiredIn }) =>
                 buttonText="Confirmar" buttonAction={() => addBenefit()} />
             <ConfirmModal isOpen={isOpenRemove} setIsOpen={setIsOpenRemove} text="Deseas renunciar a este beneficio?"
                 buttonText="Confirmar" buttonAction={() => removeBenefit()} />
+            <ConfirmModal isOpen={isOpenError} setIsOpen={setIsOpenError} text="Error: No puedes agregar más beneficios"
+                buttonText="Aceptar" buttonAction={() => setIsOpenError(false)} />
             <Sidebar selected={6} username="Obtener de la DB" />
             <main className={styles.main}>
                 <div className={styles.main__header}>
