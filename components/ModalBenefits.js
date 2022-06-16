@@ -224,7 +224,7 @@ function ModalBeneficio(props) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(Data),
       });
-      await Router.push(`${Values.companyID}/benefits`); //Where to go after call the api
+      await Router.reload();
     } catch (error) {
     console.error(error);
     }
