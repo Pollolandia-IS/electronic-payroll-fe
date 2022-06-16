@@ -172,9 +172,9 @@ function BenefitEmployeeCard(props) {
                 <Details >
                     <Frame1 >
                         <Tooltip title={props.name} arrow enterDelay={1069} placement="top-start">
-                        <Role >
-                            {props.name}
-                        </Role>
+                            <Role >
+                                {props.name}
+                            </Role>
                         </Tooltip>
                         {props.selected ? 
                             <div onMouseEnter={()=> setHovered(true)} onMouseLeave={()=>setHovered(false)}>

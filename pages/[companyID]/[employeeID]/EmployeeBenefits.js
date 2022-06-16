@@ -63,6 +63,7 @@ const EmployeeBenefits = ({ employeeID, companyID, projectsString, hiredIn, empl
     const [selectedBenefits, setSelectedBenefits] = useState([]);
     const [searchText, setSearchText] = useState("");
     const [errorText, setErrorText] = useState("");
+    //TODO: Fix styling
 
     const checkBenefitAmount = () => {
         const currentProject = projectsString.find(project => project.nombre === projectName);
