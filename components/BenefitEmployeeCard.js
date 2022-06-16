@@ -63,7 +63,7 @@ const Frame1 = styled("div")({
     flexDirection: `row`,
     justifyContent: `space-between`,
     alignItems: `center`,
-    gap: `174px`,
+    gap: `20px`,
     paddingRight: `6px`,
     boxSizing: `border-box`,
     height: `35px`,
@@ -72,7 +72,7 @@ const Frame1 = styled("div")({
 
 const Role = styled("div")(({ theme }) => ({
     textAlign: `left`,
-    whiteSpace: `pre-wrap`,
+    whiteSpace: `nowrap`,
     color: `rgba(0, 0, 0, 0.87)`,
     fontStyle: `normal`,
     fontFamily: `Heebo`,
@@ -81,6 +81,11 @@ const Role = styled("div")(({ theme }) => ({
     letterSpacing: `0px`,
     textDecoration: `none`,
     textTransform: `none`,
+    width: `441px`,
+    lineHeight: `35px`,
+    overflow: `hidden`,
+    minHeight: `35px`,
+    textOverflow: `ellipsis`,
 }));
 
 const Frame11 = styled("div")({
@@ -166,9 +171,11 @@ function BenefitEmployeeCard(props) {
             <Right >
                 <Details >
                     <Frame1 >
+                        <Tooltip title={props.name} arrow enterDelay={1069} placement="top-start">
                         <Role >
                             {props.name}
                         </Role>
+                        </Tooltip>
                         {props.selected ? 
                             <div onMouseEnter={()=> setHovered(true)} onMouseLeave={()=>setHovered(false)}>
                                 {hovered ? <IconButton onClick={()=> {props.setIsOpenRemove(true); props.setSelectedBenefit(props.name);}} size="small" color="error" > 
