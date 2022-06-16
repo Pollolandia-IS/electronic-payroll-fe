@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { prisma } from "/.db";
 
-
 const AsideItems = [
   {
     name: "Nómica",
@@ -38,8 +37,12 @@ export async function getServerSideProps(context) {
     },
   });
   let employees = (
-    await prisma.empleado.findMany({where:{cedulaJuridica: companyID}, include: { persona: true } })
-  ).filter((e) =>
+    await prisma.empleado.findMany({
+      where: { cedulaJuridica: companyID },
+      include: { persona: true },
+    })
+  )
+    .filter((e) =>
       employeesNotInThisProject.every((ee) => ee.cedulaEmpleado != e.cedula)
     )
     .map((e) => e.persona);
@@ -58,7 +61,6 @@ const AddEmployee = ({
   nombreProyecto,
   cedulaJuridica,
 }) => {
-
   const navItems = [
     ["Proyectos", true, `/${cedulaJuridica}/project`],
     ["Reportes", false, "/reports"],
@@ -114,14 +116,21 @@ const AddEmployee = ({
       ...formState,
       montoPago: parseInt(formState.montoPago),
       fechaInicio: `${formState.fechaInicio}T00:00:00Z`,
-      fechaFin: `${formState.fechaInicio}T00:00:00Z`, fechaFin: `${formState.fechaFin}T00:00:00Z`};
-      
+      fechaFin: `${formState.fechaInicio}T00:00:00Z`,
+      fechaFin: `${formState.fechaFin}T00:00:00Z`,
+    };
+
     const selectedEmployees = filteredEmployees.map((e) => e.cedula);
 
     const response = await fetch("/api/addEmployee", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ form, selectedEmployees, cedulaJuridica, nombreProyecto}),
+      body: JSON.stringify({
+        form,
+        selectedEmployees,
+        cedulaJuridica,
+        nombreProyecto,
+      }),
     });
     setFormState(getCleanInputs());
     setModalOpen(false);
@@ -228,7 +237,6 @@ const AddEmployee = ({
       </Modal>
       <h1 className={Styles.title}>Agregar Empleados</h1>
       <div className={Styles.container}>
-        
         <div className={Styles.head}>
           <HeaderEmployeeCard
             isSelected={!filteredEmployeesLength}
