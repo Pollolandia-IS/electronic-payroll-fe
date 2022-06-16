@@ -32,19 +32,28 @@ export async function getServerSideProps(context) {
             cedulaEmpleado: employeeID,
         }
     });
+    const employee = await prisma.persona.findMany({
+        where: {
+            cedula: employeeID,
+        }, select: {
+            nombre: true,
+        },
+    });
     const hiredIn = JSON.parse(safeJsonStringify(hired));
     const projectsString = JSON.parse(safeJsonStringify(projects));
+    const employeeName = JSON.parse(safeJsonStringify(employee));
     return {
         props: {
             employeeID,
             companyID,
             projectsString,
             hiredIn,
+            employeeName,
         },
     };
 }
 
-const EmployeeBenefits = ({ employeeID, companyID, projectsString, hiredIn }) => {
+const EmployeeBenefits = ({ employeeID, companyID, projectsString, hiredIn, employeeName }) => {
     const [selectedBenefit, setSelectedBenefit] = useState("");
     const [isOpenAdd, setIsOpenAdd] = useState(false);
     const [isOpenRemove, setIsOpenRemove] = useState(false);
@@ -242,7 +251,7 @@ const EmployeeBenefits = ({ employeeID, companyID, projectsString, hiredIn }) =>
                 buttonText="Confirmar" buttonAction={() => removeBenefit()} />
             <ConfirmModal isOpen={isOpenError} setIsOpen={setIsOpenError} text={errorText}
                 buttonText="Aceptar" buttonAction={() => setIsOpenError(false)} />
-            <Sidebar selected={6} username="Obtener de la DB" />
+            <Sidebar selected={6} username={employeeName[0].nombre} />
             <main className={styles.main}>
                 <div className={styles.main__header}>
                     <FormControl>
