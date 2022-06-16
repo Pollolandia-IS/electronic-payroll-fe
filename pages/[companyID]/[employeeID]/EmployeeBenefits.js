@@ -52,6 +52,8 @@ const EmployeeBenefits = ({ employeeID, companyID, projectsString, hiredIn }) =>
     const [projectName, setProjectName] = useState("");
     const [benefits, setBenefits] = useState([]);
     const [selectedBenefits, setSelectedBenefits] = useState([]);
+    const [searchText, setSearchText] = useState("");
+    const [errorText, setErrorText] = useState("");
 
     const checkBenefitAmount = () => {
         const currentProject = projectsString.find(project => project.nombre === projectName);
@@ -72,6 +74,13 @@ const EmployeeBenefits = ({ employeeID, companyID, projectsString, hiredIn }) =>
         if (currentAmountBenefits < maxAmountBenefits && currentAmountSum < maxAmountSum) {
             return true;
         } else {
+            setIsOpenAdd(false);
+            if(currentAmountBenefits > maxAmountBenefits){
+                setErrorText("¡Ups! Límite de beneficios excedido.");
+            } else {
+                setErrorText("¡Ups! Monto límite de beneficios excedido.");
+            }
+            setIsOpenError(true);
             return false;
         }
     }
@@ -95,10 +104,7 @@ const EmployeeBenefits = ({ employeeID, companyID, projectsString, hiredIn }) =>
             } catch (error) {
                 console.error(error);
             }
-        } else {
-            setIsOpenAdd(false);
-            setIsOpenError(true);
-        }
+        } 
     }
     const removeBenefit = async () => {
         const dataForDB = {
@@ -123,20 +129,42 @@ const EmployeeBenefits = ({ employeeID, companyID, projectsString, hiredIn }) =>
     const parseBenefits = () => {
         const found = false;
         return benefits.map(benefit => {
-            found = false;
-            for(let i = 0; i < selectedBenefits.length && !found; i++) {
-                if(selectedBenefits[i].nombreBeneficio === benefit.nombreBeneficio) {
-                    found = true;
-                    return <BenefitEmployeeCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} 
-                        description={benefit.descripcion} amount={benefit.montoPago} selected={true} 
+            if(searchText === ""){
+                found = false;
+                for(let i = 0; i < selectedBenefits.length && !found; i++) {
+                    if(selectedBenefits[i].nombreBeneficio === benefit.nombreBeneficio) {
+                        found = true;
+                        return <BenefitEmployeeCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} 
+                            description={benefit.descripcion} amount={benefit.montoPago} selected={true} 
+                                setIsOpenAdd={setIsOpenAdd} setIsOpenRemove={setIsOpenRemove} setSelectedBenefit={setSelectedBenefit}/>
+                    }
+                }
+                if(!found) {
+                    return <BenefitEmployeeCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio}
+                        description={benefit.descripcion} amount={benefit.montoPago} selected={false}
                             setIsOpenAdd={setIsOpenAdd} setIsOpenRemove={setIsOpenRemove} setSelectedBenefit={setSelectedBenefit}/>
                 }
+            } else {
+                if(benefit.nombreBeneficio.toLowerCase().includes(searchText.toLowerCase()) 
+                    || benefit.descripcion.toLowerCase().includes(searchText.toLowerCase()) 
+                        || benefit.montoPago.toString().includes(searchText)){
+                    found = false;
+                    for(let i = 0; i < selectedBenefits.length && !found; i++) {
+                        if(selectedBenefits[i].nombreBeneficio === benefit.nombreBeneficio) {
+                            found = true;
+                            return <BenefitEmployeeCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} 
+                                description={benefit.descripcion} amount={benefit.montoPago} selected={true} 
+                                    setIsOpenAdd={setIsOpenAdd} setIsOpenRemove={setIsOpenRemove} setSelectedBenefit={setSelectedBenefit}/>
+                        }
+                    }
+                    if(!found) {
+                        return <BenefitEmployeeCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio}
+                            description={benefit.descripcion} amount={benefit.montoPago} selected={false}
+                                setIsOpenAdd={setIsOpenAdd} setIsOpenRemove={setIsOpenRemove} setSelectedBenefit={setSelectedBenefit}/>
+                    }
+                }
             }
-            if(!found) {
-                return <BenefitEmployeeCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio}
-                    description={benefit.descripcion} amount={benefit.montoPago} selected={false}
-                        setIsOpenAdd={setIsOpenAdd} setIsOpenRemove={setIsOpenRemove} setSelectedBenefit={setSelectedBenefit}/>
-            }
+
         })
     }
 
@@ -171,7 +199,8 @@ const EmployeeBenefits = ({ employeeID, companyID, projectsString, hiredIn }) =>
 
     const getBenefits = () => {
         let rows = [];
-        const benefits = parseBenefits();
+        let benefits = parseBenefits();
+        benefits = benefits.filter(benefit => benefit != undefined);
         for (let i = 0; i < benefits.length; i += 2) {
             rows.push(
                 <div key={i} className={styles.main__row}>
@@ -200,13 +229,18 @@ const EmployeeBenefits = ({ employeeID, companyID, projectsString, hiredIn }) =>
         getSelectedBenefits(event.target.value);
     }
 
+    const handleTextChange = (event) => {
+        setSearchText(event.target.value);
+        getBenefits();
+    };
+
     return (
         <>
             <ConfirmModal isOpen={isOpenAdd} setIsOpen={setIsOpenAdd} text="Deseas agregar este beneficio?"
                 buttonText="Confirmar" buttonAction={() => addBenefit()} />
             <ConfirmModal isOpen={isOpenRemove} setIsOpen={setIsOpenRemove} text="Deseas renunciar a este beneficio?"
                 buttonText="Confirmar" buttonAction={() => removeBenefit()} />
-            <ConfirmModal isOpen={isOpenError} setIsOpen={setIsOpenError} text="Error: No puedes agregar más beneficios"
+            <ConfirmModal isOpen={isOpenError} setIsOpen={setIsOpenError} text={errorText}
                 buttonText="Aceptar" buttonAction={() => setIsOpenError(false)} />
             <Sidebar selected={6} username="Obtener de la DB" />
             <main className={styles.main}>
@@ -220,7 +254,7 @@ const EmployeeBenefits = ({ employeeID, companyID, projectsString, hiredIn }) =>
                             {getProjects()}
                         </TextFieldStandard1>
                     </FormControl>
-                    <Search placeholder="Buscar beneficio..." />
+                    <Search handleSearch={handleTextChange}  searchText={searchText} placeholder="Buscar beneficio..."/>
                 </div>
                 <div className={styles.main__content}>    
                     {getBenefits()}
