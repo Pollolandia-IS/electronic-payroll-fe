@@ -19,7 +19,7 @@ async function addEmployeeToProject(req, res) {
         ...req.body.form,
         cedulaEmpleado: employee,
         nombreProyecto: req.body.nombreProyecto,
-        cedulaJuridica: parseInt(req.body.cedulaJuridica)
+        cedulaJuridica: req.body.cedulaJuridica
       },
     });
     return res.status(200).json({ success: "OK" });

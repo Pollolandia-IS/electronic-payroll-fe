@@ -29,7 +29,6 @@ const AsideItems = [
 
 export async function getServerSideProps(context) {
   const { companyID, project } = context.params;
-
   let employeesNotInThisProject = await prisma.esContratado.findMany({
     where: {
       nombreProyecto: project,
@@ -38,11 +37,9 @@ export async function getServerSideProps(context) {
       cedulaEmpleado: true,
     },
   });
-
   let employees = (
     await prisma.empleado.findMany({where:{cedulaJuridica: companyID}, include: { persona: true } })
-  )
-    .filter((e) =>
+  ).filter((e) =>
       employeesNotInThisProject.every((ee) => ee.cedulaEmpleado != e.cedula)
     )
     .map((e) => e.persona);
@@ -63,9 +60,9 @@ const AddEmployee = ({
 }) => {
 
   const navItems = [
-    ["Proyectos", true, `${cedulaJuridica}/project`],
+    ["Proyectos", true, `/${cedulaJuridica}/project`],
     ["Reportes", false, "/reports"],
-    ["Empleados", false, `${cedulaJuridica}/Employees`],
+    ["Empleados", false, `/${cedulaJuridica}/Employees`],
     ["Deducciones", false, "/deductions"],
     ["Beneficios", false, "/benefits"],
   ];
@@ -128,7 +125,7 @@ const AddEmployee = ({
     });
     setFormState(getCleanInputs());
     setModalOpen(false);
-    router.push(`/${cedulaJuridica}/project/${nombreProyecto}`);
+    router.push(`/${cedulaJuridica}/project/${nombreProyecto}/addEmployee`);
   };
 
   const handleInputChange = (event) => {
