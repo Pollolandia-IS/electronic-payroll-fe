@@ -8,7 +8,7 @@
     position: relative;
     width: 407px;
     height: 0px;
-    left: 581px;
+    left: -50px;
     border: 1px solid #848484;
 }
 
@@ -17,7 +17,7 @@
     position: relative;
     width: 293.22px;
     height: 29.75px;
-    left: 581px;
+    left: -50px;
     font-family: 'Roboto Slab';
     font-style: normal;
     font-weight: 700;
@@ -40,7 +40,6 @@
     margin-right: auto;
     border-radius: 30px;    
     border-color: #FE3D2B;
-    left: 900px;
     font-family: 'Roboto Slab';
     font-style: normal;
     font-weight: 700;
@@ -77,7 +76,7 @@
     position: relative;
     width: 293.22px;
     height: 29.75px;
-    left: 581px;
+    left: -50px;
     font-family: 'Roboto Slab';
     font-style: normal;
     font-weight: 700;
