@@ -1,15 +1,16 @@
 import { Select, FormControl, InputLabel, MenuItem} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react'
 import {prisma} from "/.db";
-import styles from "/styles/Projects.module.css";
+import styles from "/styles/EmployerBenefits.module.css";
 import safeJsonStringify from 'safe-json-stringify';
 import Sidebar from "../../components/Sidebar";
 import BenefitsCard from '../../components/CardBenefits'
 import NewBenefitModal from '../../components/ModalBenefits'
 import Search from "../../components/Search";
 import IconBox from "../../components/IconBox";
-import AddIcon from '@mui/icons-material/Add';
+
 
 export async function getServerSideProps(context) {
   const { companyID } = context.params;
@@ -40,8 +41,20 @@ export async function getServerSideProps(context) {
   };
 }
 
-const TextFieldStandard1 = styled(Select)({  
-  width: `200px`,  
+const TextFieldStandard = styled(Select)({
+  backgroundColor: `rgba(255, 255, 255, 1)`,  
+  boxShadow: `0px 2px 5px rgba(0, 0, 0, 0.15)`,  
+  borderRadius: `7px`,
+  display: `flex`,  
+  flexDirection: `row`,  
+  width: `343px`,  
+  height: `50px`,  
+  justifyContent: `flex-start`,  
+  alignItems: `center`,  
+  gap: `24px`,  
+  padding: `0px`,  
+  boxSizing: `border-box`,  
+  overflow: `hidden`, 
 });
 
 const Benefits = ({companyID, benefitString, proyectString}) => {
@@ -108,13 +121,13 @@ const Benefits = ({companyID, benefitString, proyectString}) => {
       <main className={styles.main}>
         <div className={styles.main__header}>
           <FormControl>
-            <InputLabel id="select-label">Nombre de proyecto</InputLabel>
-            <TextFieldStandard1 id="projectName" value={selectedProjectName} variant="standard" size="medium" onChange={handleChangeProject}>
+            <InputLabel id="select-label"></InputLabel>
+            <TextFieldStandard id="projectName" value={selectedProjectName} size="medium" onChange={handleChangeProject}>
             <MenuItem key={""} value={'Todos'}> Todos los Proyectos </MenuItem>
             {projects.map((project) => (
               <MenuItem key={project.nombre} value={project.nombre}> {project.nombre} </MenuItem>
             ))}
-            </TextFieldStandard1>
+            </TextFieldStandard>
           </FormControl>
           <Search handleSearch={handleTextChange}  searchText={searchText} placeholder="Buscar beneficio..."/>
           <IconBox action={() =>setModalOpened(true)} ><AddIcon fontSize="large" /></IconBox>
