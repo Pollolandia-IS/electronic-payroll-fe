@@ -3,14 +3,26 @@ import { useState } from "react";
 import ConfirmModal from "../../../components/ConfirmModal";
 import Search from "../../../components/Search";
 import Sidebar from "../../../components/Sidebar";
-import styles from "/styles/Projects.module.css";
+import styles from "/styles/EmployeeBenefits.module.css";
 import { prisma } from "/.db";
-import { TextField, Dialog, Select, FormControl, InputLabel, Button, MenuItem, Tooltip } from '@mui/material';
+import { Select, FormControl , InputLabel, MenuItem } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import safeJsonStringify from 'safe-json-stringify';
 
-const TextFieldStandard1 = styled(Select)({
-    width: `185px`,
+const TextFieldStandard = styled(Select)({
+    backgroundColor: `rgba(255, 255, 255, 1)`,  
+    boxShadow: `0px 2px 5px rgba(0, 0, 0, 0.15)`,  
+    borderRadius: `7px`,
+    display: `flex`,  
+    flexDirection: `row`,  
+    width: `343px`,  
+    height: `50px`,  
+    justifyContent: `flex-start`,  
+    alignItems: `center`,  
+    gap: `24px`,  
+    padding: `0px`,  
+    boxSizing: `border-box`,  
+    overflow: `hidden`, 
 });
 
 export async function getServerSideProps(context) {
@@ -257,12 +269,12 @@ const EmployeeBenefits = ({ employeeID, companyID, projectsString, hiredIn, empl
                 <div className={styles.main__header}>
                     <FormControl>
                         <InputLabel sx={{ marginLeft: -2 }}></InputLabel>
-                        <TextFieldStandard1 select value={projectName} onChange={handleProjectChange}>
+                        <TextFieldStandard select value={projectName} onChange={handleProjectChange}>
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
                             {getProjects()}
-                        </TextFieldStandard1>
+                        </TextFieldStandard>
                     </FormControl>
                     <Search handleSearch={handleTextChange}  searchText={searchText} placeholder="Buscar beneficio..."/>
                 </div>
