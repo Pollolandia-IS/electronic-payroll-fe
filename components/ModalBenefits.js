@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 import { useState, useEffect } from 'react';
 import Router from 'next/router';
  
-const ModalBeneficio1 = styled("div")(({ theme }) =>({  
+const ModalBeneficio1 = styled("div")(({ theme }) =>({
   backgroundColor: `rgba(255, 255, 255, 1)`,  
   boxShadow: `0px 1px 18px rgba(0, 0, 0, 0.12), 0px 6px 10px rgba(0, 0, 0, 0.14), 0px 3px 5px rgba(0, 0, 0, 0.2)`,  
   borderRadius: `8px`,  
@@ -241,6 +241,19 @@ function ModalBeneficio(props) {
     }
   }
 
+  const handleCancel = () => {
+    setValidFields(false);
+    setIsValidAmount(false);
+    setSelectedProjectName('');
+    setprojectCurrency('');
+
+    Values.benefitName = '';
+    Values.amount = '';
+    Values.description = '';
+
+    props.setIsOpen(false);
+  }
+
   return (
     <Dialog open={props.isOpen} onClose={() => props.setIsOpen(false)} >
       <ModalBeneficio1 >
@@ -252,7 +265,7 @@ function ModalBeneficio(props) {
                   {`Crear Nuevo Beneficio`}
                 </CrearNuevoBeneficio>
               </NameAndTitle>
-              <FrameX onClick={() => props.setIsOpen(false)} >
+              <FrameX onClick={handleCancel} >
                 <X  src={'/assets/img/x.png'} alt={"x"}/>
               </FrameX>
             </Frame1>
@@ -274,7 +287,7 @@ function ModalBeneficio(props) {
         <Cta >
           <Links >
             <Link1 >
-              <Cancelar onClick={() => props.setIsOpen(false)}>
+              <Cancelar onClick={handleCancel}>
                 {`Cancelar`}
               </Cancelar>
             </Link1>
