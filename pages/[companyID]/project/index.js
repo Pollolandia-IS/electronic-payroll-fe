@@ -1,124 +1,87 @@
+import Sidebar from "../../../components/Sidebar";
 import Aside from "/components/Aside";
 import NavBar from "/components/NavBar";
-import ProjectCard from "/components/projectCard";
+import ProjectCard from "/components/ProjectCard";
 import styles from "/styles/Projects.module.css";
+import { useState } from "react";
+import Search from "../../../components/Search";
+import IconBox from "../../../components/IconBox";
+import AddIcon from '@mui/icons-material/Add';
+import {prisma} from "/.db";
+import safeJsonStringify from 'safe-json-stringify';
+import NewProjectModal from "../../../components/NewProjectModal";
 
 export async function getServerSideProps(context) {
-  const { companyID} = context.params;
+  const { companyID } = context.params;
+
+  let projects = await prisma.proyecto.findMany({
+    where: {
+      cedulaJuridica: companyID
+    },
+    include: {
+      _count: {
+        select: {
+          esContratado: true,
+        },
+      },
+    },
+  });
+  const projectsString = JSON.parse(safeJsonStringify(projects));
+
   return {
     props: {
       companyID,
+      projectsString,
     },
-};
+  };
 }
 
-const Projects = ({companyID}) => {
-  const navItems = [
-    ["Proyectos", true, "/RegisterCompany"],
-    ["Reportes", false, "/RegisterCompany"],
-    ["Empleados", false, "/RegisterCompany"],
-    ["Deducciones", false, "/RegisterCompany"],
-    ["Beneficios", false, "/RegisterCompany"],
-  ];
 
-  const asideItems = [
-      {
-        name: 'Nómina',
-        icon: 'payroll',
-        dropDown: [
-          ['+ Crear Proyecto', `/${companyID}/project/newProject`],
-        ],
-      },
-      {
-        name: 'Ajustes',
-        icon: 'config',
-        dropDown: [],
-      },
-      {
-        name: 'Historial',
-        icon: 'history',
-        dropDown: [],
-      },
-      {
-        name: 'Perfil',
-        icon: 'profile',
-        dropDown: [],
-      },
-      {
-        name: 'Cerrar Sesión',
-        icon: 'logout',
-      },
-    ];
+
+const Projects = ({companyID, projectsString, contracts,employees}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const convertDate = (date) => {
+    let dateArray = date.split("-");
+    dateArray[2] = dateArray[2].split("T")[0];
+    let newDate = dateArray[2] + "/" + dateArray[1] + "/" + dateArray[0];
+    return newDate;
+  }
+
+  const getProjects = () => {
+    return projectsString.map(project => {
+      return <ProjectCard key={project.nombre} name={project.nombre} employeeCount={project._count.esContratado} frequency={project.frecuenciaPago} date={convertDate(project.fechaInicio)} />
+    }
+    )
+  }
+  const getRows = () => {
+    let rows = [];
+    const projects = getProjects();
+    for (let i = 0; i < projects.length; i += 2) {
+      rows.push(
+        <div key={i} className={styles.main__row}>
+          {projects[i]}
+          {projects[i + 1]}
+        </div>
+      );
+    }
+    return rows;
+  }
+  
+
 
   return (
     <>
-    <NavBar navItems={navItems} />
-    <Aside items={asideItems}/>
+    <NewProjectModal isOpen={isOpen} setIsOpen={setIsOpen} companyID={companyID}/>
+    <Sidebar selected={2} username="David Atias" />
     <main className={styles.main}>
-        <ProjectCard
-          id="1"
-          name="Proyecto 1"
-          userCount="10"
-          currency="USD"
-          frequency="Mensual"
-          startDate="01/01/2020 - 01/30/2022"
-        />
-        <ProjectCard
-          id="2"
-          name="Proyecto 2"
-          userCount="20"
-          currency="USD"
-          frequency="Mensual"
-          startDate="01/01/2020 - 01/30/2022"
-        />
-        <ProjectCard
-          id="3"
-          name="Proyecto 3"
-          userCount="30"
-          currency="USD"
-          frequency="Mensual"
-          startDate="01/01/2020 - 01/30/2022"
-        />
-        <ProjectCard
-          id="4"
-          name="Proyecto Integrador"
-          userCount="30"
-          currency="CRC"
-          frequency="Semanal"
-          startDate="01/01/2020 - 01/08/2022"
-        />
-                <ProjectCard
-          id="1"
-          name="Proyecto 1"
-          userCount="10"
-          currency="USD"
-          frequency="Mensual"
-          startDate="01/01/2020 - 01/30/2022"
-        />
-        <ProjectCard
-          id="2"
-          name="Proyecto 2"
-          userCount="20"
-          currency="USD"
-          frequency="Mensual"
-          startDate="01/01/2020 - 01/30/2022"
-        />
-        <ProjectCard
-          id="3"
-          name="Proyecto 3"
-          userCount="30"
-          currency="USD"
-          frequency="Mensual"
-          startDate="01/01/2020 - 01/30/2022"
-        />
-        <ProjectCard
-          id="4"
-          name="Proyecto Integrador"
-          userCount="30"
-          currency="CRC"
-          frequency="Semanal"
-          startDate="01/01/2020 - 01/08/2022"
-        />
+      <div className={styles.main__header}>
+        <Search placeholder="Buscar proyecto..."/>
+        <IconBox action={() => setIsOpen(true)} ><AddIcon fontSize="large" /></IconBox>
+      </div>
+      <div className={styles.main__content}>
+        {getRows()}
+      </div>
     </main>
     </>
   );
