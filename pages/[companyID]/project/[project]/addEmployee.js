@@ -128,7 +128,7 @@ const AddEmployee = ({
     });
     setFormState(getCleanInputs());
     setModalOpen(false);
-    router.push(`/${cedulaJuridica}/project/${nombreProyecto}`);
+    //router.push(`/${cedulaJuridica}/project/${nombreProyecto}/addEmployee`);
   };
 
   const handleInputChange = (event) => {

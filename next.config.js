@@ -5,5 +5,5 @@ const nextConfig = {
 
 module.exports = {
   experimental: { images: { layoutRaw: true } },
-  nextConfig,
+  nextConfig
 };
