@@ -1,9 +1,9 @@
-import Aside from "../../components/Aside.js";
-import Navbar from "../../components/Navbar.js";
-import CardEmployee from "../../components/CardEmployee.js";
+import Aside from "../../../components/Aside.js";
+import Navbar from "../../../components/Navbar.js";
+import CardEmployee from "../../../components/CardEmployee.js";
 import Styles from "/styles/Empleados.module.css";
 import { prisma } from "/.db";
-import SearchBar from "../../components/SearchBar.js";
+import SearchBar from "../../../components/SearchBar.js";
 import { useState } from "react";
 
 const AsideItems = [
