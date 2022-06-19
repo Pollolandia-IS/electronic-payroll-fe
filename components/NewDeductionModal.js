@@ -194,7 +194,7 @@ function NewDeductionModal(props) {
   const [projectCurrency, setprojectCurrency] = useState('');
   const [Values, setValues] = useState({
     companyID: props.companyID,
-    benefitName: '',
+    deductionName: '',
     amount: '',
     description: '',
   });
@@ -207,7 +207,7 @@ function NewDeductionModal(props) {
   };
 
   const validateFields = () => {
-    setValidFields(() => isValidAmount && Values.benefitName !== '' && Values.amount !== '' && Values.description !== '');
+    setValidFields(() => isValidAmount && Values.deductionName !== '' && Values.amount !== '' && Values.description !== '');
   }
 
   useEffect(() => { validateFields()});
@@ -224,14 +224,14 @@ function NewDeductionModal(props) {
   const handleSubmit = async () => {
     const Data = {
       companyID: Values.companyID,
-      benefitName: Values.benefitName,
+      deductionName: Values.deductionName,
       projectName: selectedProjectName,
       amount: Values.amount,
       description: Values.description,
     }
     try {
       //TODO configurar el endpoint
-      await fetch(/* '/api/employerBenefit' */ '', {
+      await fetch('/api/employerDeductions', {
           method: "POST",
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(Data),
@@ -250,14 +250,14 @@ function NewDeductionModal(props) {
             <Frame1 >
               <NameAndTitle >
                 <CrearNuevoBeneficio >
-                  {`Crear Nuevo Beneficio`}
+                  {`Crear Nueva Deducción`}
                 </CrearNuevoBeneficio>
               </NameAndTitle>
               <FrameX onClick={() => props.setIsOpen(false)} >
                 <X  src={'/assets/img/x.png'} alt={"x"}/>
               </FrameX>
             </Frame1>
-            <TextFieldStandard id="benefitName" variant="standard" size="small" label={`Nombre`} onChange={handleChange} required={true} />
+            <TextFieldStandard id="deductionName" variant="standard" size="small" label={`Nombre`} onChange={handleChange} required={true} />
             <Frame11 >
               <FormControl>
                 <InputLabel id="select-label">Nombre de proyecto</InputLabel>
@@ -280,9 +280,9 @@ function NewDeductionModal(props) {
               </Cancelar>
             </Link1>
             {!validFields ? <Tooltip title={"Debes Completar todos los campos"} arrow placement='top'>
-            <span><Button onClick={handleSubmit} variant="outlined" color="primary" size='large' endIcon={<ArrowForwardIcon />} disabled={!validFields} > {`Crear Beneficio`} </Button></span>
+            <span><Button onClick={handleSubmit} variant="outlined" color="primary" size='large' endIcon={<ArrowForwardIcon />} disabled={!validFields} > {`Crear Deducción`} </Button></span>
             </Tooltip> 
-            : <Button onClick={handleSubmit} variant="outlined" color="primary" size='large' endIcon={<ArrowForwardIcon />} > {`Crear Beneficio`} </Button>}
+            : <Button onClick={handleSubmit} variant="outlined" color="primary" size='large' endIcon={<ArrowForwardIcon />} > {`Crear Deducción`} </Button>}
           </Links>
         </Cta>
       </ModalBeneficio1>
