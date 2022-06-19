@@ -1,4 +1,5 @@
-import BenefitEmployeeCard from "../../../components/BenefitEmployeeCard";
+import DeductionEmployeeCard from "../../../components/DeductionEmployeeCard";
+import AddDeductionModal from "../../../components/AddDeductionModal";
 import { useState } from "react";
 import ConfirmModal from "../../../components/ConfirmModal";
 import Search from "../../../components/Search";
@@ -34,8 +35,7 @@ export async function getServerSideProps(context) {
         },
         select: {
             nombre: true,
-            cantidadMaximaBeneficios: true,
-            montoMaximoBeneficio: true,
+            moneda: true,
         }
     });
     const hired = await prisma.esContratado.findMany({
@@ -43,6 +43,7 @@ export async function getServerSideProps(context) {
             cedulaJuridica: companyID,
             cedulaEmpleado: employeeID,
         }, select: {
+            nombreProyecto: true,
             montoPago: true,
         },
     });
@@ -68,57 +69,67 @@ export async function getServerSideProps(context) {
 }
 
 const EmployeeDeductions = ({ employeeID, companyID, projectsString, hiredIn, employeeName }) => {
-    const [selectedBenefit, setSelectedBenefit] = useState("");
+    const [selectedDeduction, setSelectedDeduction] = useState("");
     const [isOpenAdd, setIsOpenAdd] = useState(false);
     const [isOpenRemove, setIsOpenRemove] = useState(false);
     const [isOpenError, setIsOpenError] = useState(false);
     const [projectName, setProjectName] = useState("");
-    const [benefits, setBenefits] = useState([]);
-    const [selectedBenefits, setSelectedBenefits] = useState([]);
+    const [deductions, setDeductions] = useState([]);
+    const [selectedDeductions, setSelectedDeductions] = useState([]);
     const [searchText, setSearchText] = useState("");
     const [errorText, setErrorText] = useState("");
+    const [amountChosen, setAmountChosen] = useState(0);
+    const [currency, setCurrency] = useState("");
+    const [defaultAmount, setDefaultAmount] = useState(0);
     //TODO: Fix styling
 
-    const checkBenefitAmount = () => {
-        const currentProject = projectsString.find(project => project.nombre === projectName);
-        const maxAmountBenefits = parseInt(currentProject.cantidadMaximaBeneficios);
-        const maxAmountSum = parseInt(currentProject.montoMaximoBeneficio);
-        const currentAmountBenefits = selectedBenefits.length;
-        const currentAmountSum = 0;
-        if(selectedBenefits.length === 0){
-            const benefitToAdd = benefits.find(benefit => benefit.nombreBeneficio === selectedBenefit);
-            currentAmountSum += parseInt(benefitToAdd.montoPago);
-        } else {
-            for(let i = 0; i < selectedBenefits.length; i++) {  
-                const benefitToAdd = benefits.find(benefit => benefit.nombreBeneficio 
-                    === selectedBenefits[i].nombreBeneficio);
-                currentAmountSum += parseInt(benefitToAdd.montoPago);
+
+    const checkDeductionAmount = () => {
+        var currentAmountSum = 0;
+        var maxAmountSum = 0;
+        for (let i = 0; i < hiredIn.length; i++) {
+            if (hiredIn[i].nombreProyecto === projectName) {
+                maxAmountSum += hiredIn[i].montoPago;
             }
         }
-        if (currentAmountBenefits < maxAmountBenefits && currentAmountSum < maxAmountSum) {
+        if(selectedDeductions.length === 0){
+            if(amountChosen !== 0){
+                currentAmountSum += parseInt(amountChosen);
+            } else {
+                currentAmountSum += defaultAmount;
+            }
+        } else {
+            for(let i = 0; i < selectedDeductions.length; i++) {  
+                currentAmountSum += parseInt(selectedDeductions[i].aporte);
+            }
+            if(amountChosen !== 0){
+                currentAmountSum += parseInt(amountChosen);
+            } else {
+                currentAmountSum += defaultAmount;
+            }
+            console.log(currentAmountSum);
+        }
+        if (currentAmountSum <= maxAmountSum) {
             return true;
         } else {
             setIsOpenAdd(false);
-            if(currentAmountBenefits > maxAmountBenefits){
-                setErrorText("¡Ups! Límite de beneficios excedido.");
-            } else {
-                setErrorText("¡Ups! Monto límite de beneficios excedido.");
-            }
+            setErrorText("¡Ups! Monto límite de deudcciones excedido.");
             setIsOpenError(true);
             return false;
         }
     }
 
-    const addBenefit = async () => {
-        if(checkBenefitAmount()){
+    const addDeduction = async () => {
+        if(checkDeductionAmount()){
             const dataForDB = {
                 employeeID: employeeID,
                 companyID: companyID,
                 projectName: projectName,
-                benefitName: selectedBenefit,
+                deductionName: selectedDeduction,
+                amount: parseInt(amountChosen),
             };
             try {
-                await fetch (`/api/selectBenefit/`, {
+                await fetch (`/api/addVoluntaryDeduction/`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(dataForDB),
@@ -128,17 +139,18 @@ const EmployeeDeductions = ({ employeeID, companyID, projectsString, hiredIn, em
             } catch (error) {
                 console.error(error);
             }
-        } 
+        }
     }
-    const removeBenefit = async () => {
+    
+    const removeDeduction = async () => {
         const dataForDB = {
             employeeID: employeeID,
             companyID: companyID,
             projectName: projectName,
-            benefitName: selectedBenefit,
+            deductionName: selectedDeduction,
         };
         try {
-            await fetch (`/api/quitBenefit/`, {
+            await fetch (`/api/quitVoluntaryDeduction/`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(dataForDB),
@@ -150,41 +162,41 @@ const EmployeeDeductions = ({ employeeID, companyID, projectsString, hiredIn, em
         }
     }
 
-    const parseBenefits = () => {
+    const parseDeductions = () => {
         const found = false;
-        return benefits.map(benefit => {
+        return deductions.map(deduction => {
             if(searchText === ""){
                 found = false;
-                for(let i = 0; i < selectedBenefits.length && !found; i++) {
-                    if(selectedBenefits[i].nombreBeneficio === benefit.nombreBeneficio) {
+                for(let i = 0; i < selectedDeductions.length && !found; i++) {
+                    if(selectedDeductions[i].nombreDeduccion === deduction.nombreDeduccion) {
                         found = true;
-                        return <BenefitEmployeeCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} 
-                            description={benefit.descripcion} amount={benefit.montoPago} selected={true} 
-                                setIsOpenAdd={setIsOpenAdd} setIsOpenRemove={setIsOpenRemove} setSelectedBenefit={setSelectedBenefit}/>
+                        return <DeductionEmployeeCard key={deduction.nombreDeduccion} name={deduction.nombreDeduccion} setDefaultAmount={setDefaultAmount}
+                            description={deduction.descripcion} amount={deduction.monto} selected={true} setAmountChosen={setAmountChosen}
+                                setIsOpenAdd={setIsOpenAdd} setIsOpenRemove={setIsOpenRemove} setSelectedDeduction={setSelectedDeduction}/>
                     }
                 }
                 if(!found) {
-                    return <BenefitEmployeeCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio}
-                        description={benefit.descripcion} amount={benefit.montoPago} selected={false}
-                            setIsOpenAdd={setIsOpenAdd} setIsOpenRemove={setIsOpenRemove} setSelectedBenefit={setSelectedBenefit}/>
+                    return <DeductionEmployeeCard key={deduction.nombreDeduccion} name={deduction.nombreDeduccion} setDefaultAmount={setDefaultAmount}
+                        description={deduction.descripcion} amount={deduction.monto} selected={false} setAmountChosen={setAmountChosen}
+                            setIsOpenAdd={setIsOpenAdd} setIsOpenRemove={setIsOpenRemove} setSelectedDeduction={setSelectedDeduction}/>
                 }
             } else {
-                if(benefit.nombreBeneficio.toLowerCase().includes(searchText.toLowerCase()) 
-                    || benefit.descripcion.toLowerCase().includes(searchText.toLowerCase()) 
-                        || benefit.montoPago.toString().includes(searchText)){
+                if(deduction.nombreDeduccion.toLowerCase().includes(searchText.toLowerCase()) 
+                    || deduction.descripcion.toLowerCase().includes(searchText.toLowerCase()) 
+                        || deduction.monto.toString().includes(searchText)){
                     found = false;
-                    for(let i = 0; i < selectedBenefits.length && !found; i++) {
-                        if(selectedBenefits[i].nombreBeneficio === benefit.nombreBeneficio) {
+                    for(let i = 0; i < selectedDeductions.length && !found; i++) {
+                        if(selectedDeductions[i].nombreDeduccion === deduction.nombreDeduccion) {
                             found = true;
-                            return <BenefitEmployeeCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} 
-                                description={benefit.descripcion} amount={benefit.montoPago} selected={true} 
-                                    setIsOpenAdd={setIsOpenAdd} setIsOpenRemove={setIsOpenRemove} setSelectedBenefit={setSelectedBenefit}/>
+                            return <DeductionEmployeeCard key={deduction.nombreDeduccion} name={deduction.nombreDeduccion} setDefaultAmount={setDefaultAmount}
+                                description={deduction.descripcion} amount={deduction.monto} selected={true} setAmountChosen={setAmountChosen}
+                                    setIsOpenAdd={setIsOpenAdd} setIsOpenRemove={setIsOpenRemove} setSelectedDeduction={setSelectedDeduction}/>
                         }
                     }
                     if(!found) {
-                        return <BenefitEmployeeCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio}
-                            description={benefit.descripcion} amount={benefit.montoPago} selected={false}
-                                setIsOpenAdd={setIsOpenAdd} setIsOpenRemove={setIsOpenRemove} setSelectedBenefit={setSelectedBenefit}/>
+                        return <DeductionEmployeeCard key={deduction.nombreDeduccion} name={deduction.nombreDeduccion} setDefaultAmount={setDefaultAmount}
+                            description={deduction.descripcion} amount={deduction.monto} selected={false} setAmountChosen={setAmountChosen}
+                                setIsOpenAdd={setIsOpenAdd} setIsOpenRemove={setIsOpenRemove} setSelectedDeduction={setSelectedDeduction}/>
                     }
                 }
             }
@@ -192,20 +204,20 @@ const EmployeeDeductions = ({ employeeID, companyID, projectsString, hiredIn, em
         })
     }
 
-    const getSelectedBenefits = async (projectName) => {
+    const getSelectedDeductions = async (projectName) => {
         const reqBody = {
             employeeID: employeeID,
             companyID: companyID,
             projectName: projectName,
         }
-        const selectedBenefits = await (await fetch(`/api/acquiredBenefits/`, {
+        const selectedDeductions = await (await fetch(`/api/getAcquiredDeductions/`, {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json'
             },
             body: JSON.stringify(reqBody)
         })).json();
-        setSelectedBenefits(selectedBenefits);
+        setSelectedDeductions(selectedDeductions);
     }
 
     const getProjects = () => {
@@ -221,15 +233,15 @@ const EmployeeDeductions = ({ employeeID, companyID, projectsString, hiredIn, em
         })
     }
 
-    const getBenefits = () => {
+    const getDeductions = () => {
         let rows = [];
-        let benefits = parseBenefits();
-        benefits = benefits.filter(benefit => benefit != undefined);
-        for (let i = 0; i < benefits.length; i += 2) {
+        let deductions = parseDeductions();
+        deductions = deductions.filter(deduction => deduction != undefined);
+        for (let i = 0; i < deductions.length; i += 2) {
             rows.push(
                 <div key={i} className={styles.main__row}>
-                    {benefits[i]}
-                    {benefits[i + 1]}
+                    {deductions[i]}
+                    {deductions[i + 1]}
                 </div>
             );
         }
@@ -242,27 +254,39 @@ const EmployeeDeductions = ({ employeeID, companyID, projectsString, hiredIn, em
             companyID: companyID,
             projectName: event.target.value
         }
-        const benefits = await (await fetch(`/api/benefit/`, {
+        const deductions = await (await fetch(`/api/getDeductions/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify(reqBody)
         })).json();
-        setBenefits(benefits);
-        getSelectedBenefits(event.target.value);
+        const currentProject = projectsString.find(project => project.nombre === event.target.value);
+        setCurrency(currentProject.moneda);
+        setDeductions(deductions);
+        getSelectedDeductions(event.target.value);
     }
 
     const handleTextChange = (event) => {
         setSearchText(event.target.value);
-        getBenefits();
+        getDeductions();
     };
 
     return (
         <>  
-            {/*aqui va el modal de deduccion voluntaria*/}
+            <AddDeductionModal 
+                isOpen={isOpenAdd} 
+                setIsOpen={setIsOpenAdd}
+                amountChosen={amountChosen}
+                setAmountChosen={setAmountChosen}
+                currency={currency}
+                deductionName={selectedDeduction}
+                defaultAmount={defaultAmount}
+                buttonAction={() => addDeduction()}
+                buttonText="Confirmar"
+            />
             <ConfirmModal isOpen={isOpenRemove} setIsOpen={setIsOpenRemove} text="Deseas renunciar a esta deducción?"
-                buttonText="Confirmar" buttonAction={() => removeBenefit()} />
+                buttonText="Confirmar" buttonAction={() => removeDeduction()} />
             <ConfirmModal isOpen={isOpenError} setIsOpen={setIsOpenError} text={errorText}
                 buttonText="Aceptar" buttonAction={() => setIsOpenError(false)} />
             <Sidebar selected={5} username={employeeName[0].nombre} />
@@ -277,10 +301,10 @@ const EmployeeDeductions = ({ employeeID, companyID, projectsString, hiredIn, em
                             {getProjects()}
                         </TextFieldStandard>
                     </FormControl>
-                    <Search handleSearch={handleTextChange}  searchText={searchText} placeholder="Buscar beneficio..."/>
+                    <Search handleSearch={handleTextChange}  searchText={searchText} placeholder="Buscar deducción..."/>
                 </div>
                 <div className={styles.main__content}>    
-                    {getBenefits()/*getDeducciones()*/}
+                    {getDeductions()}
                 </div>
             </main>
         </>
