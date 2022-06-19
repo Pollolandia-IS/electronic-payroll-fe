@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { prisma } from "/.db";
 
-
 const AsideItems = [
   {
     name: "Nómica",
@@ -29,7 +28,6 @@ const AsideItems = [
 
 export async function getServerSideProps(context) {
   const { companyID, project } = context.params;
-
   let employeesNotInThisProject = await prisma.esContratado.findMany({
     where: {
       nombreProyecto: project,
@@ -38,9 +36,11 @@ export async function getServerSideProps(context) {
       cedulaEmpleado: true,
     },
   });
-
   let employees = (
-    await prisma.empleado.findMany({ include: { persona: true } })
+    await prisma.empleado.findMany({
+      where: { cedulaJuridica: companyID },
+      include: { persona: true },
+    })
   )
     .filter((e) =>
       employeesNotInThisProject.every((ee) => ee.cedulaEmpleado != e.cedula)
@@ -61,11 +61,10 @@ const AddEmployee = ({
   nombreProyecto,
   cedulaJuridica,
 }) => {
-
   const navItems = [
-    ["Proyectos", true, `${cedulaJuridica}/project`],
+    ["Proyectos", true, `/${cedulaJuridica}/project`],
     ["Reportes", false, "/reports"],
-    ["Empleados", false, `${cedulaJuridica}/Employees`],
+    ["Empleados", false, `/${cedulaJuridica}/Employees`],
     ["Deducciones", false, "/deductions"],
     ["Beneficios", false, "/benefits"],
   ];
@@ -117,18 +116,25 @@ const AddEmployee = ({
       ...formState,
       montoPago: parseInt(formState.montoPago),
       fechaInicio: `${formState.fechaInicio}T00:00:00Z`,
-      fechaFin: `${formState.fechaInicio}T00:00:00Z`, fechaFin: `${formState.fechaFin}T00:00:00Z`};
-      
+      fechaFin: `${formState.fechaInicio}T00:00:00Z`,
+      fechaFin: `${formState.fechaFin}T00:00:00Z`,
+    };
+
     const selectedEmployees = filteredEmployees.map((e) => e.cedula);
 
     const response = await fetch("/api/addEmployee", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ form, selectedEmployees, cedulaJuridica, nombreProyecto}),
+      body: JSON.stringify({
+        form,
+        selectedEmployees,
+        cedulaJuridica,
+        nombreProyecto,
+      }),
     });
     setFormState(getCleanInputs());
     setModalOpen(false);
-    router.push(`/${cedulaJuridica}/project/${nombreProyecto}`);
+    router.push(`/${cedulaJuridica}/project/${nombreProyecto}/addEmployee`);
   };
 
   const handleInputChange = (event) => {
@@ -231,7 +237,6 @@ const AddEmployee = ({
       </Modal>
       <h1 className={Styles.title}>Agregar Empleados</h1>
       <div className={Styles.container}>
-        
         <div className={Styles.head}>
           <HeaderEmployeeCard
             isSelected={!filteredEmployeesLength}
