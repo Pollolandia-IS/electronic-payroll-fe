@@ -12,7 +12,11 @@ async function getDeductions (req, res) {
             where: {
                 cedulaJuridica: req.body.companyID,
                 nombreProyecto: req.body.projectName,
-            }
+            }, select: {
+                monto: true,
+                descripcion: true,
+                nombreDeduccion: true,
+            },
         });
         res.status(200).json(result);
     } catch (error) {
