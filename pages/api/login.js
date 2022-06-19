@@ -15,7 +15,7 @@ const handleLogin = async (req, res) => {
   console.log(userData);
   if (userData) {
     if (userData.verified) {
-      sendResponse(userData, res, password === userData.password);
+      sendResponse({email: userData.email, verified: userData.verified, isEmployer: userData.isEmployer ,name: userData.name,}, res, password === userData.password);
     }
     else {
       res.status(401).json({type: -2, error: 'Debes confirmar tu correo' })
@@ -63,6 +63,7 @@ const getUserData = async (email) => {
     password: user.contrasenna,
     verified: user.verificado,
     isEmployer: person.empleador != null,
+    name: person.nombre,
   }
   return userData;
 }
