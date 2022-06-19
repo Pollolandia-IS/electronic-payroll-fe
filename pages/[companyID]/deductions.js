@@ -129,7 +129,7 @@ const Deductions = ({companyID, deductionString, proyectString}) => {
             ))}
             </TextFieldStandard>
           </FormControl>
-          <Search handleSearch={handleTextChange}  searchText={searchText} placeholder="Buscar deducción voluntaria..."/>
+          <Search handleSearch={handleTextChange}  searchText={searchText} placeholder="Buscar deducción..."/>
           <IconBox action={() =>setModalOpened(true)} ><AddIcon fontSize="large" /></IconBox>
         </div>
         <div className={styles.main__content}>
