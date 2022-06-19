@@ -7,8 +7,7 @@ export default function handler(req, res) {
 }
 
 async function addDeductionToProject(req, res) {
-    /*try{*/
-        console.log("No me caí");
+    try{
         const { companyID, deductionName, projectName, amount, description} = req.body;
         const createDeduction = await prisma.deduccionVoluntaria.create({
             data:{
@@ -21,8 +20,8 @@ async function addDeductionToProject(req, res) {
         });
         console.log("Salí :D");
         res.status(200).json(createDeduction);
-    /*} catch(error){
+    } catch(error){
         res.status(500);
         res.send(error.message);
-    }*/
+    }
 }
