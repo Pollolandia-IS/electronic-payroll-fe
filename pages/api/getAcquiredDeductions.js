@@ -1,19 +1,20 @@
-import {prisma} from '/.db';
+import { prisma } from "/.db";
 
-export default function handler (req, res) {
+export default function handler(req, res) {
     if (req.method == "POST") {
         getAcquiredDeductions(req, res);
-    };
+    }
 }
 
-async function getAcquiredDeductions (req, res) {
+async function getAcquiredDeductions(req, res) {
     try {
         const result = await prisma.escoge.findMany({
             where: {
                 cedulaEmpleado: req.body.employeeID,
                 cedulaJuridica: req.body.companyID,
                 nombreProyecto: req.body.projectName,
-            }, select: {
+            },
+            select: {
                 nombreDeduccion: true,
                 aporte: true,
             },
@@ -23,4 +24,4 @@ async function getAcquiredDeductions (req, res) {
         res.status(500);
         res.send(error.message);
     }
-};
+}

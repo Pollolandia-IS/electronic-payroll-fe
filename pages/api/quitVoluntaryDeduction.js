@@ -1,12 +1,12 @@
-import {prisma} from '/.db';
+import { prisma } from "/.db";
 
-export default function handler (req, res) {
+export default function handler(req, res) {
     if (req.method == "POST") {
         deleteVoluntaryDeduction(req, res);
-    };
+    }
 }
 
-async function deleteVoluntaryDeduction (req, res) {
+async function deleteVoluntaryDeduction(req, res) {
     try {
         const result = await prisma.escoge.delete({
             where: {
@@ -15,7 +15,7 @@ async function deleteVoluntaryDeduction (req, res) {
                     cedulaJuridica: req.body.companyID,
                     nombreProyecto: req.body.projectName,
                     nombreDeduccion: req.body.deductionName,
-                }
+                },
             },
         });
         res.status(200).json({ success: result });
@@ -23,4 +23,4 @@ async function deleteVoluntaryDeduction (req, res) {
         res.status(500);
         res.send(error.message);
     }
-};
+}
