@@ -10,118 +10,114 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 
 export async function getServerSideProps(context) {
-  const { companyID, employeeID, projectID } = context.params;
-  const hours = await prisma.reporteHoras.findMany({
-    where: {
-      cedulaEmpleado: employeeID,
-    },
-  });
+    const { companyID, employeeID, projectID } = context.params;
+    const hours = await prisma.reporteHoras.findMany({
+        where: {
+            cedulaEmpleado: employeeID,
+        },
+    });
 
-  //get hours with id from database, return only the name
+    let counter = 0;
+    const hoursWithId = hours.map((hourTime) => ({
+        id: counter++,
+        hours: hourTime.horasTrabajadas,
+        date: JSON.stringify(hourTime.fechaHora).split("T")[0].substring(1),
+        state: hourTime.nombreProyecto,
+    }));
 
-  let counter = 0;
-  const hoursWithId = hours.map((h) => ({
-    id: counter++,
-    hours: h.horasTrabajadas,
-    date: JSON.stringify(h.fechaHora).split("T")[0].substring(1),
-    state: h.nombreProyecto,
-  }));
-
-  return {
-    props: {
-      hoursWithId,
-      nombreProyecto: projectID,
-      cedulaEmpleado: employeeID,
-      cedulaJuridica: companyID,
-    },
-  };
+    return {
+        props: {
+            hoursWithId,
+            nombreProyecto: projectID,
+            cedulaEmpleado: employeeID,
+            cedulaJuridica: companyID,
+        },
+    };
 }
 
 const AddHoursEmployee = ({
-  nombreProyecto,
-  cedulaEmpleado,
-  hoursWithId,
-  cedulaJuridica,
+    nombreProyecto,
+    cedulaEmpleado,
+    hoursWithId,
+    cedulaJuridica,
 }) => {
-  const [showModal, setShowModal] = useState(false);
-  const [hours, setHoursState] = useState(0);
-  const [date, setDateState] = useState("2022-10-08 00:00:00");
-  const [button, setButtonState] = useState(true);
-  const router = useRouter();
+    const [showModal, setShowModal] = useState(false);
+    const [hours, setHoursState] = useState(0);
+    const [date, setDateState] = useState("2022-10-08 00:00:00");
+    const [button, setButtonState] = useState(true);
+    const router = useRouter();
 
-  const handleButtonState = (value) => {
-    setButtonState(value);
-  };
+    const handleButtonState = (value) => {
+        setButtonState(value);
+    };
 
-  const handleHoursChange = (event) => {
-    setHoursState(event.target.value);
-    if (event.target.value > 0 && event.target.value <= 24) {
-      handleButtonState(false);
-    } else {
-      handleButtonState(true);
-    }
-  };
+    const handleHoursChange = (event) => {
+        setHoursState(event.target.value);
+        if (event.target.value > 0 && event.target.value <= 24) {
+            handleButtonState(false);
+        } else {
+            handleButtonState(true);
+        }
+    };
 
-  const handleDateChange = (event) => {
-    if (event != "Invalid Date") {
-      setDateState(event.toISOString().slice(0, 19).replace("T", " "));
-      handleButtonState(false);
-    }
-  };
+    const handleDateChange = (event) => {
+        if (event != "Invalid Date") {
+            setDateState(event.toISOString().slice(0, 19).replace("T", " "));
+            handleButtonState(false);
+        }
+    };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const response = await fetch("/api/addHoursEmployee", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        employeeID: cedulaEmpleado,
-        projectID: nombreProyecto,
-        hours,
-        date,
-      }),
-    });
-    setShowModal(false);
-    router.push(
-      `/${cedulaJuridica}/${cedulaEmpleado}/${nombreProyecto}/addHoursEmployee`
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const response = await fetch("/api/addHoursEmployee", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                employeeID: cedulaEmpleado,
+                projectID: nombreProyecto,
+                hours,
+                date,
+            }),
+        });
+        setShowModal(false);
+        router.reload();
+    };
+
+    return (
+        <>
+            <div className={Styles.body}>
+                <div className={Styles.sidebar}>
+                    <Sidebar />
+                </div>
+                <div className={Styles.main}>
+                    <div className={Styles.head}>
+                        <Search />
+                        <IconBox action={setShowModal}>
+                            <AddIcon fontSize="large" />
+                        </IconBox>
+                    </div>
+                    <div className={Styles.container}>
+                        <HourTable rows={hoursWithId} />
+                    </div>
+                    <HourModal
+                        date={date}
+                        handleDate={handleDateChange}
+                        hours={hours}
+                        handleHours={handleHoursChange}
+                        employeeID={cedulaEmpleado}
+                        project={nombreProyecto}
+                        isOpen={showModal}
+                        setIsOpen={setShowModal}
+                        handleSubmit={handleSubmit}
+                        disableButton={button}
+                        handleButton={handleButtonState}
+                    />
+                </div>
+            </div>
+        </>
     );
-  };
-
-  return (
-    <>
-      <div className={Styles.body}>
-        <div className={Styles.sidebar}>
-          <Sidebar />
-        </div>
-        <div className={Styles.main}>
-          <div className={Styles.head}>
-            <Search />
-            <IconBox action={setShowModal}>
-              <AddIcon fontSize="large" />
-            </IconBox>
-          </div>
-          <div className={Styles.container}>
-            <HourTable rows={hoursWithId} />
-          </div>
-          <HourModal
-            date={date}
-            handleDate={handleDateChange}
-            hours={hours}
-            handleHours={handleHoursChange}
-            employeeID={cedulaEmpleado}
-            project={nombreProyecto}
-            isOpen={showModal}
-            setIsOpen={setShowModal}
-            handleSubmit={handleSubmit}
-            disableButton={button}
-            handleButton={handleButtonState}
-          />
-        </div>
-      </div>
-    </>
-  );
 };
 
 export default AddHoursEmployee;
