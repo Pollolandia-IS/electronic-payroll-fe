@@ -261,16 +261,7 @@ function EditProjectModal(props) {
           break;
         }
       }
-
-      // (props.projects).map(project => {
-      //   if(project.nombre !== props.name && project.nombre === nameValue){
-      //     console.log('A')
-      //     setIsUniqueName(false);
-      //   } else {
-      //     console.log(project.nombre, 'not equal');
-      //     setIsUniqueName(true);
-      //   }
-      // });
+      
       const noEmptyInputs = isValidAmount && isValidBenefits && nameValue !== '' && frequencyValue !== '' && currencyValue !== '' && amountValue !== '' && benefitsValue !== '' && dateValue !== null && dateValue != 'Invalid Date' && (dateValue.toString().split(' ')[3][0] === '2');
       const inputsChanged = nameValue !== props.name || frequencyValue !== props.frequency || currencyValue !== props.currency || parseInt(amountValue) !== props.maxAmountBen || parseInt(benefitsValue) !== props.maxBen;
 

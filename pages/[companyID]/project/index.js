@@ -54,9 +54,9 @@ const Projects = ({companyID, projectsString, contracts,employees}) => {
         employeeCount={project._count.esContratado} maxBen={project.cantidadMaximaBeneficios}
         maxAmountBen={project.montoMaximoBeneficio} currency={project.moneda}
         frequency={project.frecuenciaPago} date={convertDate(project.fechaInicio)} />
-    }
-    )
+    });
   }
+  
   const getRows = () => {
     let rows = [];
     const projects = getProjects();
