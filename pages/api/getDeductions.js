@@ -12,6 +12,7 @@ async function getDeductions(req, res) {
             where: {
                 cedulaJuridica: req.body.companyID,
                 nombreProyecto: req.body.projectName,
+                habilitado: true,
             },
             select: {
                 monto: true,
