@@ -15,6 +15,7 @@ async function insertEmployer (req, res) {
             data: {
                 email: email,
                 contrasenna: password,
+                verificado: false,
             }
         });
         const person = await prisma.persona.create({
@@ -22,7 +23,6 @@ async function insertEmployer (req, res) {
                 cedula: id,
                 nombre: name,
                 telefono: parseInt(phoneNumber),
-                foto: null,
             }
         });
         const uses = await prisma.hace_uso.create({
