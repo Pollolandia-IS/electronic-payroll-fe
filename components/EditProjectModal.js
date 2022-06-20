@@ -135,45 +135,6 @@ const TextFieldStandard2 = styled(TextField)({
   width: `185px`,  
 });
 
-const Frame2 = styled("div")({  
-  display: `flex`,  
-  flexDirection: `row`,  
-  justifyContent: `flex-start`,  
-  alignItems: `flex-start`,  
-  gap: `10px`,  
-  padding: `0px`,
-  marginTop: `10px`,
-  boxSizing: `border-box`,  
-});
-
-const Date = styled("div")(({ theme }) =>({  
-  textAlign: `left`,  
-  whiteSpace: `pre-wrap`,  
-  color: `rgba(0, 0, 0, 0.6)`,  
-  fontStyle: `normal`,  
-  fontFamily: `Roboto`,  
-  fontWeight: `400`,  
-  fontSize: `16px`,  
-  letterSpacing: `0.15000000596046448px`,  
-  textDecoration: `none`,  
-  lineHeight: `150%`,  
-  textTransform: `none`,  
-}));
-
-const DateValue = styled("div")(({ theme }) =>({  
-  textAlign: `left`,  
-  whiteSpace: `pre-wrap`,  
-  color: `rgba(0, 0, 0, 0.6)`,  
-  fontStyle: `normal`,  
-  fontFamily: `Roboto`,  
-  fontWeight: `400`,  
-  fontSize: `16px`,  
-  letterSpacing: `0.15000000596046448px`,
-  textDecoration: `none`,  
-  lineHeight: `150%`,  
-  textTransform: `none`, 
-}));
-
 const Crc = styled("div")({  
   textAlign: `center`,  
   whiteSpace: `pre-wrap`,  
@@ -241,14 +202,20 @@ const Cancelar = styled("div")(({ theme }) =>({
 }));
  
 function EditProjectModal(props) {
+
   const router = useRouter();
+  const projectDate = (props.date).split('/');
+  const [dateValue, setDateValue] = useState(new Date(`${projectDate[2]}-${(projectDate[1])}-${projectDate[0]}T00:00:00`));
+  const handleChange = (newValue) => {
+    setDateValue(newValue);
+  };
   const [nameValue, setNameValue] = useState(props.name);
   const [frequencyValue, setFrequencyValue] = useState(props.frequency);
   const [currencyValue, setCurrencyValue] = useState(props.currency);
   const [amountValue, setAmountValue] = useState(props.maxAmountBen);
   const [benefitsValue, setBenefitsValue] = useState(props.maxBen);
 
-
+  const [isUniqueName, setIsUniqueName] = useState(true);
   const [isValidAmount, setIsValidAmount] = useState(true);
   const [isValidBenefits, setIsValidBenefits] = useState(true);
   const [validFields, setValidFields] = useState(false);
@@ -286,39 +253,60 @@ function EditProjectModal(props) {
   }
 
   const validateFields = () => {
-    setValidFields(() => { isValidAmount && isValidBenefits &&
-        nameValue !== '' && nameValue !== props.name &&
-        frequencyValue !== '' && frequencyValue !== props.frequency &&
-        currencyValue !== '' && currencyValue !== props.currency &&
-        amountValue !== '' && amountValue !== props.maxAmountBen &&
-        benefitsValue !== '' && benefitsValue !== props.maxBen});
-    }
+    setValidFields(() => {
+      setIsUniqueName(true);
+      for(let index = 0; index < (props.projects).length; index++){
+        if(props.projects[index].nombre.toLowerCase() !== props.name.toLowerCase() && props.projects[index].nombre.toLowerCase() === nameValue.toLowerCase()){
+          setIsUniqueName(false);
+          break;
+        }
+      }
+
+      // (props.projects).map(project => {
+      //   if(project.nombre !== props.name && project.nombre === nameValue){
+      //     console.log('A')
+      //     setIsUniqueName(false);
+      //   } else {
+      //     console.log(project.nombre, 'not equal');
+      //     setIsUniqueName(true);
+      //   }
+      // });
+      const noEmptyInputs = isValidAmount && isValidBenefits && nameValue !== '' && frequencyValue !== '' && currencyValue !== '' && amountValue !== '' && benefitsValue !== '' && dateValue !== null && dateValue != 'Invalid Date' && (dateValue.toString().split(' ')[3][0] === '2');
+      const inputsChanged = nameValue !== props.name || frequencyValue !== props.frequency || currencyValue !== props.currency || parseInt(amountValue) !== props.maxAmountBen || parseInt(benefitsValue) !== props.maxBen;
+
+      let newDate = dateValue.toISOString().split('T');
+      newDate = newDate[0].split('-');
+      const dateChanged = newDate[0] !== projectDate[2] || newDate[1] !== projectDate[1] || newDate[2] !== projectDate[0];
+      return noEmptyInputs && isUniqueName && (inputsChanged || dateChanged);
+    });
+  }
 
   const sendProject = async () => {
-    console.log('Send Edit Project');
-//     const project = {
-//       companyID: props.companyID,
-//       name: nameValue,
-//       frequency: frequencyValue,
-//       currency: currencyValue,
-//       amount: amountValue,
-//       benefits: benefitsValue,
-//       date: dateValue.toISOString(),
-//     }
-//     console.log(project);
-//     await fetch('/api/project', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify(project)
-//     })
-//     props.setIsOpen(false);
-//     router.reload();
+    const project = {
+      companyID: props.companyID,
+      oldName: props.name,
+      name: nameValue,
+      frequency: frequencyValue,
+      currency: currencyValue,
+      amount: amountValue,
+      benefits: benefitsValue,
+      date: dateValue.toISOString(),
+    }
+    await fetch('/api/project', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'EditProject': 'true',
+      },
+      body: JSON.stringify(project)
+    })
+    props.setIsOpen(false);
+    //router.reload();
    }
 
     const handleCancel = () => {
         setNameValue(props.name);
+        setDateValue((new Date(`${projectDate[2]}-${(projectDate[1])}-${projectDate[0]}T00:00:00`)));
         setFrequencyValue(props.frequency);
         setCurrencyValue(props.currency);
         setAmountValue(props.maxAmountBen);
@@ -327,9 +315,10 @@ function EditProjectModal(props) {
         setIsValidAmount(true);
         setIsValidBenefits(true);
         setValidFields(false);
+        props.setIsOpen(false);
     }
 
-  useEffect(() => { validateFields()});
+  useEffect(() => { validateFields()} );
 
   return (
     <Dialog open={props.isOpen} onClose={() => props.setIsOpen(false)} >
@@ -346,7 +335,7 @@ function EditProjectModal(props) {
                 <X  src={'/assets/img/x.png'} alt={"x"}/>
               </FrameX>
             </Frame1>
-            <TextFieldStandard variant="standard" size="medium"  label={`Nombre`} value={nameValue} onChange={handleNameChange}   />
+            <TextFieldStandard variant="standard" size="medium"  label={`Nombre`} value={nameValue} onChange={handleNameChange} error={!isUniqueName} helperText={isUniqueName ? '': 'Este nombre de Proyecto ya existe' }/>
             <Frame11 >
             <FormControl>
               <InputLabel sx={{marginLeft: -2}}>Frecuencia de Pago</InputLabel>
@@ -368,14 +357,17 @@ function EditProjectModal(props) {
               <TextFieldStandard2 variant="standard" size="medium"  label={`Monto máx. beneficios`} type="number" value={amountValue} onChange={handleAmountChange} error={!isValidAmount} />
               <TextFieldStandard2 variant="standard" size="medium"  label={`Beneficios máximos`} type="number" value={benefitsValue} onChange={handleBenefitsChange} error={!isValidBenefits} />
             </Frame11>
-            <Frame2 >
-              <Date >
-                {`Fecha de inicio:`}
-              </Date>
-              <DateValue >
-                {props.date}
-              </DateValue>
-            </Frame2>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <Stack spacing={3} alignItems="stretch" >
+                <DesktopDatePicker
+                  label="Fecha de inicio"
+                  inputFormat="dd/MM/yyyy"
+                  value={dateValue}
+                  onChange={handleChange}
+                  renderInput={(params) => <TextField {...params} variant="standard" sx={{width: 185}} size="medium" />}
+                />
+              </Stack>
+            </LocalizationProvider>
           </Details>
         </Content>
         <Cta >
@@ -386,9 +378,9 @@ function EditProjectModal(props) {
               </Cancelar>
             </Link1>
             {!validFields ? <Tooltip title={"Debes Completar todos los campos"} arrow placement='top'>
-            <span><Button variant="outlined" color="primary" size='large' endIcon={<ArrowForwardIcon />} onClick={sendProject} disabled={!validFields} > {`Editar Proyecto`} </Button></span>
+            <span><Button variant="outlined" color="primary" size='large' endIcon={<ArrowForwardIcon />} onClick={sendProject} disabled={!validFields} > {`Guardar Cambios`} </Button></span>
             </Tooltip> 
-            : <Button variant="outlined" color="primary" size='large' endIcon={<ArrowForwardIcon />} onClick={sendProject} disabled={!validFields} > {`Editar Proyecto`} </Button>}
+            : <Button variant="outlined" color="primary" size='large' endIcon={<ArrowForwardIcon />} onClick={sendProject} disabled={!validFields} > {`Guardar Cambios`} </Button>}
           </Links>
         </Cta>
       </ModalBeneficio1>

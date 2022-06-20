@@ -50,7 +50,7 @@ const Projects = ({companyID, projectsString, contracts,employees}) => {
 
   const getProjects = () => {
     return projectsString.map(project => {
-      return <ProjectCard key={project.nombre} companyID={project.cedulaJuridica} name={project.nombre}
+      return <ProjectCard key={project.nombre} projects={projectsString} companyID={project.cedulaJuridica} name={project.nombre}
         employeeCount={project._count.esContratado} maxBen={project.cantidadMaximaBeneficios}
         maxAmountBen={project.montoMaximoBeneficio} currency={project.moneda}
         frequency={project.frecuenciaPago} date={convertDate(project.fechaInicio)} />

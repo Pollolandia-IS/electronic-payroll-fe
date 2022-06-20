@@ -206,7 +206,7 @@ function ProjectCard(props) {
 
   return (
     <>
-      <EditProjectModal isOpen={editModalIsOpen} setIsOpen={setEditModalIsOpen} companyID={props.companyID}
+      <EditProjectModal isOpen={editModalIsOpen} setIsOpen={setEditModalIsOpen} projects={props.projects} companyID={props.companyID}
         name={props.name} maxBen={props.maxBen} maxAmountBen={props.maxAmountBen} currency={props.currency}
         frequency={props.frequency} date={props.date} employeeCount={props.employeeCount} />
       <TypeGeneral >
@@ -243,8 +243,8 @@ function ProjectCard(props) {
             </Frame11>
             <Frame4 >
             </Frame4>
-            <IconButton size="small" color="primary" >
-                <EditIcon onClick={()=> setEditModalIsOpen(true)}/>
+            <IconButton size="small" color="primary" onClick={()=> setEditModalIsOpen(true)} >
+                <EditIcon/>
               </IconButton>
               <IconButton size="small" color="error" >
                 <DeleteIcon />
