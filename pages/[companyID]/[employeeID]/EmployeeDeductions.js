@@ -120,7 +120,7 @@ const EmployeeDeductions = ({
             return true;
         } else {
             setIsOpenAdd(false);
-            setErrorText("¡Ups! Monto límite de deducciones excedido.");
+            setErrorText("¡Ups! No puedes aportar más que tu sueldo.");
             setIsOpenError(true);
             return false;
         }
