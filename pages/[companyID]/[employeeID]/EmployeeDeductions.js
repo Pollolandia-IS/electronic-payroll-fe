@@ -120,7 +120,7 @@ const EmployeeDeductions = ({
             return true;
         } else {
             setIsOpenAdd(false);
-            setErrorText("¡Ups! Monto límite de deudcciones excedido.");
+            setErrorText("¡Ups! Monto límite de deducciones excedido.");
             setIsOpenError(true);
             return false;
         }
@@ -385,9 +385,6 @@ const EmployeeDeductions = ({
                             value={projectName}
                             onChange={handleProjectChange}
                         >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
                             {getProjects()}
                         </TextFieldStandard>
                     </FormControl>
