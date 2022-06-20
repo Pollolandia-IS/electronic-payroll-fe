@@ -7,37 +7,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model adquiere {
-  cedulaEmpleado      String              @db.VarChar(12)
-  cedulaJuridica      String              @db.VarChar(12)
-  nombreProyecto      String              @db.VarChar(100)
-  nombreDeduccion     String              @db.VarChar(100)
-  empleado            empleado            @relation(fields: [cedulaEmpleado], references: [cedula], onUpdate: NoAction, map: "FK__adquiere__cedula__40C49C62")
-  deduccionVoluntaria deduccionVoluntaria @relation(fields: [cedulaJuridica, nombreProyecto, nombreDeduccion], references: [cedulaJuridica, nombreProyecto, nombreDeduccion], onUpdate: NoAction, map: "FK__adquiere__3FD07829")
-
-  @@id([cedulaEmpleado, cedulaJuridica, nombreProyecto, nombreDeduccion], map: "PK__adquiere__B3780483B0C544A6")
-}
-
 model aplica_b {
   cedulaEmpleado  String     @db.VarChar(12)
   fechaHora       DateTime   @db.DateTime
   cedulaJuridica  String     @db.VarChar(12)
   nombreProyecto  String     @db.VarChar(100)
   nombreBeneficio String     @db.VarChar(100)
-  pago            pago       @relation(fields: [cedulaEmpleado, fechaHora], references: [cedulaEmpleado, fechaHora], onUpdate: NoAction, map: "FK__aplica_b__4959E263")
-  beneficios      beneficios @relation(fields: [cedulaJuridica, nombreProyecto, nombreBeneficio], references: [cedulaJuridica, nombreProyecto, nombreBeneficio], onUpdate: NoAction, map: "FK__aplica_b__4865BE2A")
+  pago            pago       @relation(fields: [cedulaEmpleado, fechaHora], references: [cedulaEmpleado, fechaHora], onUpdate: NoAction, map: "FK__aplica_b__075714DC")
+  beneficios      beneficios @relation(fields: [cedulaJuridica, nombreProyecto, nombreBeneficio], references: [cedulaJuridica, nombreProyecto, nombreBeneficio], onDelete: Cascade, map: "FK__aplica_b__0662F0A3")
 
-  @@id([cedulaEmpleado, fechaHora, cedulaJuridica, nombreProyecto, nombreBeneficio], map: "PK__aplica_b__83C60FEB42786999")
+  @@id([cedulaEmpleado, fechaHora, cedulaJuridica, nombreProyecto, nombreBeneficio], map: "PK__aplica_b__83C60FEB90D8B13C")
 }
 
 model aplica_do {
   cedulaEmpleado       String               @db.VarChar(12)
   fechaHora            DateTime             @db.DateTime
   nombreDO             String               @db.VarChar(50)
-  pago                 pago                 @relation(fields: [cedulaEmpleado, fechaHora], references: [cedulaEmpleado, fechaHora], onUpdate: NoAction, map: "FK__aplica_do__3BFFE745")
-  deduccionObligatoria deduccionObligatoria @relation(fields: [nombreDO], references: [nombre], onUpdate: NoAction, map: "FK__aplica_do__nombr__3CF40B7E")
+  pago                 pago                 @relation(fields: [cedulaEmpleado, fechaHora], references: [cedulaEmpleado, fechaHora], onUpdate: NoAction, map: "FK__aplica_do__7EC1CEDB")
+  deduccionObligatoria deduccionObligatoria @relation(fields: [nombreDO], references: [nombre], onDelete: Cascade, map: "FK__aplica_do__nombr__7FB5F314")
 
-  @@id([cedulaEmpleado, fechaHora, nombreDO], map: "PK__aplica_d__7A7DC79CF768C307")
+  @@id([cedulaEmpleado, fechaHora, nombreDO], map: "PK__aplica_d__7A7DC79C84137915")
 }
 
 model aplica_dv {
@@ -46,10 +35,10 @@ model aplica_dv {
   cedulaJuridica      String              @db.VarChar(12)
   nombreProyecto      String              @db.VarChar(100)
   nombreDeduccion     String              @db.VarChar(100)
-  pago                pago                @relation(fields: [cedulaEmpleado, fechaHora], references: [cedulaEmpleado, fechaHora], onUpdate: NoAction, map: "FK__aplica_dv__39237A9A")
-  deduccionVoluntaria deduccionVoluntaria @relation(fields: [cedulaJuridica, nombreProyecto, nombreDeduccion], references: [cedulaJuridica, nombreProyecto, nombreDeduccion], onUpdate: NoAction, map: "FK__aplica_dv__382F5661")
+  pago                pago                @relation(fields: [cedulaEmpleado, fechaHora], references: [cedulaEmpleado, fechaHora], onUpdate: NoAction, map: "FK__aplica_dv__7BE56230")
+  deduccionVoluntaria deduccionVoluntaria @relation(fields: [cedulaJuridica, nombreProyecto, nombreDeduccion], references: [cedulaJuridica, nombreProyecto, nombreDeduccion], onDelete: Cascade, map: "FK__aplica_dv__7AF13DF7")
 
-  @@id([cedulaEmpleado, fechaHora, cedulaJuridica, nombreProyecto, nombreDeduccion], map: "PK__aplica_d__A195D3173092C116")
+  @@id([cedulaEmpleado, fechaHora, cedulaJuridica, nombreProyecto, nombreDeduccion], map: "PK__aplica_d__A195D31772E46588")
 }
 
 model beneficios {
@@ -58,22 +47,23 @@ model beneficios {
   nombreBeneficio String       @db.VarChar(100)
   montoPago       Int?
   descripcion     String?      @db.Text
-  proyecto        proyecto     @relation(fields: [cedulaJuridica, nombreProyecto], references: [cedulaJuridica, nombre], onDelete: Cascade, map: "FK__beneficios__28ED12D1")
+  habilitado      Boolean?
+  proyecto        proyecto     @relation(fields: [cedulaJuridica, nombreProyecto], references: [cedulaJuridica, nombre], onDelete: Cascade, map: "FK__beneficios__6BAEFA67")
   aplica_b        aplica_b[]
   selecciona      selecciona[]
 
-  @@id([cedulaJuridica, nombreProyecto, nombreBeneficio], map: "PK__benefici__AC9FC4E0EB43FE8B")
+  @@id([cedulaJuridica, nombreProyecto, nombreBeneficio], map: "PK__benefici__AC9FC4E05E13574D")
 }
 
 model credenciales {
-  email       String     @id(map: "PK__credenci__AB6E616548893ED8") @db.VarChar(100)
+  email       String     @id(map: "PK__credenci__AB6E6165CC36BAC1") @db.VarChar(100)
   contrasenna String?    @db.VarChar(250)
   verificado  Boolean?
   hace_uso    hace_uso[]
 }
 
 model deduccionObligatoria {
-  nombre     String      @id(map: "PK__deduccio__72AFBCC701B72A2A") @db.VarChar(50)
+  nombre     String      @id(map: "PK__deduccio__72AFBCC72D51DE4B") @db.VarChar(50)
   porcentaje Int?
   aplica_do  aplica_do[]
 }
@@ -84,20 +74,19 @@ model deduccionVoluntaria {
   nombreDeduccion String      @db.VarChar(100)
   descripcion     String?     @db.Text
   monto           Int?
-  proyecto        proyecto    @relation(fields: [cedulaJuridica, nombreProyecto], references: [cedulaJuridica, nombre], onDelete: Cascade, map: "FK__deduccionVolunta__1D7B6025")
-  adquiere        adquiere[]
+  habilitado      Boolean?
+  proyecto        proyecto    @relation(fields: [cedulaJuridica, nombreProyecto], references: [cedulaJuridica, nombre], onDelete: Cascade, map: "FK__deduccionVolunta__603D47BB")
   aplica_dv       aplica_dv[]
   escoge          escoge[]
 
-  @@id([cedulaJuridica, nombreProyecto, nombreDeduccion], map: "PK__deduccio__FF4338C221BF640C")
+  @@id([cedulaJuridica, nombreProyecto, nombreDeduccion], map: "PK__deduccio__FF4338C2DABA10B1")
 }
 
 model empleado {
-  cedula         String         @id(map: "PK__empleado__415B7BE4BBD07CAE") @db.VarChar(12)
+  cedula         String         @id(map: "PK__empleado__415B7BE4CDAD784F") @db.VarChar(12)
   cedulaJuridica String?        @db.VarChar(12)
-  persona        persona        @relation(fields: [cedula], references: [cedula], onUpdate: NoAction, map: "FK__empleado__cedula__16CE6296")
-  empresa        empresa?       @relation(fields: [cedulaJuridica], references: [cedulaJuridica], onDelete: NoAction, onUpdate: NoAction, map: "FK__empleado__cedula__17C286CF")
-  adquiere       adquiere[]
+  persona        persona        @relation(fields: [cedula], references: [cedula], onUpdate: NoAction, map: "FK__empleado__cedula__59904A2C")
+  empresa        empresa?       @relation(fields: [cedulaJuridica], references: [cedulaJuridica], onDelete: NoAction, onUpdate: NoAction, map: "FK__empleado__cedula__5A846E65")
   escoge         escoge[]
   esContratado   esContratado[]
   pago           pago[]
@@ -106,21 +95,22 @@ model empleado {
 }
 
 model empleador {
-  cedula       String         @id(map: "PK__empleado__415B7BE491B2E760") @db.VarChar(12)
-  persona      persona        @relation(fields: [cedula], references: [cedula], onUpdate: NoAction, map: "FK__empleador__cedul__11158940")
+  cedula       String         @id(map: "PK__empleado__415B7BE4021828C9") @db.VarChar(12)
+  persona      persona        @relation(fields: [cedula], references: [cedula], onUpdate: NoAction, map: "FK__empleador__cedul__53D770D6")
   empresa      empresa[]
   reporteHoras reporteHoras[]
 }
 
 model empresa {
-  cedulaJuridica  String     @id(map: "PK__empresa__DD9A4FB5D92012C6") @db.VarChar(12)
+  cedulaJuridica  String     @id(map: "PK__empresa__DD9A4FB593AF6BEA") @db.VarChar(12)
   telefono        Int?
   direccion       String?    @db.VarChar(250)
   razonSocial     String?    @db.VarChar(250)
   paginaWeb       String?    @db.VarChar(100)
   email           String?    @db.VarChar(100)
+  habilitado      Boolean?
   cedulaEmpleador String?    @db.VarChar(12)
-  empleador       empleador? @relation(fields: [cedulaEmpleador], references: [cedula], onDelete: NoAction, onUpdate: NoAction, map: "FK__empresa__cedulaE__13F1F5EB")
+  empleador       empleador? @relation(fields: [cedulaEmpleador], references: [cedula], onDelete: NoAction, onUpdate: NoAction, map: "FK__empresa__cedulaE__56B3DD81")
   empleado        empleado[]
   proyecto        proyecto[]
 }
@@ -131,10 +121,11 @@ model escoge {
   nombreProyecto      String              @db.VarChar(100)
   nombreDeduccion     String              @db.VarChar(100)
   aporte              Int?
-  empleado            empleado            @relation(fields: [cedulaEmpleado], references: [cedula], onUpdate: NoAction, map: "FK__escoge__cedulaEm__318258D2")
-  deduccionVoluntaria deduccionVoluntaria @relation(fields: [cedulaJuridica, nombreProyecto, nombreDeduccion], references: [cedulaJuridica, nombreProyecto, nombreDeduccion], onUpdate: NoAction, map: "FK__escoge__308E3499")
+  habilitado          Boolean?
+  empleado            empleado            @relation(fields: [cedulaEmpleado], references: [cedula], onUpdate: NoAction, map: "FK__escoge__cedulaEm__74444068")
+  deduccionVoluntaria deduccionVoluntaria @relation(fields: [cedulaJuridica, nombreProyecto, nombreDeduccion], references: [cedulaJuridica, nombreProyecto, nombreDeduccion], onDelete: Cascade, map: "FK__escoge__73501C2F")
 
-  @@id([cedulaEmpleado, cedulaJuridica, nombreProyecto, nombreDeduccion], map: "PK__escoge__B3780483399EA28A")
+  @@id([cedulaEmpleado, cedulaJuridica, nombreProyecto, nombreDeduccion], map: "PK__escoge__B37804831008FC52")
 }
 
 model esContratado {
@@ -147,10 +138,10 @@ model esContratado {
   fechaInicio    DateTime? @db.Date
   fechaFin       DateTime? @db.Date
   jornada        String?   @db.VarChar(100)
-  empleado       empleado  @relation(fields: [cedulaEmpleado], references: [cedula], onUpdate: NoAction, map: "FK__esContrat__cedul__2057CCD0")
-  proyecto       proyecto  @relation(fields: [cedulaJuridica, nombreProyecto], references: [cedulaJuridica, nombre], onDelete: Cascade, map: "FK__esContratado__214BF109")
+  empleado       empleado  @relation(fields: [cedulaEmpleado], references: [cedula], onUpdate: NoAction, map: "FK__esContrat__cedul__6319B466")
+  proyecto       proyecto  @relation(fields: [cedulaJuridica, nombreProyecto], references: [cedulaJuridica, nombre], onDelete: Cascade, map: "FK__esContratado__640DD89F")
 
-  @@id([cedulaJuridica, nombreProyecto, cedulaEmpleado], map: "PK__esContra__C9634E46A780018F")
+  @@id([cedulaJuridica, nombreProyecto, cedulaEmpleado], map: "PK__esContra__C9634E46606B3491")
 }
 
 model genera {
@@ -158,36 +149,37 @@ model genera {
   fechaHora      DateTime @db.DateTime
   cedulaJuridica String   @db.VarChar(12)
   nombreProyecto String   @db.VarChar(100)
-  pago           pago     @relation(fields: [cedulaEmpleado, fechaHora], references: [cedulaEmpleado, fechaHora], onUpdate: NoAction, map: "FK__genera__3552E9B6")
-  proyecto       proyecto @relation(fields: [cedulaJuridica, nombreProyecto], references: [cedulaJuridica, nombre], onDelete: Cascade, map: "FK__genera__345EC57D")
+  pago           pago     @relation(fields: [cedulaEmpleado, fechaHora], references: [cedulaEmpleado, fechaHora], onUpdate: NoAction, map: "FK__genera__7814D14C")
+  proyecto       proyecto @relation(fields: [cedulaJuridica, nombreProyecto], references: [cedulaJuridica, nombre], onDelete: Cascade, map: "FK__genera__7720AD13")
 
-  @@id([cedulaEmpleado, fechaHora, cedulaJuridica, nombreProyecto], map: "PK__genera__12AD7FED4995F610")
+  @@id([cedulaEmpleado, fechaHora, cedulaJuridica, nombreProyecto], map: "PK__genera__12AD7FEDAB20F4EC")
 }
 
 model hace_uso {
   cedula       String       @db.VarChar(12)
   email        String       @db.VarChar(100)
-  persona      persona      @relation(fields: [cedula], references: [cedula], onUpdate: NoAction, map: "FK__hace_uso__cedula__09746778")
-  credenciales credenciales @relation(fields: [email], references: [email], onUpdate: NoAction, map: "FK__hace_uso__email__0A688BB1")
+  persona      persona      @relation(fields: [cedula], references: [cedula], onUpdate: NoAction, map: "FK__hace_uso__cedula__5006DFF2")
+  credenciales credenciales @relation(fields: [email], references: [email], onDelete: Cascade, map: "FK__hace_uso__email__50FB042B")
 
-  @@id([cedula, email], map: "PK__hace_uso__0BED9DF2AF0BCC75")
+  @@id([cedula, email], map: "PK__hace_uso__0BED9DF2274BB338")
 }
 
 model pago {
   cedulaEmpleado String      @db.VarChar(12)
   fechaHora      DateTime    @db.DateTime
   salarioBruto   Int?
-  empleado       empleado    @relation(fields: [cedulaEmpleado], references: [cedula], onUpdate: NoAction, map: "FK__pago__cedulaEmpl__2610A626")
+  habilitado     Boolean?
+  empleado       empleado    @relation(fields: [cedulaEmpleado], references: [cedula], onUpdate: NoAction, map: "FK__pago__cedulaEmpl__68D28DBC")
   aplica_b       aplica_b[]
   aplica_do      aplica_do[]
   aplica_dv      aplica_dv[]
   genera         genera[]
 
-  @@id([cedulaEmpleado, fechaHora], map: "PK__pago__626A902FADB4989F")
+  @@id([cedulaEmpleado, fechaHora], map: "PK__pago__626A902FB390E117")
 }
 
 model persona {
-  cedula    String     @id(map: "PK__persona__415B7BE4BE045932") @db.VarChar(12)
+  cedula    String     @id(map: "PK__persona__415B7BE4D6109199") @db.VarChar(12)
   nombre    String?    @db.VarChar(100)
   telefono  Int?
   empleado  empleado?
@@ -203,14 +195,15 @@ model proyecto {
   frecuenciaPago           String?               @db.VarChar(100)
   moneda                   String?               @db.VarChar(10)
   fechaInicio              DateTime?             @db.Date
-  empresa                  empresa               @relation(fields: [cedulaJuridica], references: [cedulaJuridica], onUpdate: NoAction, map: "FK__proyecto__cedula__1A9EF37A")
+  habilitado               Boolean?
+  empresa                  empresa               @relation(fields: [cedulaJuridica], references: [cedulaJuridica], onUpdate: NoAction, map: "FK__proyecto__cedula__5D60DB10")
   beneficios               beneficios[]
   deduccionVoluntaria      deduccionVoluntaria[]
   esContratado             esContratado[]
   genera                   genera[]
   reporteHoras             reporteHoras[]
 
-  @@id([cedulaJuridica, nombre], map: "PK__proyecto__BAB0B4791DCA4F1D")
+  @@id([cedulaJuridica, nombre], map: "PK__proyecto__BAB0B479BEF9EC16")
 }
 
 model reporteHoras {
@@ -220,11 +213,12 @@ model reporteHoras {
   nombreProyecto  String?    @db.VarChar(100)
   fechaHora       DateTime   @db.DateTime
   horasTrabajadas Int?
-  empleado        empleado   @relation(fields: [cedulaEmpleado], references: [cedula], onUpdate: NoAction, map: "FK__reporteHo__cedul__2BC97F7C")
-  empleador       empleador? @relation(fields: [cedulaEmpleador], references: [cedula], onDelete: NoAction, onUpdate: NoAction, map: "FK__reporteHo__cedul__2CBDA3B5")
-  proyecto        proyecto?  @relation(fields: [cedulaJuridica, nombreProyecto], references: [cedulaJuridica, nombre], onDelete: Cascade, map: "FK__reporteHoras__2DB1C7EE")
+  estado          Int?
+  empleado        empleado   @relation(fields: [cedulaEmpleado], references: [cedula], onUpdate: NoAction, map: "FK__reporteHo__cedul__6E8B6712")
+  empleador       empleador? @relation(fields: [cedulaEmpleador], references: [cedula], onDelete: NoAction, onUpdate: NoAction, map: "FK__reporteHo__cedul__6F7F8B4B")
+  proyecto        proyecto?  @relation(fields: [cedulaJuridica, nombreProyecto], references: [cedulaJuridica, nombre], onDelete: Cascade, map: "FK__reporteHoras__7073AF84")
 
-  @@id([cedulaEmpleado, fechaHora], map: "PK__reporteH__626A902FB870FADC")
+  @@id([cedulaEmpleado, fechaHora], map: "PK__reporteH__626A902F94AA2904")
 }
 
 model selecciona {
@@ -232,8 +226,9 @@ model selecciona {
   cedulaJuridica  String     @db.VarChar(12)
   nombreProyecto  String     @db.VarChar(100)
   nombreBeneficio String     @db.VarChar(100)
-  empleado        empleado   @relation(fields: [cedulaEmpleado], references: [cedula], onUpdate: NoAction, map: "FK__seleccion__cedul__4589517F")
-  beneficios      beneficios @relation(fields: [cedulaJuridica, nombreProyecto, nombreBeneficio], references: [cedulaJuridica, nombreProyecto, nombreBeneficio], onUpdate: NoAction, map: "FK__selecciona__44952D46")
+  habilitado      Boolean?
+  empleado        empleado   @relation(fields: [cedulaEmpleado], references: [cedula], onUpdate: NoAction, map: "FK__seleccion__cedul__038683F8")
+  beneficios      beneficios @relation(fields: [cedulaJuridica, nombreProyecto, nombreBeneficio], references: [cedulaJuridica, nombreProyecto, nombreBeneficio], onDelete: Cascade, map: "FK__selecciona__02925FBF")
 
-  @@id([cedulaEmpleado, cedulaJuridica, nombreProyecto, nombreBeneficio], map: "PK__seleccio__9645CB41F3393536")
+  @@id([cedulaEmpleado, cedulaJuridica, nombreProyecto, nombreBeneficio], map: "PK__seleccio__9645CB416B5579D2")
 }
