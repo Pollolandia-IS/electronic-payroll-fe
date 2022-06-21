@@ -17,6 +17,7 @@ import SidebarRow from './SidebarRow';
 import Router from 'next/router';
 import { Avatar, IconButton } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
+import Cookies from 'js-cookie';
 
  
 const CollapsableOpened = styled("div")({  
@@ -160,8 +161,14 @@ const UserName = styled("div")({
 });
  
 function Sidebar(props) {
+
+  const handleLogout = () => {
+    Cookies.remove('token');
+    Router.push('/LogIn');
+  }
+
   return (
-    <CollapsableOpened style={{position: 'fixed', top: 0, left: 0}}>
+    <CollapsableOpened style={{position: 'fixed', top: 0, left: 0, zIndex: 100}}>
        <Top >
          <Logo >
            <Logo1  src={'/assets/img/Logo.png'} alt={"Logo"}/>
@@ -183,7 +190,7 @@ function Sidebar(props) {
                 <UserName >
                   {props.username}
                 </UserName>
-                <IconButton size="small" color="primary" >
+                <IconButton size="small" color="primary" onClick={handleLogout} >
                   <LogoutIcon />
                 </IconButton>
               </User>
