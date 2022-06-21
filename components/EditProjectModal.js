@@ -261,7 +261,7 @@ function EditProjectModal(props) {
           break;
         }
       }
-      
+
       const noEmptyInputs = isValidAmount && isValidBenefits && nameValue !== '' && frequencyValue !== '' && currencyValue !== '' && amountValue !== '' && benefitsValue !== '' && dateValue !== null && dateValue != 'Invalid Date' && (dateValue.toString().split(' ')[3][0] === '2');
       const inputsChanged = nameValue !== props.name || frequencyValue !== props.frequency || currencyValue !== props.currency || parseInt(amountValue) !== props.maxAmountBen || parseInt(benefitsValue) !== props.maxBen;
 
@@ -275,7 +275,7 @@ function EditProjectModal(props) {
   const sendProject = async () => {
     const project = {
       companyID: props.companyID,
-      oldName: props.name,
+      oldname: props.name,
       name: nameValue,
       frequency: frequencyValue,
       currency: currencyValue,
@@ -292,7 +292,7 @@ function EditProjectModal(props) {
       body: JSON.stringify(project)
     })
     props.setIsOpen(false);
-    //router.reload();
+    router.reload();
    }
 
     const handleCancel = () => {
