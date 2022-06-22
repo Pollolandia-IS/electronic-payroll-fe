@@ -250,7 +250,6 @@ function NewDeductionModal(props) {
             description: Values.description,
         };
         try {
-            //TODO configurar el endpoint
             await fetch("/api/employerDeductions", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
