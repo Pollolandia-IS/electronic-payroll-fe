@@ -44,3 +44,14 @@
     width: 1149px;
     height: 50px;
 }
+
+.main__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 20px 76px;
+    gap: 23px;
+
+    width: 1149px;
+    height: 50px;
+}
