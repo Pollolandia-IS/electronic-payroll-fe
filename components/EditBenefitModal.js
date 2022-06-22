@@ -242,7 +242,9 @@ function ModalBeneficio(props) {
                 Values.description !== "";
             const inputsChanged =
                 Values.benefitName !== props.name ||
-                parseInt(Values.amount) !== parseInt(props.amount) ||
+                (selectedProjectName === props.projectName
+                    ? parseInt(Values.amount) !== parseInt(props.amount)
+                    : true) ||
                 Values.description !== props.description;
             return isUniqueName && noEmptyInputs && inputsChanged;
         });
