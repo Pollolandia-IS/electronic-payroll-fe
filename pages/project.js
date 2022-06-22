@@ -1,43 +1,51 @@
-import Sidebar from "../../../components/Sidebar";
+import Sidebar from "../components/Sidebar";
 import Aside from "/components/Aside";
 import NavBar from "/components/NavBar";
 import ProjectCard from "/components/ProjectCard";
 import styles from "/styles/Projects.module.css";
 import { useState } from "react";
-import Search from "../../../components/Search";
-import IconBox from "../../../components/IconBox";
+import Search from "../components/Search";
+import IconBox from "../components/IconBox";
 import AddIcon from "@mui/icons-material/Add";
 import { prisma } from "/.db";
 import safeJsonStringify from "safe-json-stringify";
-import NewProjectModal from "../../../components/NewProjectModal";
-import DeleteModal from "../../../components/DeleteModal";
+import NewProjectModal from "../components/NewProjectModal";
+import jwt from "jsonwebtoken";
+import DeleteModal from "../components/DeleteModal";
+import Router from "next/router";
 
 export async function getServerSideProps(context) {
-    const { companyID } = context.params;
+    const { req, res } = context;
+    const { cookies } = req;
+    const ids = JSON.parse(res._headers.ids);
+    const { userData } = jwt.verify(cookies.token, process.env.JWT_SECRET);
 
     let projects = await prisma.proyecto.findMany({
         where: {
-            cedulaJuridica: companyID,
+          cedulaJuridica: ids.companyId,
+          habilitado: true,
         },
         include: {
-            _count: {
-                select: {
-                    esContratado: true,
-                },
+          _count: {
+            select: {
+              esContratado: true,
             },
+          },
         },
-    });
+      });
     const projectsString = JSON.parse(safeJsonStringify(projects));
 
     return {
         props: {
-            companyID,
+            companyID: ids.companyId,
             projectsString,
+            name: userData.name,
+            isEmployer: userData.isEmployer,
         },
     };
 }
 
-const Projects = ({ companyID, projectsString, contracts, employees }) => {
+const Projects = ({ companyID, projectsString, name, isEmployer }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenRemove, setIsOpenRemove] = useState(false);
     const [selectedProject, setSelectedProject] = useState("");
@@ -69,7 +77,6 @@ const Projects = ({ companyID, projectsString, contracts, employees }) => {
             );
         });
     };
-
     const getRows = () => {
         let rows = [];
         const projects = getProjects();
@@ -96,11 +103,11 @@ const Projects = ({ companyID, projectsString, contracts, employees }) => {
                 body: JSON.stringify(dataForDB),
             });
             setIsOpenRemove(false);
+            Router.reload();
         } catch (error) {
             console.error(error);
         }
-    }
-
+    };
     return (
         <>
             <DeleteModal
@@ -116,7 +123,7 @@ const Projects = ({ companyID, projectsString, contracts, employees }) => {
                 setIsOpen={setIsOpen}
                 companyID={companyID}
             />
-            <Sidebar selected={2} username="David Atias" />
+            <Sidebar selected={2} username={name} isEmployer={isEmployer} />
             <main className={styles.main}>
                 <div className={styles.main__header}>
                     <Search placeholder="Buscar proyecto..." />
