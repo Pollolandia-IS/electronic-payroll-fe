@@ -9,7 +9,7 @@ import NewDeductionModal from "./NewDeductionModal";
 import Search from "./Search";
 import IconBox from "./IconBox";
 import DeleteModal from "../components/DeleteModal";
-import  Router  from "next/router";
+import Router from "next/router";
 
 const TextFieldStandard = styled(Select)({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -28,7 +28,8 @@ const TextFieldStandard = styled(Select)({
 });
 
 const Deductions = ({ props }) => {
-    const { companyID, deductionString, proyectString, name, isEmployer } = props;
+    const { companyID, deductionString, proyectString, name, isEmployer } =
+        props;
     const projects = proyectString;
     const [modalOpened, setModalOpened] = useState(false);
     const [searchText, setSearchText] = useState("");
@@ -50,6 +51,9 @@ const Deductions = ({ props }) => {
                                 setIsOpenRemove={setIsOpenRemove}
                                 setSelectedDeduction={setSelectedDeduction}
                                 selectedProject={selectedProjectName}
+                                companyID={companyID}
+                                projects={projects}
+                                projectName={deduction.nombreProyecto}
                             />
                         );
                     } else {
@@ -67,6 +71,9 @@ const Deductions = ({ props }) => {
                                     setIsOpenRemove={setIsOpenRemove}
                                     setSelectedDeduction={setSelectedDeduction}
                                     selectedProject={selectedProjectName}
+                                    companyID={companyID}
+                                    projects={projects}
+                                    projectName={deduction.nombreProyecto}
                                 />
                             );
                         }
@@ -87,6 +94,9 @@ const Deductions = ({ props }) => {
                                     setIsOpenRemove={setIsOpenRemove}
                                     setSelectedDeduction={setSelectedDeduction}
                                     selectedProject={selectedProjectName}
+                                    companyID={companyID}
+                                    projects={projects}
+                                    projectName={deduction.nombreProyecto}
                                 />
                             );
                         } else {
@@ -102,8 +112,13 @@ const Deductions = ({ props }) => {
                                         amount={deduction.monto}
                                         description={deduction.descripcion}
                                         setIsOpenRemove={setIsOpenRemove}
-                                        setSelectedDeduction={setSelectedDeduction}
+                                        setSelectedDeduction={
+                                            setSelectedDeduction
+                                        }
                                         selectedProject={selectedProjectName}
+                                        companyID={companyID}
+                                        projects={projects}
+                                        projectName={deduction.nombreProyecto}
                                     />
                                 );
                             }
@@ -140,7 +155,7 @@ const Deductions = ({ props }) => {
     };
 
     const deleteDeduction = async () => {
-        if (selectedProjectName !== "Todos"){
+        if (selectedProjectName !== "Todos") {
             const dataForDB = {
                 companyID: companyID,
                 projectName: selectedProjectName,
@@ -158,7 +173,7 @@ const Deductions = ({ props }) => {
                 console.error(error);
             }
         }
-    }
+    };
 
     return (
         <>

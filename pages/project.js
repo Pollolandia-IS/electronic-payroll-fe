@@ -32,6 +32,9 @@ export async function getServerSideProps(context) {
             },
           },
         },
+        orderBy: {
+            nombre: "asc"
+        }
       });
     const projectsString = JSON.parse(safeJsonStringify(projects));
 

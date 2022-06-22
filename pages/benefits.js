@@ -16,16 +16,24 @@ export async function getServerSideProps(context) {
         let benefitsQuery = await prisma.beneficios.findMany({
             where: {
                 cedulaJuridica: companyID,
-            },
+                habilitado: true,
+            }, 
+            orderBy: {
+                nombreBeneficio: "asc"
+            }
         });
         let projectQuery = await prisma.proyecto.findMany({
             where: {
                 cedulaJuridica: companyID,
+                habilitado: true,
             },
             select: {
                 nombre: true,
                 moneda: true,
             },
+            orderBy: {
+                nombre: "asc"
+            }
         });
         const benefitString = JSON.parse(safeJsonStringify(benefitsQuery));
         const proyectString = JSON.parse(safeJsonStringify(projectQuery));
@@ -46,12 +54,16 @@ export async function getServerSideProps(context) {
         let projects = await prisma.proyecto.findMany({
             where: {
                 cedulaJuridica: companyID,
+                habilitado: true,
             },
             select: {
                 nombre: true,
                 cantidadMaximaBeneficios: true,
                 montoMaximoBeneficio: true,
             },
+            orderBy: {
+                nombre: "asc"
+            }
         });
         const hired = await prisma.esContratado.findMany({
             where: {

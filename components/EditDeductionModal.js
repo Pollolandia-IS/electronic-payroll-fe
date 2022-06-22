@@ -197,16 +197,18 @@ const Cancelar = styled("div")(({ theme }) => ({
     cursor: `pointer`,
 }));
 
-function NewDeductionModal(props) {
+function EditDeductionModal(props) {
     const [validFields, setValidFields] = useState(false);
     const [isValidAmount, setIsValidAmount] = useState(true);
-    const [selectedProjectName, setSelectedProjectName] = useState("");
+    const [selectedProjectName, setSelectedProjectName] = useState(props.projectName);
     const [projectCurrency, setprojectCurrency] = useState("");
     const [Values, setValues] = useState({
         companyID: props.companyID,
-        deductionName: "",
-        amount: "",
-        description: "",
+        deductionName: props.deductionName,
+        oldDeductionName: props.deductionName,
+        projectName: props.projectName,
+        amount: props.amount,
+        description: props.description,
     });
 
     const handleChange = (event) => {
@@ -244,13 +246,15 @@ function NewDeductionModal(props) {
     const handleSubmit = async () => {
         const Data = {
             companyID: Values.companyID,
+            oldDeductionName: Values.oldDeductionName,
             deductionName: Values.deductionName,
             projectName: selectedProjectName,
+            oldProjectName: props.projectName,
             amount: Values.amount,
             description: Values.description,
         };
         try {
-            await fetch("/api/employerDeductions", {
+            await fetch("/api/employerDeductionsEdit", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(Data),
@@ -269,7 +273,7 @@ function NewDeductionModal(props) {
                         <Frame1>
                             <NameAndTitle>
                                 <CrearNuevoBeneficio>
-                                    {`Crear Nueva Deducción`}
+                                    {`Editar Deducción`}
                                 </CrearNuevoBeneficio>
                             </NameAndTitle>
                             <FrameX onClick={() => props.setIsOpen(false)}>
@@ -278,6 +282,7 @@ function NewDeductionModal(props) {
                         </Frame1>
                         <TextFieldStandard
                             id="deductionName"
+                            defaultValue={Values.deductionName}
                             variant="standard"
                             size="small"
                             label={`Nombre`}
@@ -291,6 +296,7 @@ function NewDeductionModal(props) {
                                 <TextFieldStandard1
                                     id="projectName"
                                     value={selectedProjectName}
+                                    defaultValue={selectedProjectName}
                                     variant="standard"
                                     size="medium"
                                     onChange={handleChangeProject}
@@ -309,12 +315,13 @@ function NewDeductionModal(props) {
                             <TextFieldStandard2
                                 id="amount"
                                 value={Values.amount}
+                                defaultValue={Values.amount}
                                 type="number"
                                 variant="standard"
                                 size="medium"
                                 label={`Monto`}
                                 onChange={handleChange}
-                                disabled={!selectedProjectName}
+                                disabled={!props.projectName}
                                 error={!isValidAmount}
                                 InputProps={{
                                     endAdornment: (
@@ -329,6 +336,7 @@ function NewDeductionModal(props) {
                             id="description"
                             value={Values.description}
                             variant="outlined"
+                            defaultValue={Values.description}
                             size="medium"
                             multiline
                             rows={4}
@@ -360,7 +368,7 @@ function NewDeductionModal(props) {
                                         disabled={!validFields}
                                     >
                                         {" "}
-                                        {`Crear Deducción`}{" "}
+                                        {`Editar Deducción`}{" "}
                                     </Button>
                                 </span>
                             </Tooltip>
@@ -373,7 +381,7 @@ function NewDeductionModal(props) {
                                 endIcon={<ArrowForwardIcon />}
                             >
                                 {" "}
-                                {`Crear Deducción`}{" "}
+                                {`Guardar Cambios`}{" "}
                             </Button>
                         )}
                     </Links>
@@ -383,4 +391,4 @@ function NewDeductionModal(props) {
     );
 }
 
-export default NewDeductionModal;
+export default EditDeductionModal;
