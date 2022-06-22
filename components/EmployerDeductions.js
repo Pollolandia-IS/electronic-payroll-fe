@@ -8,6 +8,8 @@ import DeductionsCard from "./DeductionsCard";
 import NewDeductionModal from "./NewDeductionModal";
 import Search from "./Search";
 import IconBox from "./IconBox";
+import DeleteModal from "../components/DeleteModal";
+import  Router  from "next/router";
 
 const TextFieldStandard = styled(Select)({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -31,39 +33,13 @@ const Deductions = ({ props }) => {
     const [modalOpened, setModalOpened] = useState(false);
     const [searchText, setSearchText] = useState("");
     const [selectedProjectName, setSelectedProjectName] = useState("Todos");
+    const [selectedDeduction, setSelectedDeduction] = useState("");
+    const [isOpenRemove, setIsOpenRemove] = useState(false);
 
     const getDeductions = () => {
         if (selectedProjectName == "Todos") {
             return deductionString.map((deduction) => {
-                if (searchText == "") {
-                    return (
-                        <DeductionsCard
-                            key={deduction.nombreDeduccion}
-                            name={deduction.nombreDeduccion}
-                            amount={deduction.monto}
-                            description={deduction.descripcion}
-                        />
-                    );
-                } else {
-                    if (
-                        deduction.nombreDeduccion
-                            .toLowerCase()
-                            .includes(searchText.toLowerCase())
-                    ) {
-                        return (
-                            <DeductionsCard
-                                key={deduction.nombreDeduccion}
-                                name={deduction.nombreDeduccion}
-                                amount={deduction.monto}
-                                description={deduction.descripcion}
-                            />
-                        );
-                    }
-                }
-            });
-        } else {
-            return deductionString.map((deduction) => {
-                if (selectedProjectName == deduction.nombreProyecto) {
+                if (deduction.habilitado) {
                     if (searchText == "") {
                         return (
                             <DeductionsCard
@@ -71,6 +47,9 @@ const Deductions = ({ props }) => {
                                 name={deduction.nombreDeduccion}
                                 amount={deduction.monto}
                                 description={deduction.descripcion}
+                                setIsOpenRemove={setIsOpenRemove}
+                                setSelectedDeduction={setSelectedDeduction}
+                                selectedProject={selectedProjectName}
                             />
                         );
                     } else {
@@ -85,8 +64,49 @@ const Deductions = ({ props }) => {
                                     name={deduction.nombreDeduccion}
                                     amount={deduction.monto}
                                     description={deduction.descripcion}
+                                    setIsOpenRemove={setIsOpenRemove}
+                                    setSelectedDeduction={setSelectedDeduction}
+                                    selectedProject={selectedProjectName}
                                 />
                             );
+                        }
+                    }
+                }
+            });
+        } else {
+            return deductionString.map((deduction) => {
+                if (deduction.habilitado) {
+                    if (selectedProjectName == deduction.nombreProyecto) {
+                        if (searchText == "") {
+                            return (
+                                <DeductionsCard
+                                    key={deduction.nombreDeduccion}
+                                    name={deduction.nombreDeduccion}
+                                    amount={deduction.monto}
+                                    description={deduction.descripcion}
+                                    setIsOpenRemove={setIsOpenRemove}
+                                    setSelectedDeduction={setSelectedDeduction}
+                                    selectedProject={selectedProjectName}
+                                />
+                            );
+                        } else {
+                            if (
+                                deduction.nombreDeduccion
+                                    .toLowerCase()
+                                    .includes(searchText.toLowerCase())
+                            ) {
+                                return (
+                                    <DeductionsCard
+                                        key={deduction.nombreDeduccion}
+                                        name={deduction.nombreDeduccion}
+                                        amount={deduction.monto}
+                                        description={deduction.descripcion}
+                                        setIsOpenRemove={setIsOpenRemove}
+                                        setSelectedDeduction={setSelectedDeduction}
+                                        selectedProject={selectedProjectName}
+                                    />
+                                );
+                            }
                         }
                     }
                 }
@@ -119,8 +139,37 @@ const Deductions = ({ props }) => {
         getRows();
     };
 
+    const deleteDeduction = async () => {
+        if (selectedProjectName !== "Todos"){
+            const dataForDB = {
+                companyID: companyID,
+                projectName: selectedProjectName,
+                deductionName: selectedDeduction,
+            };
+            try {
+                await fetch(`/api/deleteDeduction/`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dataForDB),
+                });
+                Router.reload();
+                setIsOpenRemove(false);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+
     return (
         <>
+            <DeleteModal
+                title="Eliminar deducción"
+                message="¿Deseas eliminar esta deducción?"
+                buttonText="Eliminar"
+                setIsOpen={setIsOpenRemove}
+                isOpen={isOpenRemove}
+                buttonAction={() => deleteDeduction()}
+            />
             <NewDeductionModal
                 isOpen={modalOpened}
                 setIsOpen={setModalOpened}
