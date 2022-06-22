@@ -24,7 +24,7 @@ export async function getServerSideProps(context) {
 export default function Home(props) {
     return (
         <>
-            <Sidebar selected={1} username={props.name} />
+            <Sidebar selected={1} username={props.name} isEmployer={props.isEmployer} />
             <Dashboard isEmployer={props.isEmployer} username={props.name} />
         </>
     );

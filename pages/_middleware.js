@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+const BASEURL = "http://localhost:3000";
 export default async function middleware(req) {
     const userData = await decodeToken(req);
     return handleRequest(req, userData);
@@ -7,17 +8,17 @@ export default async function middleware(req) {
 
 const handleRequest = (req, userData) => {
     const url = req.url;
-    if (url === "http://localhost:3000/") {
+    if (url === `${BASEURL}/`) {
         return handleIndex(userData);
-    } else if (url === "http://localhost:3000/benefits") {
+    } else if (url === `${BASEURL}/benefits`) {
         return handleBenefits(userData);
-    } else if (url === `http://localhost:3000/project`) {
+    } else if (url === `${BASEURL}/project`) {
         return handleProject(userData);
-    } else if (url === `http://localhost:3000/employees`) {
+    } else if (url === `${BASEURL}/employees`) {
         return handleEmployees(userData);
-    } else if (url === `http://localhost:3000/deductions`) {
+    } else if (url === `${BASEURL}/deductions`) {
         return handleDeductions(userData);
-    } else if (url === `http://localhost:3000/hours`) {
+    } else if (url === `${BASEURL}/hours`) {
         return handleHours(userData);
     }
     else {
@@ -29,7 +30,7 @@ const handleIndex = async (userData) => {
     if (userData) {
         return NextResponse.next();
     } else {
-        return NextResponse.redirect("http://localhost:3000/unauthorized");
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
 };
 
@@ -40,7 +41,7 @@ const handleBenefits = async (userData) => {
         response.headers.append("ids", JSON.stringify(ids));
         return response;
     } else {
-        return NextResponse.redirect("http://localhost:3000/unauthorized");
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
 };
 
@@ -52,10 +53,10 @@ const handleProject = async (userData) => {
             response.headers.append("ids", JSON.stringify(ids));
             return response;
         } else {
-            return NextResponse.redirect(`http://localhost:3000/coming-soon`);
+            return NextResponse.redirect(`${BASEURL}/coming-soon`);
         }
     } else {
-        return NextResponse.redirect(`http://localhost:3000/unauthorized`);
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
 };
 
@@ -67,10 +68,10 @@ const handleEmployees = async (userData) => {
             response.headers.append("ids", JSON.stringify(ids));
             return response;
         } else {
-            return NextResponse.redirect(`http://localhost:3000/coming-soon`);
+            return NextResponse.redirect(`${BASEURL}/coming-soon`);
         }
     } else {
-        return NextResponse.redirect(`http://localhost:3000/unauthorized`);
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
 };
 
@@ -81,7 +82,7 @@ const handleDeductions = async (userData) => {
         response.headers.append("ids", JSON.stringify(ids));
         return response;
     } else {
-        return NextResponse.redirect("http://localhost:3000/unauthorized");
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
 };
 
@@ -93,17 +94,17 @@ const handleHours = async (userData) => {
             response.headers.append("ids", JSON.stringify(ids));
             return response;
         } else {
-            return NextResponse.redirect(`http://localhost:3000/coming-soon`);
+            return NextResponse.redirect(`${BASEURL}/coming-soon`);
         }
     } else {
-        return NextResponse.redirect(`http://localhost:3000/unauthorized`);
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
 }
 
 const decodeToken = async (req) => {
     const { cookies } = req;
     const decoded = await (
-        await fetch("http://localhost:3000/api/services/validateToken", {
+        await fetch(`${BASEURL}/api/services/validateToken`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -120,7 +121,7 @@ const decodeToken = async (req) => {
 const fetchIds = async (userData) => {
     if (userData) {
         const ids = await (
-            await fetch("http://localhost:3000/api/services/fetchIds", {
+            await fetch(`${BASEURL}/api/services/fetchIds`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

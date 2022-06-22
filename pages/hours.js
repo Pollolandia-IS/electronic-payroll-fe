@@ -98,6 +98,7 @@ export async function getServerSideProps(context) {
             cedulaEmpleado: employeeID,
             proyectString,
             name: userData.name,
+            isEmployer: userData.isEmployer,
         },
     };
 }
@@ -107,6 +108,7 @@ const AddHoursEmployee = ({
     hoursWithId,
     proyectString,
     name,
+    isEmployer,
 }) => {
     const projects = proyectString;
     const [showModal, setShowModal] = useState(false);
@@ -193,7 +195,7 @@ const AddHoursEmployee = ({
             />
             <div className={Styles.body}>
                 <div className={Styles.sidebar}>
-                    <Sidebar selected={4} username={name} />
+                    <Sidebar selected={4} username={name} isEmployer={isEmployer} />
                 </div>
                 <div className={Styles.main}>
                     <div className={Styles.main__header}>

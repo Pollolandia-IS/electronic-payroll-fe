@@ -24,7 +24,7 @@ const TextFieldStandard = styled(Select)({
 });
 
 const EmployeeBenefits = ({ props }) => {
-    const { employeeID, companyID, projectsString, hiredIn, employeeName } = props;
+    const { employeeID, companyID, projectsString, hiredIn, employeeName, isEmployer } = props;
     const [selectedBenefit, setSelectedBenefit] = useState("");
     const [isOpenAdd, setIsOpenAdd] = useState(false);
     const [isOpenRemove, setIsOpenRemove] = useState(false);
@@ -312,7 +312,7 @@ const EmployeeBenefits = ({ props }) => {
                 buttonText="Aceptar"
                 buttonAction={() => setIsOpenError(false)}
             />
-            <Sidebar selected={6} username={employeeName} />
+            <Sidebar selected={6} username={employeeName} isEmployer={isEmployer} />
             <main className={styles.main}>
                 <div className={styles.main__header}>
                     <FormControl>

@@ -37,11 +37,12 @@ export async function getServerSideProps(context) {
       companyID: ids.companyId,
       projectsString,
       name: userData.name,
+      isEmployer: userData.isEmployer,
     },
   };
 }
 
-const Projects = ({companyID, projectsString, name}) => {
+const Projects = ({companyID, projectsString, name, isEmployer}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const convertDate = (date) => {
@@ -79,7 +80,7 @@ const Projects = ({companyID, projectsString, name}) => {
   return (
     <>
     <NewProjectModal isOpen={isOpen} setIsOpen={setIsOpen} companyID={companyID}/>
-    <Sidebar selected={2} username={name} />
+    <Sidebar selected={2} username={name} isEmployer={isEmployer} />
     <main className={styles.main}>
       <div className={styles.main__header}>
         <Search placeholder="Buscar proyecto..."/>

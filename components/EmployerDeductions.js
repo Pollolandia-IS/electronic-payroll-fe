@@ -26,7 +26,7 @@ const TextFieldStandard = styled(Select)({
 });
 
 const Deductions = ({ props }) => {
-    const { companyID, deductionString, proyectString, employeeName } = props;
+    const { companyID, deductionString, proyectString, name, isEmployer } = props;
     const projects = proyectString;
     const [modalOpened, setModalOpened] = useState(false);
     const [searchText, setSearchText] = useState("");
@@ -127,7 +127,7 @@ const Deductions = ({ props }) => {
                 companyID={companyID}
                 projects={projects}
             />
-            <Sidebar selected={5} username={employeeName} />
+            <Sidebar selected={5} username={name} isEmployer={isEmployer} />
             <main className={styles.main}>
                 <div className={styles.main__header}>
                     <FormControl>
