@@ -200,7 +200,7 @@ const Cancelar = styled("div")(({ theme }) => ({
 function EditDeductionModal(props) {
     const [validFields, setValidFields] = useState(false);
     const [isValidAmount, setIsValidAmount] = useState(true);
-    const [selectedProjectName, setSelectedProjectName] = useState("");
+    const [selectedProjectName, setSelectedProjectName] = useState(props.projectName);
     const [projectCurrency, setprojectCurrency] = useState("");
     const [Values, setValues] = useState({
         companyID: props.companyID,
@@ -254,7 +254,6 @@ function EditDeductionModal(props) {
             description: Values.description,
         };
         try {
-            //TODO configurar el endpoint
             await fetch("/api/employerDeductionsEdit", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
