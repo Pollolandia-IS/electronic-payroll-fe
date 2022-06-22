@@ -65,7 +65,7 @@ const EmployeeBenefits = ({ props }) => {
             currentAmountSum += parseInt(benefitToAdd.montoPago); 
         }
         if (
-            currentAmountBenefits <= maxAmountBenefits &&
+            currentAmountBenefits < maxAmountBenefits &&
             currentAmountSum <= maxAmountSum
         ) {
             return true;
