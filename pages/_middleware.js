@@ -7,9 +7,10 @@ export default async function middleware(req) {
 
 const handleRequest = (req, userData) => {
     const url = req.url;
-    if (url === `${process.env.URL}/`) {
+    if (url === URL) {
         return handleIndex(userData);
-    } else if (url === `${process.env.URL}/benefits`) {
+    }
+    else if (url === 'http://localhost:3000/benefits') {
         return handleBenefits(userData);
     } else if (url === `${process.env.URL}/project`) {
         return handleProject(userData);
@@ -22,7 +23,7 @@ const handleIndex = async (userData) => {
     if (userData) {
         return NextResponse.next();
     } else {
-        return NextResponse.redirect(`${process.env.URL}/unauthorized`);
+        return NextResponse.redirect('http://localhost:3000/unauthorized');
     }
 };
 
@@ -33,7 +34,7 @@ const handleBenefits = async (userData) => {
         response.headers.append("ids", JSON.stringify(ids));
         return response;
     } else {
-        return NextResponse.redirect(`${process.env.URL}/unauthorized`);
+        return NextResponse.redirect('http://localhost:3000/unauthorized');
     }
 };
 
@@ -55,7 +56,7 @@ const handleProject = async (userData) => {
 const decodeToken = async (req) => {
     const { cookies } = req;
     const decoded = await (
-        await fetch(`${process.env.URL}/api/services/validateToken`, {
+        await fetch('http://localhost:3000/api/services/validateToken', {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -72,7 +73,7 @@ const decodeToken = async (req) => {
 const fetchIds = async (userData) => {
     if (userData) {
         const ids = await (
-            await fetch(`${process.env.URL}/api/services/fetchIds`, {
+            await fetch('http://localhost:3000/api/services/fetchIds', {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

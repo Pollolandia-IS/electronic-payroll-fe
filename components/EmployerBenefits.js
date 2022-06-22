@@ -8,6 +8,7 @@ import BenefitsCard from "./CardBenefits";
 import NewBenefitModal from "./ModalBenefits";
 import Search from "./Search";
 import IconBox from "./IconBox";
+import DeleteModal from "./DeleteModal";
 
 const TextFieldStandard = styled(Select)({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -31,6 +32,8 @@ const EmployerBenefits = ({ props }) => {
     const [modalOpened, setModalOpened] = useState(false);
     const [searchText, setSearchText] = useState("");
     const [selectedProjectName, setSelectedProjectName] = useState("Todos");
+    const [isOpenRemove, setIsOpenRemove] = useState(false);
+    const [selectedBenefit, setSelectedBenefit] = useState("");
 
     const getBenefits = () => {
         if (selectedProjectName == "Todos") {
@@ -42,6 +45,8 @@ const EmployerBenefits = ({ props }) => {
                             name={benefit.nombreBeneficio}
                             amount={benefit.montoPago}
                             description={benefit.descripcion}
+                            setIsOpen={setIsOpenRemove}
+                            setSelected={setSelectedBenefit}
                         />
                     );
                 } else {
@@ -56,6 +61,8 @@ const EmployerBenefits = ({ props }) => {
                                 name={benefit.nombreBeneficio}
                                 amount={benefit.montoPago}
                                 description={benefit.descripcion}
+                                setIsOpen={setIsOpenRemove}
+                                setSelected={setSelectedBenefit}
                             />
                         );
                     }
@@ -71,6 +78,8 @@ const EmployerBenefits = ({ props }) => {
                                 name={benefit.nombreBeneficio}
                                 amount={benefit.montoPago}
                                 description={benefit.descripcion}
+                                setIsOpen={setIsOpenRemove}
+                                setSelected={setSelectedBenefit}
                             />
                         );
                     } else {
@@ -85,6 +94,8 @@ const EmployerBenefits = ({ props }) => {
                                     name={benefit.nombreBeneficio}
                                     amount={benefit.montoPago}
                                     description={benefit.descripcion}
+                                    setIsOpen={setIsOpenRemove}
+                                    setSelected={setSelectedBenefit}
                                 />
                             );
                         }
@@ -119,8 +130,37 @@ const EmployerBenefits = ({ props }) => {
         getRows();
     };
 
+    const deleteBenefit = async () => {
+        if(selectedProjectName !== "Todos"){
+            const dataForDB = {
+                companyID: companyID,
+                projectName: selectedProjectName,
+                benefitName: selectedBenefit,
+            };
+            try {
+                await fetch(`/api/employerDeleteBenefit/`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dataForDB),
+                });
+                handleChangeProject({ target: { value: selectedProjectName } });
+                setIsOpenRemove(false);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+
     return (
         <>
+            <DeleteModal
+                isOpen={isOpenRemove}
+                setIsOpen={setIsOpenRemove}
+                title="Eliminar Beneficio"
+                message="Deseas eliminar este beneficio?"
+                buttonText="Eliminar"
+                buttonAction={() => deleteBenefit()}
+            />
             <NewBenefitModal
                 isOpen={modalOpened}
                 setIsOpen={setModalOpened}
