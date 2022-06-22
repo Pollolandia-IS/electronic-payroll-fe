@@ -178,7 +178,7 @@ function BeneficiosCard(props) {
           <IconButton size="small" color="primary" >
             <EditIcon />
           </IconButton>
-          <IconButton size="small" color="error" >
+          <IconButton size="small" color="error" sx={{marginLeft: 0.7}} >
             <DeleteIcon />
           </IconButton>
         </Stats>
