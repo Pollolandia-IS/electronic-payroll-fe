@@ -16,9 +16,9 @@ async function addDeductionToProject(req, res) {
                 nombreDeduccion : deductionName,
                 monto:  parseInt(amount),
                 descripcion : description,
+                habilitado: true,
             }
         });
-        console.log("Salí :D");
         res.status(200).json(createDeduction);
     } catch(error){
         res.status(500);

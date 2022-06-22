@@ -2,45 +2,14 @@ import { Select, FormControl, InputLabel, MenuItem } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
-import { prisma } from "/.db";
 import styles from "/styles/EmployerDeductions.module.css";
-import safeJsonStringify from "safe-json-stringify";
-import Sidebar from "../../components/Sidebar";
-import DeductionsCard from "../../components/DeductionsCard";
-import NewDeductionModal from "../../components/NewDeductionModal";
-import Search from "../../components/Search";
-import IconBox from "../../components/IconBox";
-import DeleteModal from "../../components/DeleteModal";
-import { Router } from "next/router";
-
-export async function getServerSideProps(context) {
-    const { companyID } = context.params;
-
-    let deductionsQuery = await prisma.deduccionVoluntaria.findMany({
-        where: {
-            cedulaJuridica: companyID,
-        },
-    });
-    let projectQuery = await prisma.proyecto.findMany({
-        where: {
-            cedulaJuridica: companyID,
-        },
-        select: {
-            nombre: true,
-            moneda: true,
-        },
-    });
-    const deductionString = JSON.parse(safeJsonStringify(deductionsQuery));
-    const proyectString = JSON.parse(safeJsonStringify(projectQuery));
-
-    return {
-        props: {
-            companyID,
-            deductionString,
-            proyectString,
-        },
-    };
-}
+import Sidebar from "./Sidebar";
+import DeductionsCard from "./DeductionsCard";
+import NewDeductionModal from "./NewDeductionModal";
+import Search from "./Search";
+import IconBox from "./IconBox";
+import DeleteModal from "../components/DeleteModal";
+import  Router  from "next/router";
 
 const TextFieldStandard = styled(Select)({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -58,7 +27,8 @@ const TextFieldStandard = styled(Select)({
     overflow: `hidden`,
 });
 
-const Deductions = ({ companyID, deductionString, proyectString }) => {
+const Deductions = ({ props }) => {
+    const { companyID, deductionString, proyectString, name, isEmployer } = props;
     const projects = proyectString;
     const [modalOpened, setModalOpened] = useState(false);
     const [searchText, setSearchText] = useState("");
@@ -206,7 +176,7 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                 companyID={companyID}
                 projects={projects}
             />
-            <Sidebar selected={5} username="Derek Suárez" />
+            <Sidebar selected={5} username={name} isEmployer={isEmployer} />
             <main className={styles.main}>
                 <div className={styles.main__header}>
                     <FormControl>

@@ -194,7 +194,15 @@ function BeneficiosCard(props) {
                         >
                             <EditIcon />
                         </IconButton>
-                        <IconButton size="small" color="error">
+                        <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => {
+                                props.setIsOpen(true);
+                                props.setSelected(props.name);
+                            }}
+                            disabled={props.selectedProjectName === "Todos"}
+                        >
                             <DeleteIcon />
                         </IconButton>
                     </Stats>
