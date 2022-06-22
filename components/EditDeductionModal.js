@@ -200,7 +200,6 @@ const Cancelar = styled("div")(({ theme }) => ({
 function EditDeductionModal(props) {
     const [validFields, setValidFields] = useState(false);
     const [isValidAmount, setIsValidAmount] = useState(true);
-    const [selectedProjectName, setSelectedProjectName] = useState("");
     const [projectCurrency, setprojectCurrency] = useState("");
     const [Values, setValues] = useState({
         companyID: props.companyID,
@@ -233,7 +232,7 @@ function EditDeductionModal(props) {
     });
 
     const handleChangeProject = (e) => {
-        setSelectedProjectName(e.target.value);
+        props.projectName(e.target.value);
         props.projects.map((project) => {
             if (project.nombre == e.target.value) {
                 setprojectCurrency(project.moneda);
@@ -245,7 +244,7 @@ function EditDeductionModal(props) {
         const Data = {
             companyID: Values.companyID,
             deductionName: Values.deductionName,
-            projectName: selectedProjectName,
+            projectName: props.projectName,
             amount: Values.amount,
             description: Values.description,
         };
@@ -279,6 +278,7 @@ function EditDeductionModal(props) {
                         </Frame1>
                         <TextFieldStandard
                             id="deductionName"
+                            defaultValue={Values.deductionName}
                             variant="standard"
                             size="small"
                             label={`Nombre`}
@@ -291,7 +291,9 @@ function EditDeductionModal(props) {
                                 </InputLabel>
                                 <TextFieldStandard1
                                     id="projectName"
-                                    value={selectedProjectName}
+                                    value={props.projectName}
+                                    defaultValue={props.projectName}
+                                    disabled={true}
                                     variant="standard"
                                     size="medium"
                                     onChange={handleChangeProject}
@@ -310,12 +312,13 @@ function EditDeductionModal(props) {
                             <TextFieldStandard2
                                 id="amount"
                                 value={Values.amount}
+                                defaultValue={Values.amount}
                                 type="number"
                                 variant="standard"
                                 size="medium"
                                 label={`Monto`}
                                 onChange={handleChange}
-                                disabled={!selectedProjectName}
+                                disabled={!props.projectName}
                                 error={!isValidAmount}
                                 InputProps={{
                                     endAdornment: (
@@ -330,6 +333,7 @@ function EditDeductionModal(props) {
                             id="description"
                             value={Values.description}
                             variant="outlined"
+                            defaultValue={Values.description}
                             size="medium"
                             multiline
                             rows={4}

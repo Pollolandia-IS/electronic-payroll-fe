@@ -15,6 +15,8 @@
 import { styled } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import EditDeductionModal from "./EditDeductionModal";
+import { useState } from "react";
 import { IconButton, Tooltip } from "@mui/material";
 
 const TypeEmpleador = styled("div")(({ theme }) => ({
@@ -150,11 +152,20 @@ const Stats = styled("div")({
 });
 
 function DeductionsCard(props) {
-    const editDeduction = () => {
-        props.editDeductionModal(props.name, props.amount, props.description);
-      };
+    const [editModalIsOpen, setEditModalIsOpen] = useState(false);
     return (
-        <TypeEmpleador>
+        <>
+            <EditDeductionModal
+                isOpen={editModalIsOpen}
+                setIsOpen={setEditModalIsOpen}
+                companyID={props.companyID}
+                projects={props.projects}
+                projectName = {props.projectName}
+                deductionName={props.name}
+                amount={props.amount}
+                description={props.description}
+            />
+            <TypeEmpleador>
             <Right>
                 <Details>
                     <Frame1>
@@ -174,7 +185,7 @@ function DeductionsCard(props) {
                     <Description>{props.description}</Description>
                 </Details>
                 <Stats>
-                    <IconButton onClick={() => {editDeduction();}} size="small" color="primary">
+                    <IconButton onClick={() => {setEditModalIsOpen(true);}} size="small" color="primary">
                         <EditIcon />
                     </IconButton>
                     <IconButton size="small" color="error">
@@ -182,7 +193,8 @@ function DeductionsCard(props) {
                     </IconButton>
                 </Stats>
             </Right>
-        </TypeEmpleador>
+            </TypeEmpleador>
+        </>
     );
 }
 

@@ -61,13 +61,8 @@ const TextFieldStandard = styled(Select)({
 const Deductions = ({ companyID, deductionString, proyectString }) => {
     const projects = proyectString;
     const [modalOpened, setModalOpened] = useState(false);
-    const [modalEditOpened, setModalEditOpened] = useState(false);
     const [searchText, setSearchText] = useState("");
     const [selectedProjectName, setSelectedProjectName] = useState("Todos");
-    const setEditDeductionModal = ({name, amount, description}) => {
-        
-        setModalEditOpened(true);
-      };
     const getDeductions = () => {
         if (selectedProjectName == "Todos") {
             return deductionString.map((deduction) => {
@@ -78,7 +73,9 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                             name={deduction.nombreDeduccion}
                             amount={deduction.monto}
                             description={deduction.descripcion}
-                            editDeductionModal = {setEditDeductionModal}
+                            companyID = {companyID}
+                            projects = {projects}
+                            projectName = {deduction.nombreProyecto}
                         />
                     );
                 } else {
@@ -93,7 +90,9 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                                 name={deduction.nombreDeduccion}
                                 amount={deduction.monto}
                                 description={deduction.descripcion}
-                                editDeductionModal = {setEditDeductionModal}
+                                companyID = {companyID}
+                                projects = {projects}
+                                projectName = {deduction.nombreProyecto}
                             />
                         );
                     }
@@ -109,7 +108,9 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                                 name={deduction.nombreDeduccion}
                                 amount={deduction.monto}
                                 description={deduction.descripcion}
-                                editDeductionModal = {setEditDeductionModal}
+                                companyID = {companyID}
+                                projects = {projects}
+                                projectName = {deduction.nombreProyecto}
                             />
                         );
                     } else {
@@ -124,7 +125,9 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                                     name={deduction.nombreDeduccion}
                                     amount={deduction.monto}
                                     description={deduction.descripcion}
-                                    editDeductionModal = {setEditDeductionModal}
+                                    companyID = {companyID}
+                                    projects = {projects}
+                                    projectName = {deduction.nombreProyecto}
                                 />
                             );
                         }
@@ -167,15 +170,6 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                 companyID={companyID}
                 projects={projects}
             />
-            <EditDeductionModal
-                isOpen={modalEditOpened}
-                setIsOpen={setModalEditOpened}
-                companyID={companyID}
-                projects={projects}
-                deductionName="prueba"
-                amount=""
-                description=""
-            />
             <Sidebar selected={5} username="Derek Suárez" />
             <main className={styles.main}>
                 <div className={styles.main__header}>
@@ -212,6 +206,7 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                     </IconBox>
                 </div>
                 <div className={styles.main__content}>{getRows()}</div>
+                
             </main>
         </>
     );
