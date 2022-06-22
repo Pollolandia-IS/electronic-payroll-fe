@@ -174,7 +174,14 @@ function DeductionsCard(props) {
                     <IconButton size="small" color="primary">
                         <EditIcon />
                     </IconButton>
-                    <IconButton size="small" color="error">
+                    <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => {
+                            props.setIsOpenRemove(true);
+                            props.setSelectedDeduction(props.name);
+                        }}
+                    >
                         <DeleteIcon />
                     </IconButton>
                 </Stats>
