@@ -176,7 +176,7 @@ function Sidebar(props) {
          <List >
            <div>
             <SidebarRow1  icon="home" text="Inicio" isSelected={props.selected == 1} href={'#'} />
-            <SidebarRow2  icon="project" text="Proyectos" isSelected={props.selected == 2} href={'#'} />
+            <SidebarRow2  icon="project" text="Proyectos" isSelected={props.selected == 2} href={'/project'} />
             <SidebarRow3  icon="employee" text="Empleados" isSelected={props.selected == 3} href={'#'} />
             <SidebarRow4  icon="report" text={'Registro de Horas'} isSelected={props.selected == 4} href={'#'} />
             <SidebarRow5  icon="voluntary" text={'Deducciones'} isSelected={props.selected == 5} href={'/deductions'} />
