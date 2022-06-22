@@ -12,9 +12,12 @@ const handleRequest = (req, userData) => {
     }
     else if (url === 'http://localhost:3000/benefits') {
         return handleBenefits(userData);
-    } else if (url === `${process.env.URL}/project`) {
+    } else if (url === `http://localhost:3000/project`) {
         return handleProject(userData);
-    } else {
+    } else if (url === `http://localhost:3000/employees`) {
+        return handleEmployees(userData);
+    }
+    else {
         return NextResponse.next();
     }
 };
@@ -46,12 +49,27 @@ const handleProject = async (userData) => {
             response.headers.append("ids", JSON.stringify(ids));
             return response;
         } else {
-            return NextResponse.redirect(`${process.env.URL}/coming-soon`);
+            return NextResponse.redirect(`http://localhost:3000/coming-soon`);
         }
     } else {
-        return NextResponse.redirect(`${process.env.URL}/unauthorized`);
+        return NextResponse.redirect(`http://localhost:3000/unauthorized`);
     }
 };
+
+const handleEmployees = async (userData) => {
+    if (userData) {
+        if (userData.isEmployer) {
+            const ids = await fetchIds(userData);
+            let response = NextResponse.next();
+            response.headers.append("ids", JSON.stringify(ids));
+            return response;
+        } else {
+            return NextResponse.redirect(`http://localhost:3000/coming-soon`);
+        }
+    } else {
+        return NextResponse.redirect(`http://localhost:3000/unauthorized`);
+    }
+}
 
 const decodeToken = async (req) => {
     const { cookies } = req;
