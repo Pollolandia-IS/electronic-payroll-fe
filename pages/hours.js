@@ -1,9 +1,9 @@
 import { prisma } from "/.db";
-import HourTable from "../../../../components/HourTable";
-import HourModal from "../../../../components/HourModal";
-import Search from "../../../../components/Search";
-import Sidebar from "../../../../components/Sidebar";
-import IconBox from "../../../../components/IconBox";
+import HourTable from "../components/HourTable";
+import HourModal from "../components/HourModal";
+import Search from "../components/Search";
+import Sidebar from "../components/Sidebar";
+import IconBox from "../components/IconBox";
 import AddIcon from "@mui/icons-material/Add";
 import Styles from "/styles/AddHoursEmployee.module.css";
 import { useState } from "react";
