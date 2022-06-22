@@ -9,11 +9,11 @@ const handleRequest = (req, userData) => {
     const url = req.url;
     if (url === `${process.env.URL}/`) {
         return handleIndex(userData);
-    }
-    else if (url === `${process.env.URL}/benefits`) {
+    } else if (url === `${process.env.URL}/benefits`) {
         return handleBenefits(userData);
-    }
-    else {
+    } else if (url === `${process.env.URL}/project`) {
+        return handleProject(userData);
+    } else {
         return NextResponse.next();
     }
 };
@@ -35,7 +35,22 @@ const handleBenefits = async (userData) => {
     } else {
         return NextResponse.redirect(`${process.env.URL}/unauthorized`);
     }
-}
+};
+
+const handleProject = async (userData) => {
+    if (userData) {
+        if (userData.isEmployer) {
+            const ids = await fetchIds(userData);
+            let response = NextResponse.next();
+            response.headers.append("ids", JSON.stringify(ids));
+            return response;
+        } else {
+            return NextResponse.redirect(`${process.env.URL}/coming-soon`);
+        }
+    } else {
+        return NextResponse.redirect(`${process.env.URL}/unauthorized`);
+    }
+};
 
 const decodeToken = async (req) => {
     const { cookies } = req;
