@@ -1,0 +1,171 @@
+import { Select, FormControl, InputLabel, MenuItem } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { styled } from "@mui/material/styles";
+import { useState } from "react";
+import styles from "/styles/EmployerBenefits.module.css";
+import Sidebar from "./Sidebar";
+import BenefitsCard from "./CardBenefits";
+import NewBenefitModal from "./ModalBenefits";
+import Search from "./Search";
+import IconBox from "./IconBox";
+
+const TextFieldStandard = styled(Select)({
+    backgroundColor: `rgba(255, 255, 255, 1)`,
+    boxShadow: `0px 2px 5px rgba(0, 0, 0, 0.15)`,
+    borderRadius: `7px`,
+    display: `flex`,
+    flexDirection: `row`,
+    width: `343px`,
+    height: `50px`,
+    justifyContent: `flex-start`,
+    alignItems: `center`,
+    gap: `24px`,
+    padding: `0px`,
+    boxSizing: `border-box`,
+    overflow: `hidden`,
+});
+
+const EmployerBenefits = ({ props }) => {
+    const { companyID, benefitString, proyectString, name } = props;
+    const projects = proyectString;
+    const [modalOpened, setModalOpened] = useState(false);
+    const [searchText, setSearchText] = useState("");
+    const [selectedProjectName, setSelectedProjectName] = useState("Todos");
+
+    const getBenefits = () => {
+        if (selectedProjectName == "Todos") {
+            return benefitString.map((benefit) => {
+                if (searchText == "") {
+                    return (
+                        <BenefitsCard
+                            key={benefit.nombreBeneficio}
+                            name={benefit.nombreBeneficio}
+                            amount={benefit.montoPago}
+                            description={benefit.descripcion}
+                        />
+                    );
+                } else {
+                    if (
+                        benefit.nombreBeneficio
+                            .toLowerCase()
+                            .includes(searchText.toLowerCase())
+                    ) {
+                        return (
+                            <BenefitsCard
+                                key={benefit.nombreBeneficio}
+                                name={benefit.nombreBeneficio}
+                                amount={benefit.montoPago}
+                                description={benefit.descripcion}
+                            />
+                        );
+                    }
+                }
+            });
+        } else {
+            return benefitString.map((benefit) => {
+                if (selectedProjectName == benefit.nombreProyecto) {
+                    if (searchText == "") {
+                        return (
+                            <BenefitsCard
+                                key={benefit.nombreBeneficio}
+                                name={benefit.nombreBeneficio}
+                                amount={benefit.montoPago}
+                                description={benefit.descripcion}
+                            />
+                        );
+                    } else {
+                        if (
+                            benefit.nombreBeneficio
+                                .toLowerCase()
+                                .includes(searchText.toLowerCase())
+                        ) {
+                            return (
+                                <BenefitsCard
+                                    key={benefit.nombreBeneficio}
+                                    name={benefit.nombreBeneficio}
+                                    amount={benefit.montoPago}
+                                    description={benefit.descripcion}
+                                />
+                            );
+                        }
+                    }
+                }
+            });
+        }
+    };
+
+    const getRows = () => {
+        let rows = [];
+        let benefits = getBenefits();
+        benefits = benefits.filter((benefit) => benefit != undefined);
+        for (let i = 0; i < benefits.length; i += 2) {
+            rows.push(
+                <div key={i} className={styles.main__row}>
+                    {benefits[i]}
+                    {benefits[i + 1]}
+                </div>
+            );
+        }
+        return rows;
+    };
+
+    const handleChangeProject = (e) => {
+        setSelectedProjectName(e.target.value);
+        getRows();
+    };
+
+    const handleTextChange = (e) => {
+        setSearchText(e.target.value);
+        getRows();
+    };
+
+    return (
+        <>
+            <NewBenefitModal
+                isOpen={modalOpened}
+                setIsOpen={setModalOpened}
+                companyID={companyID}
+                projects={projects}
+            />
+            <Sidebar selected={6} username={name} />
+            <main className={styles.main}>
+                <div className={styles.main__header}>
+                    <FormControl>
+                        <InputLabel id="select-label"></InputLabel>
+                        <TextFieldStandard
+                            id="projectName"
+                            value={selectedProjectName}
+                            size="medium"
+                            onChange={handleChangeProject}
+                        >
+                            <MenuItem key={""} value={"Todos"}>
+                                {" "}
+                                Todos los Proyectos{" "}
+                            </MenuItem>
+                            {projects.map((project) => (
+                                <MenuItem
+                                    key={project.nombre}
+                                    value={project.nombre}
+                                >
+                                    {" "}
+                                    {project.nombre}{" "}
+                                </MenuItem>
+                            ))}
+                        </TextFieldStandard>
+                    </FormControl>
+                    <Search
+                        handleSearch={handleTextChange}
+                        searchText={searchText}
+                        placeholder="Buscar beneficio..."
+                    />
+                    <IconBox action={() => setModalOpened(true)}>
+                        <AddIcon fontSize="large" />
+                    </IconBox>
+                </div>
+                <div className={styles.main__content}>{getRows()}</div>
+            </main>
+        </>
+    );
+};
+
+export default EmployerBenefits;
