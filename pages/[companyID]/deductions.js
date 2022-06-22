@@ -18,11 +18,13 @@ export async function getServerSideProps(context) {
     let deductionsQuery = await prisma.deduccionVoluntaria.findMany({
         where: {
             cedulaJuridica: companyID,
+            habilitado: true,
         },
     });
     let projectQuery = await prisma.proyecto.findMany({
         where: {
             cedulaJuridica: companyID,
+            habilitado: true,
         },
         select: {
             nombre: true,

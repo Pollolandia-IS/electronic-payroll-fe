@@ -295,8 +295,8 @@ function EditDeductionModal(props) {
                                 </InputLabel>
                                 <TextFieldStandard1
                                     id="projectName"
-                                    value={props.projectName}
-                                    defaultValue={props.projectName}
+                                    value={selectedProjectName}
+                                    defaultValue={selectedProjectName}
                                     variant="standard"
                                     size="medium"
                                     onChange={handleChangeProject}
@@ -381,7 +381,7 @@ function EditDeductionModal(props) {
                                 endIcon={<ArrowForwardIcon />}
                             >
                                 {" "}
-                                {`Editar Deducción`}{" "}
+                                {`Guardar Cambios`}{" "}
                             </Button>
                         )}
                     </Links>
