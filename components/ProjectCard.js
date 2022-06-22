@@ -17,7 +17,8 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButton, Tooltip } from '@mui/material';
-
+import { useState } from "react";
+import EditProjectModal from '../components/EditProjectModal'
  
 const TypeGeneral = styled("div")(({ theme }) =>({  
   backgroundColor: `rgba(255, 255, 255, 1)`,  
@@ -31,7 +32,7 @@ const TypeGeneral = styled("div")(({ theme }) =>({
   alignItems: `flex-start`,  
   gap: `16px`,  
   padding: `0px`,  
-  boxSizing: `border-box`,  
+  boxSizing: `border-box`,
   overflow: `hidden`,  
 }));
   
@@ -199,52 +200,59 @@ const Frame4 = styled("div")({
   alignSelf: `stretch`,  
   width: `348px`,  
 });
- 
+
 function ProjectCard(props) {
+  const [editModalIsOpen, setEditModalIsOpen] = useState(false);
+
   return (
-    <TypeGeneral >
-       <Right >
-         <Details >
-           <Tooltip title={props.name} arrow enterDelay={1500} placement="top-start">
-           <Role >
-             {props.name}
-               </Role>
-              </Tooltip>
-           <Frame2 >
-             <Date >
-               {`Fecha de inicio:`}
-                 </Date>
-             <DateValue >
-               {props.date}
-                 </DateValue>
-           </Frame2>
-           <Frame1 >
-             <Frequency >
-               {`Frecuencia: `}
-                 </Frequency>
-             <FrequencyValue >
-               {props.frequency}
-                 </FrequencyValue>
-           </Frame1>
-         </Details>
-         <Stats >
-           <Frame11 >
-             <AccountCircleOutlinedIcon color='primary' />
-             <EmployeeCount >
-               {props.employeeCount}
-                 </EmployeeCount>
-           </Frame11>
-           <Frame4 >
-           </Frame4>
-           <IconButton size="small" color="primary" >
-              <EditIcon />
-            </IconButton>
-            <IconButton size="small" color="error" >
-              <DeleteIcon />
-            </IconButton>
-         </Stats>
-       </Right>
-     </TypeGeneral>
+    <>
+      <EditProjectModal isOpen={editModalIsOpen} setIsOpen={setEditModalIsOpen} projects={props.projects} companyID={props.companyID}
+        name={props.name} maxBen={props.maxBen} maxAmountBen={props.maxAmountBen} currency={props.currency}
+        frequency={props.frequency} date={props.date} employeeCount={props.employeeCount} />
+      <TypeGeneral >
+        <Right >
+          <Details >
+            <Tooltip title={props.name} arrow enterDelay={1500} placement="top-start">
+            <Role >
+              {props.name}
+                </Role>
+                </Tooltip>
+            <Frame2 >
+              <Date >
+                {`Fecha de inicio:`}
+                  </Date>
+              <DateValue >
+                {props.date}
+                  </DateValue>
+            </Frame2>
+            <Frame1 >
+              <Frequency >
+                {`Frecuencia: `}
+                  </Frequency>
+              <FrequencyValue >
+                {props.frequency}
+                  </FrequencyValue>
+            </Frame1>
+          </Details>
+          <Stats >
+            <Frame11 >
+              <AccountCircleOutlinedIcon color='primary' />
+              <EmployeeCount >
+                {props.employeeCount}
+                  </EmployeeCount>
+            </Frame11>
+            <Frame4 >
+            </Frame4>
+            <IconButton size="small" color="primary" onClick={()=> setEditModalIsOpen(true)} >
+                <EditIcon/>
+              </IconButton>
+              <IconButton size="small" color="error" >
+                <DeleteIcon />
+              </IconButton>
+          </Stats>
+        </Right>
+      </TypeGeneral>
+    </>
    );
 }
 
