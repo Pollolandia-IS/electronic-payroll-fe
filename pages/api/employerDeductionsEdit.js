@@ -7,9 +7,16 @@ export default function handler(req, res) {
 }
 
 async function editDeduction(req, res) {
-    try{
+    //try{
         const { companyID, deductionName, projectName, amount, description} = req.body;
-        const createDeduction = await prisma.deduccionVoluntaria.edit({
+        const createDeduction = await prisma.deduccionVoluntaria.update({
+            where: {
+                cedulaJuridica_nombreProyecto_nombreDeduccion : {
+                    cedulaJuridica : companyID,
+                    nombreProyecto : projectName,
+                    nombreDeduccion : deductionName
+                }
+            },
             data:{
                 cedulaJuridica: companyID,
                 nombreProyecto : projectName,
@@ -18,10 +25,9 @@ async function editDeduction(req, res) {
                 descripcion : description,
             }
         });
-        console.log("Salí :D");
         res.status(200).json(createDeduction);
-    } catch(error){
+    /*} catch(error){
         res.status(500);
         res.send(error.message);
-    }
+    }*/
 }
