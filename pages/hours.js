@@ -11,6 +11,7 @@ import IconBox from "../components/IconBox";
 import Styles from "/styles/AddHoursEmployee.module.css";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import jwt from "jsonwebtoken";
 
 const TextFieldStandard = styled(Select)({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -29,7 +30,13 @@ const TextFieldStandard = styled(Select)({
 });
 
 export async function getServerSideProps(context) {
-    const { companyID, employeeID, projectID } = context.params;
+
+    const { req, res } = context;
+    const { cookies } = req;
+    const ids = JSON.parse(res._headers.ids);
+    const {userData} = jwt.verify(cookies.token, process.env.JWT_SECRET);
+    const employeeID = ids.id;
+    const companyID = ids.companyId;
 
     const hours = await prisma.reporteHoras.findMany({
         where: {
@@ -59,7 +66,7 @@ export async function getServerSideProps(context) {
         )
     );
 
-    let employeesNotInThisProject = await prisma.esContratado.findMany({
+    let employeeProjects = await prisma.esContratado.findMany({
         where: {
             cedulaEmpleado: employeeID,
         },
@@ -67,7 +74,6 @@ export async function getServerSideProps(context) {
             nombreProyecto: true,
         },
     });
-
     let projectQuery = (
         await prisma.proyecto.findMany({
             where: {
@@ -77,33 +83,30 @@ export async function getServerSideProps(context) {
                 nombre: true,
             },
         })
-    ).filter((project) =>
-        employeesNotInThisProject.every(
+    );
+    projectQuery = projectQuery.filter((project) =>
+        employeeProjects.some(
             (employee) => employee.nombreProyecto === project.nombre
         )
     );
 
     const proyectString = JSON.parse(safeJsonStringify(projectQuery));
 
-    console.log(proyectString);
-
     return {
         props: {
             hoursWithId,
-            nombreProyecto: projectID,
             cedulaEmpleado: employeeID,
-            cedulaJuridica: companyID,
             proyectString,
+            name: userData.name,
         },
     };
 }
 
 const AddHoursEmployee = ({
-    nombreProyecto,
     cedulaEmpleado,
     hoursWithId,
-    cedulaJuridica,
     proyectString,
+    name,
 }) => {
     const projects = proyectString;
     const [showModal, setShowModal] = useState(false);
@@ -153,6 +156,7 @@ const AddHoursEmployee = ({
             setDateState(event.toISOString().slice(0, 19).replace("T", " "));
             handleButtonState(false);
         }
+        handleHoursChange({ target: { value: hours } });
     };
 
     const handleSubmit = async (event) => {
@@ -181,7 +185,6 @@ const AddHoursEmployee = ({
                 hours={hours}
                 handleHours={handleHoursChange}
                 employeeID={cedulaEmpleado}
-                project={nombreProyecto}
                 isOpen={showModal}
                 setIsOpen={setShowModal}
                 handleSubmit={handleSubmit}
@@ -190,7 +193,7 @@ const AddHoursEmployee = ({
             />
             <div className={Styles.body}>
                 <div className={Styles.sidebar}>
-                    <Sidebar />
+                    <Sidebar selected={4} username={name} />
                 </div>
                 <div className={Styles.main}>
                     <div className={Styles.main__header}>
@@ -218,7 +221,7 @@ const AddHoursEmployee = ({
                             searchText={searchText}
                             placeholder="Buscar beneficio..."
                         />
-                        <IconBox action={() => setShowModal(true)}>
+                        <IconBox action={() => setShowModal(true)} isDisabled={selectedProjectName === ""}>
                             <AddIcon fontSize="large" />
                         </IconBox>
                     </div>
