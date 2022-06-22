@@ -14,6 +14,7 @@ async function selectBenefit (req, res) {
                 cedulaJuridica: req.body.companyID,
                 nombreProyecto: req.body.projectName,
                 nombreBeneficio: req.body.benefitName,
+                habilitado: true,
             }
         });
         res.status(200).json({ success: benefits });

@@ -18,7 +18,6 @@ async function addDeductionToProject(req, res) {
                 descripcion : description,
             }
         });
-        console.log("Salí :D");
         res.status(200).json(createDeduction);
     } catch(error){
         res.status(500);
