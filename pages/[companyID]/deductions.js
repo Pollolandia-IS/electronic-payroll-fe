@@ -11,6 +11,7 @@ import NewDeductionModal from "../../components/NewDeductionModal";
 import Search from "../../components/Search";
 import IconBox from "../../components/IconBox";
 import DeleteModal from "../../components/DeleteModal";
+import { Router } from "next/router";
 
 export async function getServerSideProps(context) {
     const { companyID } = context.params;
@@ -68,39 +69,7 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
     const getDeductions = () => {
         if (selectedProjectName == "Todos") {
             return deductionString.map((deduction) => {
-                if (searchText == "") {
-                    return (
-                        <DeductionsCard
-                            key={deduction.nombreDeduccion}
-                            name={deduction.nombreDeduccion}
-                            amount={deduction.monto}
-                            description={deduction.descripcion}
-                            setIsOpenRemove={setIsOpenRemove}
-                            setSelectedDeduction={setSelectedDeduction}
-                        />
-                    );
-                } else {
-                    if (
-                        deduction.nombreDeduccion
-                            .toLowerCase()
-                            .includes(searchText.toLowerCase())
-                    ) {
-                        return (
-                            <DeductionsCard
-                                key={deduction.nombreDeduccion}
-                                name={deduction.nombreDeduccion}
-                                amount={deduction.monto}
-                                description={deduction.descripcion}
-                                setIsOpenRemove={setIsOpenRemove}
-                                setSelectedDeduction={setSelectedDeduction}
-                            />
-                        );
-                    }
-                }
-            });
-        } else {
-            return deductionString.map((deduction) => {
-                if (selectedProjectName == deduction.nombreProyecto) {
+                if (deduction.habilitado) {
                     if (searchText == "") {
                         return (
                             <DeductionsCard
@@ -110,6 +79,7 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                                 description={deduction.descripcion}
                                 setIsOpenRemove={setIsOpenRemove}
                                 setSelectedDeduction={setSelectedDeduction}
+                                selectedProject={selectedProjectName}
                             />
                         );
                     } else {
@@ -126,8 +96,47 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                                     description={deduction.descripcion}
                                     setIsOpenRemove={setIsOpenRemove}
                                     setSelectedDeduction={setSelectedDeduction}
+                                    selectedProject={selectedProjectName}
                                 />
                             );
+                        }
+                    }
+                }
+            });
+        } else {
+            return deductionString.map((deduction) => {
+                if (deduction.habilitado) {
+                    if (selectedProjectName == deduction.nombreProyecto) {
+                        if (searchText == "") {
+                            return (
+                                <DeductionsCard
+                                    key={deduction.nombreDeduccion}
+                                    name={deduction.nombreDeduccion}
+                                    amount={deduction.monto}
+                                    description={deduction.descripcion}
+                                    setIsOpenRemove={setIsOpenRemove}
+                                    setSelectedDeduction={setSelectedDeduction}
+                                    selectedProject={selectedProjectName}
+                                />
+                            );
+                        } else {
+                            if (
+                                deduction.nombreDeduccion
+                                    .toLowerCase()
+                                    .includes(searchText.toLowerCase())
+                            ) {
+                                return (
+                                    <DeductionsCard
+                                        key={deduction.nombreDeduccion}
+                                        name={deduction.nombreDeduccion}
+                                        amount={deduction.monto}
+                                        description={deduction.descripcion}
+                                        setIsOpenRemove={setIsOpenRemove}
+                                        setSelectedDeduction={setSelectedDeduction}
+                                        selectedProject={selectedProjectName}
+                                    />
+                                );
+                            }
                         }
                     }
                 }
@@ -173,6 +182,7 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(dataForDB),
                 });
+                Router.reload();
                 setIsOpenRemove(false);
             } catch (error) {
                 console.error(error);
