@@ -63,30 +63,32 @@ const Benefits = ({companyID, benefitString, proyectString}) => {
   const [searchText, setSearchText] = useState('');
   const [selectedProjectName, setSelectedProjectName] = useState('Todos');
 
+  const createBenefitCard = (nombreProyecto, nombreBeneficio, montoPago,descripcion ) => {
+    return <BenefitsCard key={nombreBeneficio} projects={proyectString} benefits={benefitString} companyID={companyID} projectName={nombreProyecto} name={nombreBeneficio} amount={montoPago} description={descripcion} />
+  }
+
   const getBenefits = () => {
-    if(selectedProjectName == 'Todos'){
-      return benefitString.map(benefit => {
+    return benefitString.map(benefit => {
+      if(selectedProjectName == 'Todos'){
         if(searchText == ''){
-          return <BenefitsCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} amount={benefit.montoPago} description={benefit.descripcion} />
+          return createBenefitCard( benefit.nombreProyecto, benefit.nombreBeneficio,benefit.montoPago, benefit.descripcion );
         } else {
           if(benefit.nombreBeneficio.toLowerCase().includes(searchText.toLowerCase())){
-            return <BenefitsCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} amount={benefit.montoPago} description={benefit.descripcion} />
+            return createBenefitCard( benefit.nombreProyecto, benefit.nombreBeneficio,benefit.montoPago, benefit.descripcion );
           }
         }
-      });
-    } else {
-      return benefitString.map(benefit => {
+      } else {
         if(selectedProjectName == benefit.nombreProyecto ){
           if(searchText == ''){
-            return <BenefitsCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} amount={benefit.montoPago} description={benefit.descripcion} />
+            return createBenefitCard( benefit.nombreProyecto, benefit.nombreBeneficio,benefit.montoPago, benefit.descripcion );
           } else {
             if(benefit.nombreBeneficio.toLowerCase().includes(searchText.toLowerCase())){
-              return <BenefitsCard key={benefit.nombreBeneficio} name={benefit.nombreBeneficio} amount={benefit.montoPago} description={benefit.descripcion} />
+              return createBenefitCard( benefit.nombreProyecto, benefit.nombreBeneficio,benefit.montoPago, benefit.descripcion );
             }
           }
         }
-      });
-    }
+      }
+    });
   }
 
   const getRows = () => {
