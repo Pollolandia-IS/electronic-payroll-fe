@@ -19,6 +19,7 @@ async function insertProject (req, res) {
                 montoMaximoBeneficio: parseInt(amount),
                 frecuenciaPago: frequency,
                 fechaInicio: date,
+                habilitado: true,
             }
         });
         console.log(result);
