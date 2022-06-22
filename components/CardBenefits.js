@@ -178,7 +178,7 @@ function BeneficiosCard(props) {
           <IconButton size="small" color="primary" >
             <EditIcon />
           </IconButton>
-          <IconButton size="small" color="error" >
+          <IconButton size="small" color="error" onClick={() => {props.setIsOpen(true); props.setSelected(props.name);}}>
             <DeleteIcon />
           </IconButton>
         </Stats>
