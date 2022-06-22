@@ -7,7 +7,7 @@ export default async function middleware(req) {
 
 const handleRequest = (req, userData) => {
     const url = req.url;
-    if (url === URL) {
+    if (url === 'http://localhost:3000/') {
         return handleIndex(userData);
     }
     else if (url === 'http://localhost:3000/benefits') {
