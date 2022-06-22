@@ -10,6 +10,7 @@ import DeductionsCard from "../../components/DeductionsCard";
 import NewDeductionModal from "../../components/NewDeductionModal";
 import Search from "../../components/Search";
 import IconBox from "../../components/IconBox";
+import DeleteModal from "../../components/DeleteModal";
 
 export async function getServerSideProps(context) {
     const { companyID } = context.params;
@@ -61,6 +62,8 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
     const [modalOpened, setModalOpened] = useState(false);
     const [searchText, setSearchText] = useState("");
     const [selectedProjectName, setSelectedProjectName] = useState("Todos");
+    const [selectedDeduction, setSelectedDeduction] = useState("");
+    const [isOpenRemove, setIsOpenRemove] = useState(false);
 
     const getDeductions = () => {
         if (selectedProjectName == "Todos") {
@@ -72,6 +75,8 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                             name={deduction.nombreDeduccion}
                             amount={deduction.monto}
                             description={deduction.descripcion}
+                            setIsOpenRemove={setIsOpenRemove}
+                            setSelectedDeduction={setSelectedDeduction}
                         />
                     );
                 } else {
@@ -86,6 +91,8 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                                 name={deduction.nombreDeduccion}
                                 amount={deduction.monto}
                                 description={deduction.descripcion}
+                                setIsOpenRemove={setIsOpenRemove}
+                                setSelectedDeduction={setSelectedDeduction}
                             />
                         );
                     }
@@ -101,6 +108,8 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                                 name={deduction.nombreDeduccion}
                                 amount={deduction.monto}
                                 description={deduction.descripcion}
+                                setIsOpenRemove={setIsOpenRemove}
+                                setSelectedDeduction={setSelectedDeduction}
                             />
                         );
                     } else {
@@ -115,6 +124,8 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                                     name={deduction.nombreDeduccion}
                                     amount={deduction.monto}
                                     description={deduction.descripcion}
+                                    setIsOpenRemove={setIsOpenRemove}
+                                    setSelectedDeduction={setSelectedDeduction}
                                 />
                             );
                         }
@@ -149,8 +160,36 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
         getRows();
     };
 
+    const deleteDeduction = async () => {
+        if (selectedProjectName !== "Todos"){
+            const dataForDB = {
+                companyID: companyID,
+                projectName: selectedProjectName,
+                deductionName: selectedDeduction,
+            };
+            try {
+                await fetch(`/api/deleteDeduction/`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dataForDB),
+                });
+                setIsOpenRemove(false);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+
     return (
         <>
+            <DeleteModal
+                title="Eliminar deducción"
+                message="¿Deseas eliminar esta deducción?"
+                buttonText="Eliminar"
+                setIsOpen={setIsOpenRemove}
+                isOpen={isOpenRemove}
+                buttonAction={() => deleteDeduction()}
+            />
             <NewDeductionModal
                 isOpen={modalOpened}
                 setIsOpen={setModalOpened}
