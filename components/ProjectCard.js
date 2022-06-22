@@ -250,7 +250,14 @@ function ProjectCard(props) {
                         >
                             <EditIcon />
                         </IconButton>
-                        <IconButton size="small" color="error">
+                        <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => {
+                                props.setIsOpen(true);
+                                props.setSelectedProject(props.name);
+                            }}
+                        >
                             <DeleteIcon />
                         </IconButton>
                     </Stats>
