@@ -10,13 +10,17 @@ import AddIcon from '@mui/icons-material/Add';
 import {prisma} from "/.db";
 import safeJsonStringify from 'safe-json-stringify';
 import NewProjectModal from "../components/NewProjectModal";
+import jwt from "jsonwebtoken";
 
 export async function getServerSideProps(context) {
-  const { companyID } = context.params;
+  const { req, res } = context;
+  const { cookies } = req;
+  const ids = JSON.parse(res._headers.ids);
+  const {userData} = jwt.verify(cookies.token, process.env.JWT_SECRET);
 
   let projects = await prisma.proyecto.findMany({
     where: {
-      cedulaJuridica: companyID
+      cedulaJuridica: ids.companyId,
     },
     include: {
       _count: {
@@ -30,15 +34,14 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      companyID,
+      companyID: ids.companyId,
       projectsString,
+      name: userData.name,
     },
   };
 }
 
-
-
-const Projects = ({companyID, projectsString, contracts,employees}) => {
+const Projects = ({companyID, projectsString, name}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const convertDate = (date) => {
@@ -76,7 +79,7 @@ const Projects = ({companyID, projectsString, contracts,employees}) => {
   return (
     <>
     <NewProjectModal isOpen={isOpen} setIsOpen={setIsOpen} companyID={companyID}/>
-    <Sidebar selected={2} username="David Atias" />
+    <Sidebar selected={2} username={name} />
     <main className={styles.main}>
       <div className={styles.main__header}>
         <Search placeholder="Buscar proyecto..."/>
