@@ -9,6 +9,7 @@ import NewBenefitModal from "./ModalBenefits";
 import Search from "./Search";
 import IconBox from "./IconBox";
 import DeleteModal from "./DeleteModal";
+import Router from "next/router";
 
 const TextFieldStandard = styled(Select)({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -35,19 +36,39 @@ const EmployerBenefits = ({ props }) => {
     const [isOpenRemove, setIsOpenRemove] = useState(false);
     const [selectedBenefit, setSelectedBenefit] = useState("");
 
+    const createBenefitCard = (
+        nombreProyecto,
+        nombreBeneficio,
+        montoPago,
+        descripcion
+    ) => {
+        return (
+            <BenefitsCard
+                key={nombreBeneficio}
+                projects={proyectString}
+                benefits={benefitString}
+                companyID={companyID}
+                projectName={nombreProyecto}
+                name={nombreBeneficio}
+                amount={montoPago}
+                description={descripcion}
+                setIsOpen={setIsOpenRemove}
+                setSelected={setSelectedBenefit}
+                selectedProjectName={selectedProjectName}
+            />
+        );
+    };
+
     const getBenefits = () => {
-        if (selectedProjectName == "Todos") {
-            return benefitString.map((benefit) => {
+        return benefitString.map((benefit) => {
+            if ( benefit.habilitado) {
+            if (selectedProjectName == "Todos") {
                 if (searchText == "") {
-                    return (
-                        <BenefitsCard
-                            key={benefit.nombreBeneficio}
-                            name={benefit.nombreBeneficio}
-                            amount={benefit.montoPago}
-                            description={benefit.descripcion}
-                            setIsOpen={setIsOpenRemove}
-                            setSelected={setSelectedBenefit}
-                        />
+                    return createBenefitCard(
+                        benefit.nombreProyecto,
+                        benefit.nombreBeneficio,
+                        benefit.montoPago,
+                        benefit.descripcion
                     );
                 } else {
                     if (
@@ -55,32 +76,22 @@ const EmployerBenefits = ({ props }) => {
                             .toLowerCase()
                             .includes(searchText.toLowerCase())
                     ) {
-                        return (
-                            <BenefitsCard
-                                key={benefit.nombreBeneficio}
-                                name={benefit.nombreBeneficio}
-                                amount={benefit.montoPago}
-                                description={benefit.descripcion}
-                                setIsOpen={setIsOpenRemove}
-                                setSelected={setSelectedBenefit}
-                            />
+                        return createBenefitCard(
+                            benefit.nombreProyecto,
+                            benefit.nombreBeneficio,
+                            benefit.montoPago,
+                            benefit.descripcion
                         );
                     }
                 }
-            });
-        } else {
-            return benefitString.map((benefit) => {
+            } else {
                 if (selectedProjectName == benefit.nombreProyecto) {
                     if (searchText == "") {
-                        return (
-                            <BenefitsCard
-                                key={benefit.nombreBeneficio}
-                                name={benefit.nombreBeneficio}
-                                amount={benefit.montoPago}
-                                description={benefit.descripcion}
-                                setIsOpen={setIsOpenRemove}
-                                setSelected={setSelectedBenefit}
-                            />
+                        return createBenefitCard(
+                            benefit.nombreProyecto,
+                            benefit.nombreBeneficio,
+                            benefit.montoPago,
+                            benefit.descripcion
                         );
                     } else {
                         if (
@@ -88,21 +99,18 @@ const EmployerBenefits = ({ props }) => {
                                 .toLowerCase()
                                 .includes(searchText.toLowerCase())
                         ) {
-                            return (
-                                <BenefitsCard
-                                    key={benefit.nombreBeneficio}
-                                    name={benefit.nombreBeneficio}
-                                    amount={benefit.montoPago}
-                                    description={benefit.descripcion}
-                                    setIsOpen={setIsOpenRemove}
-                                    setSelected={setSelectedBenefit}
-                                />
+                            return createBenefitCard(
+                                benefit.nombreProyecto,
+                                benefit.nombreBeneficio,
+                                benefit.montoPago,
+                                benefit.descripcion
                             );
                         }
                     }
                 }
-            });
+            }
         }
+        });
     };
 
     const getRows = () => {
@@ -137,13 +145,14 @@ const EmployerBenefits = ({ props }) => {
                 projectName: selectedProjectName,
                 benefitName: selectedBenefit,
             };
+            console.log(selectedBenefit);
             try {
                 await fetch(`/api/employerDeleteBenefit/`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(dataForDB),
                 });
-                handleChangeProject({ target: { value: selectedProjectName } });
+                Router.reload();
                 setIsOpenRemove(false);
             } catch (error) {
                 console.error(error);

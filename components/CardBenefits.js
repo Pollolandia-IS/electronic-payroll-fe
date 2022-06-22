@@ -16,6 +16,8 @@ import { styled } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { IconButton, Tooltip } from "@mui/material";
+import { useState } from "react";
+import EditBenefitModal from "../components/EditBenefitModal";
 
 const TypeEmpleador = styled("div")(({ theme }) => ({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -150,43 +152,63 @@ const Stats = styled("div")({
 });
 
 function BeneficiosCard(props) {
+    const [editModalIsOpen, setEditModalIsOpen] = useState(false);
+
     return (
-        <TypeEmpleador>
-            <Right>
-                <Details>
-                    <Frame1>
-                        <Tooltip
-                            title={props.name}
-                            arrow
-                            enterDelay={1069}
-                            placement="top-start"
+        <>
+            <EditBenefitModal
+                isOpen={editModalIsOpen}
+                setIsOpen={setEditModalIsOpen}
+                projects={props.projects}
+                benefits={props.benefits}
+                companyID={props.companyID}
+                projectName={props.projectName}
+                name={props.name}
+                amount={props.amount}
+                description={props.description}
+            />
+            <TypeEmpleador>
+                <Right>
+                    <Details>
+                        <Frame1>
+                            <Tooltip
+                                title={props.name}
+                                arrow
+                                enterDelay={1069}
+                                placement="top-start"
+                            >
+                                <Role>{props.name}</Role>
+                            </Tooltip>
+                        </Frame1>
+                        <Monto>
+                            <MontoText>{`Monto:`}</MontoText>
+                            <Valor>{props.amount}</Valor>
+                        </Monto>
+                        <Description>{props.description}</Description>
+                    </Details>
+                    <Stats>
+                        <IconButton
+                            size="small"
+                            color="primary"
+                            onClick={() => setEditModalIsOpen(true)}
                         >
-                            <Role>{props.name}</Role>
-                        </Tooltip>
-                    </Frame1>
-                    <Monto>
-                        <MontoText>{`Monto:`}</MontoText>
-                        <Valor>{props.amount}</Valor>
-                    </Monto>
-                    <Description>{props.description}</Description>
-                </Details>
-                <Stats>
-                    <IconButton size="small" color="primary">
-                        <EditIcon />
-                    </IconButton>
-                    <IconButton
-                        size="small"
-                        color="error"
-                        onClick={() => {
-                            props.setIsOpen(true);
-                            props.setSelected(props.name);
-                        }}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
-                </Stats>
-            </Right>
-        </TypeEmpleador>
+                            <EditIcon />
+                        </IconButton>
+                        <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => {
+                                props.setIsOpen(true);
+                                props.setSelected(props.name);
+                            }}
+                            disabled={props.selectedProjectName === "Todos"}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    </Stats>
+                </Right>
+            </TypeEmpleador>
+        </>
     );
 }
 
