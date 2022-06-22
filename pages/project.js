@@ -1,15 +1,15 @@
-import Sidebar from "../../../components/Sidebar";
+import Sidebar from "../components/Sidebar";
 import Aside from "/components/Aside";
 import NavBar from "/components/NavBar";
 import ProjectCard from "/components/ProjectCard";
 import styles from "/styles/Projects.module.css";
 import { useState } from "react";
-import Search from "../../../components/Search";
-import IconBox from "../../../components/IconBox";
+import Search from "../components/Search";
+import IconBox from "../components/IconBox";
 import AddIcon from '@mui/icons-material/Add';
 import {prisma} from "/.db";
 import safeJsonStringify from 'safe-json-stringify';
-import NewProjectModal from "../../../components/NewProjectModal";
+import NewProjectModal from "../components/NewProjectModal";
 
 export async function getServerSideProps(context) {
   const { companyID } = context.params;
