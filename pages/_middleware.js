@@ -85,6 +85,21 @@ const handleDeductions = async (userData) => {
     }
 };
 
+const handleHours = async (userData) => {
+    if (userData) {
+        if (!userData.isEmployer) {
+            const ids = await fetchIds(userData);
+            let response = NextResponse.next();
+            response.headers.append("ids", JSON.stringify(ids));
+            return response;
+        } else {
+            return NextResponse.redirect(`http://localhost:3000/coming-soon`);
+        }
+    } else {
+        return NextResponse.redirect(`http://localhost:3000/unauthorized`);
+    }
+}
+
 const decodeToken = async (req) => {
     const { cookies } = req;
     const decoded = await (
