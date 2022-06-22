@@ -181,6 +181,7 @@ function DeductionsCard(props) {
                             props.setIsOpenRemove(true);
                             props.setSelectedDeduction(props.name);
                         }}
+                        disabled={props.selectedProject === "Todos"}
                     >
                         <DeleteIcon />
                     </IconButton>
