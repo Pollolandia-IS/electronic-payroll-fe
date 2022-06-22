@@ -188,7 +188,15 @@ function DeductionsCard(props) {
                     <IconButton onClick={() => {setEditModalIsOpen(true);}} size="small" color="primary">
                         <EditIcon />
                     </IconButton>
-                    <IconButton size="small" color="error">
+                    <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => {
+                            props.setIsOpenRemove(true);
+                            props.setSelectedDeduction(props.name);
+                        }}
+                        disabled={props.selectedProject === "Todos"}
+                    >
                         <DeleteIcon />
                     </IconButton>
                 </Stats>
