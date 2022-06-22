@@ -13,7 +13,6 @@ async function getAcquiredBenefits (req, res) {
                 cedulaEmpleado: req.body.employeeID,
                 cedulaJuridica: req.body.companyID,
                 nombreProyecto: req.body.projectName,
-                habilitado: true,
             },
         });
         res.status(200).json(selectedBenefits);

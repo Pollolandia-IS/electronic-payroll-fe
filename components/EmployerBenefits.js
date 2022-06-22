@@ -2,43 +2,14 @@ import { Select, FormControl, InputLabel, MenuItem } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
-import { prisma } from "/.db";
 import styles from "/styles/EmployerBenefits.module.css";
-import safeJsonStringify from "safe-json-stringify";
-import Sidebar from "../../components/Sidebar";
-import BenefitsCard from "../../components/CardBenefits";
-import NewBenefitModal from "../../components/ModalBenefits";
-import Search from "../../components/Search";
-import IconBox from "../../components/IconBox";
-
-export async function getServerSideProps(context) {
-    const { companyID } = context.params;
-
-    let benefitsQuery = await prisma.beneficios.findMany({
-        where: {
-            cedulaJuridica: companyID,
-        },
-    });
-    let projectQuery = await prisma.proyecto.findMany({
-        where: {
-            cedulaJuridica: companyID,
-        },
-        select: {
-            nombre: true,
-            moneda: true,
-        },
-    });
-    const benefitString = JSON.parse(safeJsonStringify(benefitsQuery));
-    const proyectString = JSON.parse(safeJsonStringify(projectQuery));
-
-    return {
-        props: {
-            companyID,
-            benefitString,
-            proyectString,
-        },
-    };
-}
+import Sidebar from "./Sidebar";
+import BenefitsCard from "./CardBenefits";
+import NewBenefitModal from "./ModalBenefits";
+import Search from "./Search";
+import IconBox from "./IconBox";
+import DeleteModal from "./DeleteModal";
+import Router from "next/router";
 
 const TextFieldStandard = styled(Select)({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -56,11 +27,14 @@ const TextFieldStandard = styled(Select)({
     overflow: `hidden`,
 });
 
-const Benefits = ({ companyID, benefitString, proyectString }) => {
+const EmployerBenefits = ({ props }) => {
+    const { companyID, benefitString, proyectString, name, isEmployer } = props;
     const projects = proyectString;
     const [modalOpened, setModalOpened] = useState(false);
     const [searchText, setSearchText] = useState("");
     const [selectedProjectName, setSelectedProjectName] = useState("Todos");
+    const [isOpenRemove, setIsOpenRemove] = useState(false);
+    const [selectedBenefit, setSelectedBenefit] = useState("");
 
     const createBenefitCard = (
         nombreProyecto,
@@ -78,12 +52,16 @@ const Benefits = ({ companyID, benefitString, proyectString }) => {
                 name={nombreBeneficio}
                 amount={montoPago}
                 description={descripcion}
+                setIsOpen={setIsOpenRemove}
+                setSelected={setSelectedBenefit}
+                selectedProjectName={selectedProjectName}
             />
         );
     };
 
     const getBenefits = () => {
         return benefitString.map((benefit) => {
+            if ( benefit.habilitado) {
             if (selectedProjectName == "Todos") {
                 if (searchText == "") {
                     return createBenefitCard(
@@ -131,6 +109,7 @@ const Benefits = ({ companyID, benefitString, proyectString }) => {
                     }
                 }
             }
+        }
         });
     };
 
@@ -159,15 +138,45 @@ const Benefits = ({ companyID, benefitString, proyectString }) => {
         getRows();
     };
 
+    const deleteBenefit = async () => {
+        if(selectedProjectName !== "Todos"){
+            const dataForDB = {
+                companyID: companyID,
+                projectName: selectedProjectName,
+                benefitName: selectedBenefit,
+            };
+            console.log(selectedBenefit);
+            try {
+                await fetch(`/api/employerDeleteBenefit/`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dataForDB),
+                });
+                Router.reload();
+                setIsOpenRemove(false);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+
     return (
         <>
+            <DeleteModal
+                isOpen={isOpenRemove}
+                setIsOpen={setIsOpenRemove}
+                title="Eliminar Beneficio"
+                message="Deseas eliminar este beneficio?"
+                buttonText="Eliminar"
+                buttonAction={() => deleteBenefit()}
+            />
             <NewBenefitModal
                 isOpen={modalOpened}
                 setIsOpen={setModalOpened}
                 companyID={companyID}
                 projects={projects}
             />
-            <Sidebar selected={6} username="Axel Matus" />
+            <Sidebar selected={6} username={name} isEmployer={isEmployer} />
             <main className={styles.main}>
                 <div className={styles.main__header}>
                     <FormControl>
@@ -208,4 +217,4 @@ const Benefits = ({ companyID, benefitString, proyectString }) => {
     );
 };
 
-export default Benefits;
+export default EmployerBenefits;

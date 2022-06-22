@@ -1,14 +1,12 @@
-import DeductionEmployeeCard from "../../../components/DeductionEmployeeCard";
-import AddDeductionModal from "../../../components/AddDeductionModal";
+import DeductionEmployeeCard from "./DeductionEmployeeCard";
+import AddDeductionModal from "./AddDeductionModal";
 import { useState } from "react";
-import ConfirmModal from "../../../components/ConfirmModal";
-import Search from "../../../components/Search";
-import Sidebar from "../../../components/Sidebar";
+import ConfirmModal from "./ConfirmModal";
+import Search from "./Search";
+import Sidebar from "./Sidebar";
 import styles from "/styles/EmployeeDeductions.module.css";
-import { prisma } from "/.db";
 import { Select, FormControl, InputLabel, MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import safeJsonStringify from "safe-json-stringify";
 
 const TextFieldStandard = styled(Select)({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -26,57 +24,8 @@ const TextFieldStandard = styled(Select)({
     overflow: `hidden`,
 });
 
-export async function getServerSideProps(context) {
-    const { companyID, employeeID } = context.params;
-
-    let projects = await prisma.proyecto.findMany({
-        where: {
-            cedulaJuridica: companyID,
-        },
-        select: {
-            nombre: true,
-            moneda: true,
-        },
-    });
-    const hired = await prisma.esContratado.findMany({
-        where: {
-            cedulaJuridica: companyID,
-            cedulaEmpleado: employeeID,
-        },
-        select: {
-            nombreProyecto: true,
-            montoPago: true,
-        },
-    });
-    const employee = await prisma.persona.findMany({
-        where: {
-            cedula: employeeID,
-        },
-        select: {
-            nombre: true,
-        },
-    });
-    const hiredIn = JSON.parse(safeJsonStringify(hired));
-    const projectsString = JSON.parse(safeJsonStringify(projects));
-    const employeeName = JSON.parse(safeJsonStringify(employee));
-    return {
-        props: {
-            employeeID,
-            companyID,
-            projectsString,
-            hiredIn,
-            employeeName,
-        },
-    };
-}
-
-const EmployeeDeductions = ({
-    employeeID,
-    companyID,
-    projectsString,
-    hiredIn,
-    employeeName,
-}) => {
+const EmployeeDeductions = ({props}) => {
+    const { employeeID, companyID, projectsString, hiredIn, employeeName, isEmployer } = props;
     const [selectedDeduction, setSelectedDeduction] = useState("");
     const [isOpenAdd, setIsOpenAdd] = useState(false);
     const [isOpenRemove, setIsOpenRemove] = useState(false);
@@ -375,7 +324,7 @@ const EmployeeDeductions = ({
                 buttonText="Aceptar"
                 buttonAction={() => setIsOpenError(false)}
             />
-            <Sidebar selected={5} username={employeeName[0].nombre} />
+            <Sidebar selected={5} username={employeeName} isEmployer={isEmployer} />
             <main className={styles.main}>
                 <div className={styles.main__header}>
                     <FormControl>

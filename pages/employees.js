@@ -1,16 +1,16 @@
-import Aside from "../../../components/Aside.js";
-import Navbar from "../../../components/Navbar.js";
-import CardEmployee from "../../../components/CardEmployee.js";
+import Aside from "../components/Aside";
+import Navbar from "../components/Navbar.js";
+import CardEmployee from "../components/CardEmployee.js";
 import Styles from "/styles/Empleados.module.css";
 import { prisma } from "/.db";
-import SearchBar from "../../../components/SearchBar.js";
+import SearchBar from "../components/SearchBar.js";
 import { useState } from "react";
 
 const AsideItems = [
   {
     name: "Nómica",
     icon: "payroll",
-    dropDown: [["- Crear Proyecto", "/projects/create"]],
+    dropDown: [],
   },
   {
     name: "Ajustes",
@@ -26,7 +26,11 @@ const AsideItems = [
 
 
 export async function getServerSideProps(context) {
-  const {companyID} = context.params;
+  const { req, res } = context;
+  const { cookies } = req;
+  const ids = JSON.parse(res._headers.ids);
+  const companyID = ids.companyId;
+
   let employees = (
     await prisma.empleado.findMany({
       where: { cedulaJuridica: companyID },
