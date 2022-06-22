@@ -200,10 +200,13 @@ const Cancelar = styled("div")(({ theme }) => ({
 function EditDeductionModal(props) {
     const [validFields, setValidFields] = useState(false);
     const [isValidAmount, setIsValidAmount] = useState(true);
+    const [selectedProjectName, setSelectedProjectName] = useState("");
     const [projectCurrency, setprojectCurrency] = useState("");
     const [Values, setValues] = useState({
         companyID: props.companyID,
         deductionName: props.deductionName,
+        oldDeductionName: props.deductionName,
+        projectName: props.projectName,
         amount: props.amount,
         description: props.description,
     });
@@ -232,7 +235,7 @@ function EditDeductionModal(props) {
     });
 
     const handleChangeProject = (e) => {
-        props.projectName(e.target.value);
+        setSelectedProjectName(e.target.value);
         props.projects.map((project) => {
             if (project.nombre == e.target.value) {
                 setprojectCurrency(project.moneda);
@@ -243,8 +246,10 @@ function EditDeductionModal(props) {
     const handleSubmit = async () => {
         const Data = {
             companyID: Values.companyID,
+            oldDeductionName: Values.oldDeductionName,
             deductionName: Values.deductionName,
-            projectName: props.projectName,
+            projectName: selectedProjectName,
+            oldProjectName: props.projectName,
             amount: Values.amount,
             description: Values.description,
         };
@@ -293,7 +298,6 @@ function EditDeductionModal(props) {
                                     id="projectName"
                                     value={props.projectName}
                                     defaultValue={props.projectName}
-                                    disabled={true}
                                     variant="standard"
                                     size="medium"
                                     onChange={handleChangeProject}
