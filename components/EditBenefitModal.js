@@ -266,22 +266,22 @@ function ModalBeneficio(props) {
 
     const handleSubmit = async () => {
         const Data = {
-          companyID: Values.companyID,
-          oldBenefitName: props.name,
-          benefitName: Values.benefitName,
-          projectName: selectedProjectName,
-          amount: Values.amount,
-          description: Values.description,
-        }
+            companyID: Values.companyID,
+            oldBenefitName: props.name,
+            benefitName: Values.benefitName,
+            projectName: selectedProjectName,
+            amount: Values.amount,
+            description: Values.description,
+        };
         try {
-          await fetch('/api/editbenefit', {
-              method: "POST",
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(Data),
-          });
-          Router.reload();
+            await fetch("/api/editbenefit", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(Data),
+            });
+            Router.reload();
         } catch (error) {
-        console.error(error);
+            console.error(error);
         }
     };
 
