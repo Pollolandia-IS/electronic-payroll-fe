@@ -8,6 +8,7 @@ import safeJsonStringify from "safe-json-stringify";
 import Sidebar from "../../components/Sidebar";
 import DeductionsCard from "../../components/DeductionsCard";
 import NewDeductionModal from "../../components/NewDeductionModal";
+import EditDeductionModal from "../../components/EditDeductionModal";
 import Search from "../../components/Search";
 import IconBox from "../../components/IconBox";
 
@@ -56,12 +57,17 @@ const TextFieldStandard = styled(Select)({
     overflow: `hidden`,
 });
 
+
 const Deductions = ({ companyID, deductionString, proyectString }) => {
     const projects = proyectString;
     const [modalOpened, setModalOpened] = useState(false);
+    const [modalEditOpened, setModalEditOpened] = useState(false);
     const [searchText, setSearchText] = useState("");
     const [selectedProjectName, setSelectedProjectName] = useState("Todos");
-
+    const setEditDeductionModal = ({name, amount, description}) => {
+        
+        setModalEditOpened(true);
+      };
     const getDeductions = () => {
         if (selectedProjectName == "Todos") {
             return deductionString.map((deduction) => {
@@ -72,6 +78,7 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                             name={deduction.nombreDeduccion}
                             amount={deduction.monto}
                             description={deduction.descripcion}
+                            editDeductionModal = {setEditDeductionModal}
                         />
                     );
                 } else {
@@ -86,6 +93,7 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                                 name={deduction.nombreDeduccion}
                                 amount={deduction.monto}
                                 description={deduction.descripcion}
+                                editDeductionModal = {setEditDeductionModal}
                             />
                         );
                     }
@@ -101,6 +109,7 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                                 name={deduction.nombreDeduccion}
                                 amount={deduction.monto}
                                 description={deduction.descripcion}
+                                editDeductionModal = {setEditDeductionModal}
                             />
                         );
                     } else {
@@ -115,6 +124,7 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                                     name={deduction.nombreDeduccion}
                                     amount={deduction.monto}
                                     description={deduction.descripcion}
+                                    editDeductionModal = {setEditDeductionModal}
                                 />
                             );
                         }
@@ -156,6 +166,15 @@ const Deductions = ({ companyID, deductionString, proyectString }) => {
                 setIsOpen={setModalOpened}
                 companyID={companyID}
                 projects={projects}
+            />
+            <EditDeductionModal
+                isOpen={modalEditOpened}
+                setIsOpen={setModalEditOpened}
+                companyID={companyID}
+                projects={projects}
+                deductionName="prueba"
+                amount=""
+                description=""
             />
             <Sidebar selected={5} username="Derek Suárez" />
             <main className={styles.main}>

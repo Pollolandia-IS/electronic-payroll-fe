@@ -150,6 +150,9 @@ const Stats = styled("div")({
 });
 
 function DeductionsCard(props) {
+    const editDeduction = () => {
+        props.editDeductionModal(props.name, props.amount, props.description);
+      };
     return (
         <TypeEmpleador>
             <Right>
@@ -171,7 +174,7 @@ function DeductionsCard(props) {
                     <Description>{props.description}</Description>
                 </Details>
                 <Stats>
-                    <IconButton size="small" color="primary">
+                    <IconButton onClick={() => {editDeduction();}} size="small" color="primary">
                         <EditIcon />
                     </IconButton>
                     <IconButton size="small" color="error">
