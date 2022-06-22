@@ -2,26 +2,40 @@ import { NextResponse } from "next/server";
 
 export default async function middleware(req) {
     const userData = await decodeToken(req);
-    const ids = await fetchIds(userData);
-    return handleRequest(req, userData, ids);
+    return handleRequest(req, userData);
 }
 
-const handleRequest = (req, userData, ids) => {
+const handleRequest = (req, userData) => {
     const url = req.url;
     if (url === `${process.env.URL}/`) {
-        return handleIndex(userData, ids);
+        return handleIndex(userData);
+    }
+    else if (url === `${process.env.URL}/benefits`) {
+        return handleBenefits(userData);
+    }
+    else {
+        return NextResponse.next();
     }
 };
 
-const handleIndex = (userData, ids) => {
+const handleIndex = async (userData) => {
     if (userData) {
+        return NextResponse.next();
+    } else {
+        return NextResponse.redirect(`${process.env.URL}/unauthorized`);
+    }
+};
+
+const handleBenefits = async (userData) => {
+    if (userData) {
+        const ids = await fetchIds(userData);
         let response = NextResponse.next();
         response.headers.append("ids", JSON.stringify(ids));
         return response;
     } else {
         return NextResponse.redirect(`${process.env.URL}/unauthorized`);
     }
-};
+}
 
 const decodeToken = async (req) => {
     const { cookies } = req;
