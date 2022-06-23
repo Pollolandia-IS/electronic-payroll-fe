@@ -6,6 +6,7 @@ import Checkbox from '@mui/material/Checkbox';
 
 
 const CardEmployee = (props) => {
+    console.log(props);
 
     return (
         <>
@@ -43,6 +44,10 @@ const CardEmployee = (props) => {
                         <h3 className={styles.card__name}>
                             Cedula: {" "}
                             {props.cardItems.cedula}
+                        </h3>
+                        <h3 className={styles.card__name}>
+                            Correo: {" "}
+                            {props.cardItems.hace_uso[0].email}
                         </h3>
                     </div>
                     <div className={styles.card__info__body}>
