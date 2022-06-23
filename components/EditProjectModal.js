@@ -273,6 +273,8 @@ function EditProjectModal(props) {
   }
 
   const sendProject = async () => {
+    let benefitDataChanged = false;
+    (amountValue !== props.amount || benefitsValue !== props.benefits) ? benefitDataChanged = true : benefitDataChanged = false;
     const project = {
       companyID: props.companyID,
       oldname: props.name,
@@ -282,7 +284,9 @@ function EditProjectModal(props) {
       amount: amountValue,
       benefits: benefitsValue,
       date: dateValue.toISOString(),
+      benefitDataChanged: benefitDataChanged
     }
+
     await fetch('/api/project', {
       method: 'POST',
       headers: {
