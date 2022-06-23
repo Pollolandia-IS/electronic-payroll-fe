@@ -111,7 +111,7 @@ const Projects = ({ companyID, projectsString, name, isEmployer }) => {
 
     const getRows = () => {
         let rows = [];
-        const projects = getProjects();
+        let projects = getProjects();
         projects = projects.filter((project) => project != undefined); 
         for (let i = 0; i < projects.length; i += 2) {
             rows.push(
