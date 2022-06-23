@@ -135,7 +135,7 @@ const EmployeeDeductions = ({props}) => {
                                 name={deduction.nombreDeduccion}
                                 setDefaultAmount={setDefaultAmount}
                                 description={deduction.descripcion}
-                                amount={deduction.monto}
+                                amount={selectedDeductions[i].aporte}
                                 selected={true}
                                 setAmountChosen={setAmountChosen}
                                 setIsOpenAdd={setIsOpenAdd}
@@ -188,7 +188,7 @@ const EmployeeDeductions = ({props}) => {
                                     name={deduction.nombreDeduccion}
                                     setDefaultAmount={setDefaultAmount}
                                     description={deduction.descripcion}
-                                    amount={deduction.monto}
+                                    amount={selectedDeductions[i].aporte}
                                     selected={true}
                                     setAmountChosen={setAmountChosen}
                                     setIsOpenAdd={setIsOpenAdd}

@@ -289,7 +289,7 @@ function NewProjectModal(props) {
                 <X  src={'/assets/img/x.png'} alt={"x"}/>
               </FrameX>
             </Frame1>
-            <TextFieldStandard variant="standard" size="medium"  label={`Nombre`} value={nameValue} onChange={handleNameChange}   />
+            <TextFieldStandard variant="standard" size="medium"  label={`Nombre`} value={nameValue} onChange={handleNameChange} maxLength={90}/>
             <Frame11 >
             <FormControl>
               <InputLabel sx={{marginLeft: -2}}>Frecuencia de Pago</InputLabel>

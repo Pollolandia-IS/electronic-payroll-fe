@@ -20,8 +20,23 @@ const handleRequest = (req, userData) => {
         return handleDeductions(userData);
     } else if (url === `${BASEURL}/hours`) {
         return handleHours(userData);
-    }
-    else {
+    } else if (url.match(/http:\/\/localhost:3000\/([0-9]+)\/verify/g)) {
+        let userID = url.match(/\/([0-9]+)/g)[0].substring(1);
+        try {
+            fetch(`${BASEURL}/api/verify`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userID,
+                }),
+            });
+        } catch (error) {
+            console.log("Error:", error);
+        }
+        let response = NextResponse.redirect(`${BASEURL}/LogIn`);
+        response.headers.append("verified", JSON.stringify(true));
+        return response;
+    } else {
         return NextResponse.next();
     }
 };
@@ -99,7 +114,7 @@ const handleHours = async (userData) => {
     } else {
         return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
-}
+};
 
 const decodeToken = async (req) => {
     const { cookies } = req;

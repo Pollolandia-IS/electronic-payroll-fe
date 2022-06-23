@@ -1,5 +1,5 @@
-import EmployerBenefits from "../components/EmployerDeductions";
-import EmployeeBenefits from "../components/EmployeeDeductions";
+import EmployerDeductions from "../components/EmployerDeductions";
+import EmployeeDeductions from "../components/EmployeeDeductions";
 import jwt from "jsonwebtoken";
 import { prisma } from "/.db";
 import safeJsonStringify from "safe-json-stringify";
@@ -98,9 +98,9 @@ const Benefits = (props) => {
     return (
         <>
             {props.isEmployer ? (
-                <EmployerBenefits props={props.employerProps} />
+                <EmployerDeductions props={props.employerProps} />
             ) : (
-                <EmployeeBenefits props={props.employeeProps} />
+                <EmployeeDeductions props={props.employeeProps} />
             )}
         </>
     );
