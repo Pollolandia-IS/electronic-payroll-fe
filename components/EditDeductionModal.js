@@ -287,6 +287,7 @@ function EditDeductionModal(props) {
                             size="small"
                             label={`Nombre`}
                             onChange={handleChange}
+                            maxLength={90}
                         />
                         <Frame11>
                             <FormControl>

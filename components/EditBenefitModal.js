@@ -324,6 +324,7 @@ function ModalBeneficio(props) {
                                 label={`Nombre`}
                                 onChange={handleChange}
                                 required={true}
+                                maxLength={90}
                             />
                             <Frame11>
                                 <FormControl>
