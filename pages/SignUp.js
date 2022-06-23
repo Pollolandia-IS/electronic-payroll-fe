@@ -17,9 +17,9 @@ function SignUp() {
             "Cedula",
             "text",
             true,
-            "11",
-            "[0-9]{9,11}",
-            "Una combinación de 9 a 11 dígitos",
+            "12",
+            "[0-9]{9,12}",
+            "Una combinación de 9 a 12 dígitos",
         ],
         ["Email", "email", true],
         [

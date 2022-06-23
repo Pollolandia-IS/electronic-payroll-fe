@@ -226,7 +226,7 @@ const Deductions = ({ props }) => {
                         <AddIcon fontSize="large" />
                     </IconBox>
                 </div>
-                <div className={styles.main__content}>{getRows()}</div>
+                { getRows().length !== 0 ? <div className={styles.main__content}>{getRows()}</div> : <div className={styles.main__noDeductions}>{selectedProjectName === "Todos" ? "Aún no hay deducciones creadas." : "Aún no hay deducciones creadas para este proyecto."}<p style={{fontWeight: 400, fontSize: 20}}> Agrega una deducción con el botón +</p></div> }
             </main>
         </>
     );

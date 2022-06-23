@@ -19,6 +19,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { IconButton, Tooltip } from "@mui/material";
 import { useState } from "react";
 import EditProjectModal from "../components/EditProjectModal";
+import Router from "next/router";
 
 const TypeGeneral = styled("div")(({ theme }) => ({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -239,7 +240,7 @@ function ProjectCard(props) {
                     </Details>
                     <Stats>
                         <Frame11>
-                            <AccountCircleOutlinedIcon color="primary" />
+                            <AccountCircleOutlinedIcon color="primary" sx={{cursor: "pointer"}} onClick={() => Router.push(`/${props.companyID}/project/${props.name}/addEmployee`)}/>
                             <EmployeeCount>{props.employeeCount}</EmployeeCount>
                         </Frame11>
                         <Frame4></Frame4>

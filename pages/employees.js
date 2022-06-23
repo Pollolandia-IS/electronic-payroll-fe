@@ -6,29 +6,19 @@ import { prisma } from "/.db";
 import SearchBar from "../components/SearchBar.js";
 import { useState } from "react";
 
-const AsideItems = [
-    {
-        name: "Nómica",
-        icon: "payroll",
-        dropDown: [],
-    },
-    {
-        name: "Ajustes",
-        icon: "config",
-        dropDown: [],
-    },
-    {
-        name: "Historial",
-        icon: "history",
-        dropDown: [],
-    },
-];
-
 export async function getServerSideProps(context) {
     const { req, res } = context;
     const { cookies } = req;
     const ids = JSON.parse(res._headers.ids);
     const companyID = ids.companyId;
+
+    const AsideItems = [
+      {
+        name: 'Empleados',
+        icon: 'profile',
+        dropDown: [['- Nuevo Empleado', `${companyID}/registerEmployeeModal`],],
+      },
+  ];
 
     let employees = (
         await prisma.empleado.findMany({
@@ -53,14 +43,16 @@ export async function getServerSideProps(context) {
         props: {
             employees,
             companyID,
+            AsideItems,
         },
     };
 }
-const Employees = ({ employees, companyID }) => {
+const Employees = ({ employees, companyID, AsideItems }) => {
     const navItems = [
-        ["Proyectos", false, `/${companyID}/project`],
-        ["Reportes", false, "/reports"],
-        ["Empleados", true, `/${companyID}/Employees`],
+      ["Inicio", false, `/`],
+        ["Proyectos", false, `/project`],
+        ["Registro Horas", false, "/hours"],
+        ["Empleados", true, `/Employees`],
         ["Deducciones", false, "/deductions"],
         ["Beneficios", false, "/benefits"],
     ];

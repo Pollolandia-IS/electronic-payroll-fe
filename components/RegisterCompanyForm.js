@@ -107,7 +107,7 @@ const RegisterCompanyForm = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(Data),
             });
-            await Router.push('/'); //Where to go after call the api
+            await Router.push('/LogIn'); //Where to go after call the api
         } catch (error) {
         console.error(error);
         }
