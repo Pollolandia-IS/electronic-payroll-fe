@@ -179,7 +179,7 @@ function BenefitEmployeeCard(props) {
                         {props.selected ? 
                             <div onMouseEnter={()=> setHovered(true)} onMouseLeave={()=>setHovered(false)}>
                                 {hovered ? <IconButton onClick={()=> {props.setIsOpenRemove(true); props.setSelectedBenefit(props.name);}} size="small" color="error" > 
-                                        <Tooltip title="Recusar Beneficio" arrow placement='top'> 
+                                        <Tooltip title="Renunciar al Beneficio" arrow placement='top'> 
                                             <RemoveCircleOutlined color='error' /> 
                                         </Tooltip> 
                                     </IconButton>
