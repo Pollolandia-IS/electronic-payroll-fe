@@ -11,7 +11,6 @@ export default function handler(req, res) {
 const handleLogin = async (req, res) => {
   const { email, password } = req.body;
   const userData = await getUserData(email);
-  console.log(userData);
   if (userData) {
     sendResponse(
       { isEmployer: userData.isEmployer, name: userData.name, email: userData.email },
