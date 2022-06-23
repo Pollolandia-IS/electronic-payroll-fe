@@ -1,0 +1,104 @@
+.AE__h1 {
+    margin-bottom: -5px;
+    width: 500px;
+    position: relative;
+    font-family: 'Open Sans Hebrew Condensed';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 54px;
+    display: block;
+    left: 590px;
+    top: auto;
+
+    color: #000000;
+}
+
+.AE__h2 {
+    margin-top: -10px;
+    width: 500px;
+    position: relative;
+    font-family: 'Open Sans Hebrew Condensed';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 27px;
+    display: block;
+    left: 590px;
+    top: auto;
+    
+
+    color: rgba(0, 0, 0, 0.66);
+}
+
+.AE__nav__ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    text-align: center;
+}
+
+.AE__nav__li {
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    display: inline;
+    float: left;
+    font-family: 'Open Sans Hebrew Condensed';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+    margin-left: 20px;
+}
+
+.AE__nav {
+    padding: 5px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.FormRect1{
+    position: absolute;
+    width: 774px;
+    height: 439.92px;
+    left: 374px;
+    top: 204.37px;
+
+    background: #FFFFFF;
+    border-radius: 10px;
+}
+
+.FormRect2{
+    position: absolute;
+    width: 774px;
+    height: 69.57px;
+    left: 374px;
+    top: 204.37px;
+
+    background: #FE3D2B;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.button{
+    background-color: #FE3D2B;
+    position: relative;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 30px;    
+    border-color: #FE3D2B;
+    /*left: 581px;*/
+    font-family: 'Roboto Slab';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 26px;
+    display: block;
+    align-items: center;
+    text-align: center;
+    color: #FFFFFF;
+    cursor: pointer;
+}

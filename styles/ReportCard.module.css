@@ -1,0 +1,70 @@
+.container {
+  display: flex;
+  align-items: center;
+  column-gap: 13px;
+}
+
+.card {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Roboto Slab', serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 21px;
+  border: 1px solid #000000;
+  border-radius: 20px;
+  width: 651px;
+}
+
+.card__employee {
+  align-items: center;
+  display: flex;
+  width: 240px;
+  border-radius: 20px 0 0 20px;
+}
+.card__text {
+  margin: 0;
+  text-align: center;
+}
+
+.card__employee h3 {
+  width: 159px;
+}
+
+.card__image {
+  border-radius: 50px;
+  border: 1px solid #000000;
+  margin-left: 21px;
+  margin-right: 14px;
+}
+
+.card__date {
+  text-align: center;
+  width: 144px;
+  border-left: solid 1px #000000;
+  border-right: solid 1px #000000;
+  height: inherit;
+}
+
+.card__hours {
+  text-align: center;
+  width: 107px;
+  border-right: solid 1px #000000;
+}
+
+.card__status {
+  text-align: center;
+  width: 160px;
+}
+
+.card__button {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  background-color: #6BB252;
+}
+
+.card__button:nth-child(2) {
+  background-color: #FE3D2B;
+}

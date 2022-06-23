@@ -1,0 +1,89 @@
+.RegisterForm {
+    width: 300px;
+    margin-top: auto;
+}
+
+.Form__border {
+    display: block;
+    position: relative;
+    width: 407px;
+    height: 0px;
+    left: -50px;
+    border: 1px solid #848484;
+}
+
+.Form__input {
+    display: block;
+    position: relative;
+    width: 293.22px;
+    height: 29.75px;
+    left: -50px;
+    font-family: 'Roboto Slab';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 26.38px;
+    color: #848484;
+    background: transparent;
+    border: none;
+}
+
+.Form__input:focus {
+    outline: none;
+}
+
+.Form__button {
+    background-color: #FE3D2B;
+    position: relative;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 30px;    
+    border-color: #FE3D2B;
+    font-family: 'Roboto Slab';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 26px;
+    display: block;
+    align-items: center;
+    text-align: center;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.Form__input__file {
+    width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.Form__input__file::-webkit-file-upload-button {
+    width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.Form__label__file {
+    content: 'Foto';
+    display: block;
+    position: relative;
+    width: 293.22px;
+    height: 29.75px;
+    left: -50px;
+    font-family: 'Roboto Slab';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 26.38px;
+    color: #848484;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}

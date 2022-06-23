@@ -1,0 +1,78 @@
+.container {
+    margin-top: 50px;
+    margin-left: 200px;
+    width: 1103px;
+    height: 511.84px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 30px;
+    width: 100%;
+    height: 100%;
+}
+
+.separator{
+    width: 500vw;
+    height: 0px;
+    border-bottom: 1px solid rgba(132, 132, 132, 0.5);
+    margin-top: 30px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 100%;
+    height: 100%;
+}
+
+.label {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 22px;
+    font-weight: bold;
+    margin-top: 30px; /*yA LO VI Nice*/ 
+}
+/*Estoy armando el form*/
+.label input {
+    border: 0cm;
+    outline: 0ch;
+}
+
+.label span {
+    margin-right: 10px;
+}
+
+.submit {
+    margin: 30px auto 0 auto;
+    width: 147.97px;
+    height: 38px;
+    left: 865px;
+    top: 187px;
+    border-radius: 10px;
+    border: 0ch;
+    background-color: #FE3D2B;
+    color : white;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 20px;
+}
+
+.title {
+    margin-top: 149px;
+    margin-left: 200px;
+    font-family: 'Roboto Slab';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 34px;
+    color: #FE3D2B;
+}

@@ -1,0 +1,31 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: flex-end;
+    width: 590px;
+    height: 38px;
+}
+
+.button {
+    width: 82px;
+    height: 18px;
+}
+
+.top {
+    display: flex;
+    flex-direction: row;
+}
+
+.bottom {
+    justify-content: end;
+    padding-right: 15%;
+}
+
+.bottom {
+    color: #FE3D2B;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 18px;
+    margin-top:5px;
+}

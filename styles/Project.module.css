@@ -1,0 +1,9 @@
+.main {
+  margin: 105px 0 0 177px;
+}
+
+.main * {
+  margin: 0;
+  padding: 0;
+}
+
