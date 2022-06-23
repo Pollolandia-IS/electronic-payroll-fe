@@ -85,7 +85,6 @@ const Projects = ({ companyID, projectsString, name, isEmployer }) => {
             return projectsString.map((project) => {
                 if (
                     project.nombre.toLowerCase().includes(searchText.toLowerCase()) ||
-                    project.cedulaJuridica.toLowerCase().includes(searchText.toLowerCase()) ||
                     project.frecuenciaPago.toLowerCase().includes(searchText.toLowerCase()) 
                 ) {
                     return (
