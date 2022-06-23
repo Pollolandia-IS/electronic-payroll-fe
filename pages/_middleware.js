@@ -20,6 +20,8 @@ const handleRequest = (req, userData) => {
         return handleDeductions(userData);
     } else if (url === `${BASEURL}/hours`) {
         return handleHours(userData);
+    } else if (url === `${BASEURL}/payroll`) {
+        return handlePayroll(userData);
     }
     else {
         return NextResponse.next();
@@ -89,6 +91,21 @@ const handleDeductions = async (userData) => {
 const handleHours = async (userData) => {
     if (userData) {
         if (!userData.isEmployer) {
+            const ids = await fetchIds(userData);
+            let response = NextResponse.next();
+            response.headers.append("ids", JSON.stringify(ids));
+            return response;
+        } else {
+            return NextResponse.redirect(`${BASEURL}/coming-soon`);
+        }
+    } else {
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
+    }
+}
+
+const handlePayroll = async (userData) => {
+    if (userData) {
+        if (userData.isEmployer) {
             const ids = await fetchIds(userData);
             let response = NextResponse.next();
             response.headers.append("ids", JSON.stringify(ids));
