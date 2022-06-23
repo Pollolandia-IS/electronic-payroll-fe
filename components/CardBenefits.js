@@ -182,7 +182,7 @@ function BeneficiosCard(props) {
                         </Frame1>
                         <Monto>
                             <MontoText>{`Monto:`}</MontoText>
-                            <Valor>{props.amount}</Valor>
+                            <Valor>{new Intl.NumberFormat('de-DE').format(props.amount)}</Valor>
                         </Monto>
                         <Description>{props.description}</Description>
                     </Details>
