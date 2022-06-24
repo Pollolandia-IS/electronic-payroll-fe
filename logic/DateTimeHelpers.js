@@ -1,4 +1,12 @@
 /// Calculations for date and time
+module.exports = {
+    dateToString,
+    stringToDate,
+    dateToStringWithTime,
+    stringToDateWithTime,
+    addDays,
+    getDayDifference
+}
 
 
 /**
@@ -12,7 +20,25 @@
  * @throws {Error} if the separator is not a single character
  */
 export function dateToString(date, separator = "-") {
-    return date.getDate() + separator + (date.getMonth() + 1) + separator + date.getFullYear();
+    if (!(date instanceof Date)) {
+        throw new Error("The date is not a date");
+    }
+    if (typeof separator !== "string") {
+        throw new Error("The separator is not a string");
+    }
+    if (separator.length > 1) {
+        throw new Error("The separator is not a single character");
+    }
+    if (separator.length === 0) {
+        throw new Error("The separator is empty");
+    }
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    // add leading zero if necessary
+    const dayString = day < 10 ? "0" + day : day;
+    const monthString = month < 10 ? "0" + month : month;
+    return `${dayString}${separator}${monthString}${separator}${year}`;
 }
 
 /**
