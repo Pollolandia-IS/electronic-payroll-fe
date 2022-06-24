@@ -1,17 +1,60 @@
 import { addDays } from "./DateTimeHelpers";
 
 /**
- *
- * @param {number} salary
- * @param {number} percentage
+ * Applies a percentage deduction (mandatory deduction) to the salary.
+ * @param {number} salary The salary to apply the percentage deduction to.
+ * @param {number} percentage The percentage of the salary to deduct.
+ * @returns {number} The salary after the percentage deduction.
+ * @throws {Error} if the salary is not a number
+ * @throws {Error} if the percentage is not a number
+ * @throws {Error} if the salary is less than 0
+ * @throws {Error} if the percentage is less than 0 
  */
-function applyPercentageDeduction(totalSalary, percentageDeduction) {
+export function applyPercentageDeduction(totalSalary, percentageDeduction) {
+    if (isNaN(totalSalary)) {
+        throw new Error("The salary is not a number");
+    }
+    if (isNaN(percentageDeduction)) {
+        throw new Error("The percentage deduction is not a number");
+    }
+    if (totalSalary < 0) {
+        throw new Error("The salary is less than 0");
+    }
+    if (percentageDeduction < 0) {
+        throw new Error("The percentage deduction is less than 0");
+    }
     return totalSalary - totalSalary * percentageToDecimal(percentageDeduction);
 }
 
 const percentageToDecimal = (percentage) => percentage / 100;
 
-function applyFixedDeduction(totalSalary, fixedDeduction) {
+/**
+ * Applies a fixed deduction (voluntary deduction) to the salary.
+ * @param {number} salary The salary to apply the fixed deduction to.
+ * @param {number} fixedDeduction The fixed amount to deduct.
+ * @returns {number} The salary after the fixed deduction.
+ * @throws {Error} if the salary is not a number
+ * @throws {Error} if the fixed deduction is not a number
+ * @throws {Error} if the salary is less than 0
+ * @throws {Error} if the fixed deduction is less than 0
+ * @throws {Error} if the salary is less than the fixed deduction
+ */
+export function applyFixedDeduction(totalSalary, fixedDeduction) {
+    if (isNaN(totalSalary)) {
+        throw new Error("The salary is not a number");
+    }
+    if (isNaN(fixedDeduction)) {
+        throw new Error("The fixed deduction is not a number");
+    }
+    if (totalSalary < 0) {
+        throw new Error("The salary is less than 0");
+    }
+    if (fixedDeduction < 0) {
+        throw new Error("The fixed deduction is less than 0");
+    }
+    if (totalSalary < fixedDeduction) {
+        throw new Error("The salary is less than the fixed deduction");
+    }
     return totalSalary - fixedDeduction;
 }
 
@@ -25,7 +68,7 @@ function applyFixedDeduction(totalSalary, fixedDeduction) {
  * @throws {Error} if the hours are less than 0
  * @throws {Error} if the hourly rate is less than 0
  */
-function calculateHourlySalary(hours, hourlyRate) {
+export function calculateHourlySalary(hours, hourlyRate) {
     if (isNaN(hours)) {
         throw new Error("The hours are not a number");
     }
@@ -44,39 +87,55 @@ function calculateHourlySalary(hours, hourlyRate) {
 /**
  * Add benefits to the salary.
  * @param {number} salary
- * @param {number} benefits
+ * @param {number} benefit
  * @returns {number}
  * @throws {Error} if the salary is not a number
  * @throws {Error} if the benefits are not a number
  * @throws {Error} if the salary is less than 0
  * @throws {Error} if the benefits are less than 0
  */
-function addBenefit(salary, benefit) {
+export function addBenefit(salary, benefit) {
     if (isNaN(salary)) {
         throw new Error("The salary is not a number");
     }
-    if (isNaN(benefits)) {
-        throw new Error("The benefits are not a number");
+    if (isNaN(benefit)) {
+        throw new Error("The benefit is not a number");
     }
     if (salary < 0) {
         throw new Error("The salary is less than 0");
     }
-    if (benefits < 0) {
-        throw new Error("The benefits are less than 0");
+    if (benefit < 0) {
+        throw new Error("The benefit is less than 0");
     }
-    return salary + benefits;
+    return salary + benefit;
 }
 
 /**
  * Calculate the next payday.
  * If frequency is Mensual, next Payment is the last day of the month.
  * If frequency is Quincenal, next Payment is on the 15th of the month or the last day of the month
- * if frequency is weekly, next Payment is next Sunday
+ * if frequency is weekly, next Payment is next Friday.
  * @param {Date} paymentDate The date of the last payment
- * @param {string} frequency
+ * @param {string} frequency The frequency of the payment
  * @returns {Date} the next payday
+ * @throws {Error} if the paymentDate is not a Date
+ * @throws {Error} if the frequency is not a string
+ * @throws {Error} if the frequency is not Mensual, Quincenal or Semanal
+ * @throws {Error} if the paymentDate is an invalid date
  */
 export function getNextPaymentDate(paymentDate, frequency) {
+    if (!(paymentDate instanceof Date)) {
+        throw new Error("The payment date is not a date");
+    }
+    if (typeof frequency !== "string") {
+        throw new Error("The frequency is not a string");
+    }
+    if (frequency !== "Mensual" && frequency !== "Quincenal" && frequency !== "Semanal") {
+        throw new Error("The frequency is not Mensual, Quincenal or Semanal");
+    }
+    if (paymentDate == "Invalid Date") {
+        throw new Error("The payment date is an invalid date");
+    }
     const date = new Date(paymentDate);
     if (frequency === "Mensual") {
         // last day of the month
@@ -92,8 +151,8 @@ export function getNextPaymentDate(paymentDate, frequency) {
             date.setDate(0);
         }
     } else if (frequency === "Semanal") {
-        // next Sunday
-        date.setDate(date.getDate() + (7 - date.getDay()));
+        const daysToAdd = ((7 - date.getDay() + 5) % 7);
+        date.setDate(date.getDate() + daysToAdd);
     }
     return date;
 }
@@ -149,7 +208,7 @@ export function createPaymentField(name, amount) {
  * netSalary: number
  * }} The payment fields object
  */
-export function createPaymentFields(
+export function createPayment(
     salary,
     mandatoryDeductions,
     voluntaryDeductions,
@@ -168,6 +227,7 @@ export function createPaymentFields(
         0
     );
     const netSalary =
+        // TODO ask if benefits should be added to the salary
         salary - totalMandatoryDeductions - totalVoluntaryDeductions + totalBenefits;
     return {
         salary,
