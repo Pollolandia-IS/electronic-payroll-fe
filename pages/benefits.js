@@ -60,6 +60,7 @@ export async function getServerSideProps(context) {
                 nombre: true,
                 cantidadMaximaBeneficios: true,
                 montoMaximoBeneficio: true,
+                moneda: true,
             },
             orderBy: {
                 nombre: "asc"
