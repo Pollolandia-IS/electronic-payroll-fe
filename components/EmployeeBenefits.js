@@ -4,7 +4,7 @@ import ConfirmModal from "./ConfirmModal";
 import Search from "./Search";
 import Sidebar from "./Sidebar";
 import styles from "/styles/EmployeeBenefits.module.css";
-import { Select, FormControl, InputLabel, MenuItem, Typography } from "@mui/material";
+import { Select, FormControl, InputLabel, MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 const TextFieldStandard = styled(Select)({
