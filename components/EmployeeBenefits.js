@@ -24,12 +24,20 @@ const TextFieldStandard = styled(Select)({
 });
 
 const EmployeeBenefits = ({ props }) => {
-    const { employeeID, companyID, projectsString, hiredIn, employeeName, isEmployer } = props;
+    const {
+        employeeID,
+        companyID,
+        projectsString,
+        hiredIn,
+        employeeName,
+        isEmployer,
+    } = props;
     const [selectedBenefit, setSelectedBenefit] = useState("");
     const [isOpenAdd, setIsOpenAdd] = useState(false);
     const [isOpenRemove, setIsOpenRemove] = useState(false);
     const [isOpenError, setIsOpenError] = useState(false);
     const [projectName, setProjectName] = useState("");
+    const [projectCurrency, setProjectCurrency] = useState("");
     const [benefits, setBenefits] = useState([]);
     const [selectedBenefits, setSelectedBenefits] = useState([]);
     const [searchText, setSearchText] = useState("");
@@ -62,7 +70,8 @@ const EmployeeBenefits = ({ props }) => {
             const benefitToAdd = benefits.find(
                 (benefit) => benefit.nombreBeneficio === selectedBenefit
             );
-            currentAmountSum += parseInt(benefitToAdd.montoPago); 
+            currentAmountSum += parseInt(benefitToAdd.montoPago);
+            currentAmountBenefits += 1;
         }
         if (
             currentAmountBenefits < maxAmountBenefits &&
@@ -122,45 +131,56 @@ const EmployeeBenefits = ({ props }) => {
         }
     };
 
+    const createBenefitCard = (benefit) => {
+        let found = false;
+        for (let i = 0; i < selectedBenefits.length && !found; i++) {
+            if (
+                selectedBenefits[i].nombreBeneficio === benefit.nombreBeneficio
+            ) {
+                found = true;
+                return (
+                    <BenefitEmployeeCard
+                        key={benefit.nombreBeneficio}
+                        name={benefit.nombreBeneficio}
+                        description={benefit.descripcion}
+                        amount={benefit.montoPago}
+                        selected={true}
+                        currency={projectCurrency}
+                        setIsOpenAdd={setIsOpenAdd}
+                        setIsOpenRemove={setIsOpenRemove}
+                        setSelectedBenefit={setSelectedBenefit}
+                    />
+                );
+            }
+        }
+        if (!found) {
+            return (
+                <BenefitEmployeeCard
+                    key={benefit.nombreBeneficio}
+                    name={benefit.nombreBeneficio}
+                    description={benefit.descripcion}
+                    amount={benefit.montoPago}
+                    selected={false}
+                    currency={projectCurrency}
+                    setIsOpenAdd={setIsOpenAdd}
+                    setIsOpenRemove={setIsOpenRemove}
+                    setSelectedBenefit={setSelectedBenefit}
+                />
+            );
+        }
+    };
+
+    const changeCurrency = (projectName) => {
+        const currentProject = projectsString.find(
+            (project) => project.nombre === projectName
+        );
+        setProjectCurrency(currentProject.moneda);
+    };
+
     const parseBenefits = () => {
-        const found = false;
         return benefits.map((benefit) => {
             if (searchText === "") {
-                found = false;
-                for (let i = 0; i < selectedBenefits.length && !found; i++) {
-                    if (
-                        selectedBenefits[i].nombreBeneficio ===
-                        benefit.nombreBeneficio
-                    ) {
-                        found = true;
-                        return (
-                            <BenefitEmployeeCard
-                                key={benefit.nombreBeneficio}
-                                name={benefit.nombreBeneficio}
-                                description={benefit.descripcion}
-                                amount={benefit.montoPago}
-                                selected={true}
-                                setIsOpenAdd={setIsOpenAdd}
-                                setIsOpenRemove={setIsOpenRemove}
-                                setSelectedBenefit={setSelectedBenefit}
-                            />
-                        );
-                    }
-                }
-                if (!found) {
-                    return (
-                        <BenefitEmployeeCard
-                            key={benefit.nombreBeneficio}
-                            name={benefit.nombreBeneficio}
-                            description={benefit.descripcion}
-                            amount={benefit.montoPago}
-                            selected={false}
-                            setIsOpenAdd={setIsOpenAdd}
-                            setIsOpenRemove={setIsOpenRemove}
-                            setSelectedBenefit={setSelectedBenefit}
-                        />
-                    );
-                }
+                return createBenefitCard(benefit);
             } else {
                 if (
                     benefit.nombreBeneficio
@@ -171,45 +191,7 @@ const EmployeeBenefits = ({ props }) => {
                         .includes(searchText.toLowerCase()) ||
                     benefit.montoPago.toString().includes(searchText)
                 ) {
-                    found = false;
-                    for (
-                        let i = 0;
-                        i < selectedBenefits.length && !found;
-                        i++
-                    ) {
-                        if (
-                            selectedBenefits[i].nombreBeneficio ===
-                            benefit.nombreBeneficio
-                        ) {
-                            found = true;
-                            return (
-                                <BenefitEmployeeCard
-                                    key={benefit.nombreBeneficio}
-                                    name={benefit.nombreBeneficio}
-                                    description={benefit.descripcion}
-                                    amount={benefit.montoPago}
-                                    selected={true}
-                                    setIsOpenAdd={setIsOpenAdd}
-                                    setIsOpenRemove={setIsOpenRemove}
-                                    setSelectedBenefit={setSelectedBenefit}
-                                />
-                            );
-                        }
-                    }
-                    if (!found) {
-                        return (
-                            <BenefitEmployeeCard
-                                key={benefit.nombreBeneficio}
-                                name={benefit.nombreBeneficio}
-                                description={benefit.descripcion}
-                                amount={benefit.montoPago}
-                                selected={false}
-                                setIsOpenAdd={setIsOpenAdd}
-                                setIsOpenRemove={setIsOpenRemove}
-                                setSelectedBenefit={setSelectedBenefit}
-                            />
-                        );
-                    }
+                    return createBenefitCard(benefit);
                 }
             }
         });
@@ -282,6 +264,7 @@ const EmployeeBenefits = ({ props }) => {
         ).json();
         setBenefits(benefits);
         getSelectedBenefits(event.target.value);
+        changeCurrency(event.target.value);
     };
 
     const handleTextChange = (event) => {
@@ -312,7 +295,11 @@ const EmployeeBenefits = ({ props }) => {
                 buttonText="Aceptar"
                 buttonAction={() => setIsOpenError(false)}
             />
-            <Sidebar selected={6} username={employeeName} isEmployer={isEmployer} />
+            <Sidebar
+                selected={6}
+                username={employeeName}
+                isEmployer={isEmployer}
+            />
             <main className={styles.main}>
                 <div className={styles.main__header}>
                     <FormControl>
