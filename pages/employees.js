@@ -1,5 +1,5 @@
 import Aside from "../components/Aside";
-import Navbar from "../components/Navbar.js";
+import Navbar from "../components/NavBar.js";
 import CardEmployee from "../components/CardEmployee.js";
 import Styles from "/styles/Empleados.module.css";
 import { prisma } from "/.db";

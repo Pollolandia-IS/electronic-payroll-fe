@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import Image from 'next/image';
 import RegisterForm from '../../../components/RegisterForm.js';
-import Modal from '../../../Components/Modal.js'
-import NavBar from '../../../Components/NavBar.js';
-import Aside from '../../../Components/Aside.js';
+import Modal from '../../../components/Modal.js'
+import NavBar from '../../../components/NavBar.js';
+import Aside from '../../../components/Aside.js';
 import styles from '../../../styles/AgregarEmpleados.module.css';
 
 export async function getServerSideProps(context) {
