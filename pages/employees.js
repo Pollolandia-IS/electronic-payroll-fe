@@ -6,93 +6,96 @@ import { prisma } from "/.db";
 import SearchBar from "../components/SearchBar.js";
 import { useState } from "react";
 
-const AsideItems = [
-  {
-    name: "Nómica",
-    icon: "payroll",
-    dropDown: [],
-  },
-  {
-    name: "Ajustes",
-    icon: "config",
-    dropDown: [],
-  },
-  {
-    name: "Historial",
-    icon: "history",
-    dropDown: [],
-  },
-];
-
-
 export async function getServerSideProps(context) {
-  const { req, res } = context;
-  const { cookies } = req;
-  const ids = JSON.parse(res._headers.ids);
-  const companyID = ids.companyId;
+    const { req, res } = context;
+    const { cookies } = req;
+    const ids = JSON.parse(res._headers.ids);
+    const companyID = ids.companyId;
 
-  let employees = (
-    await prisma.empleado.findMany({
-      where: { cedulaJuridica: companyID },
-      include: { persona: true },
-    })
-  ).map((e) => e.persona);
-
-  return {
-    props: {
-      employees,
-      companyID
-    },
-  };
-}
-const Employees = ({ employees, companyID }) => {
-
-  const navItems = [
-    ["Proyectos", false, `/${companyID}/project`],
-    ["Reportes", false, "/reports"],
-    ["Empleados", true, `/${companyID}/Employees`],
-    ["Deducciones", false, "/deductions"],
-    ["Beneficios", false, "/benefits"],
+    const AsideItems = [
+      {
+        name: 'Empleados',
+        icon: 'profile',
+        dropDown: [['- Nuevo Empleado', `${companyID}/registerEmployeeModal`],],
+      },
   ];
 
-  const [searchText, setSearchText] = useState("");
+    let employees = (
+        await prisma.empleado.findMany({
+            where: { cedulaJuridica: companyID },
+            include: { persona: { include: { hace_uso: true } } },
+        })
+    ).map((e) => e.persona);
 
-  const handleTextChange = (event) => {
-    setSearchText(event.target.value);
-  };
+    employees.sort((a, b) => {
+        if (a.nombre < b.nombre) {
+            return -1;
+        }
+        if (a.nombre > b.nombre) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    );
 
-  console.log(employees)
+    return {
+        props: {
+            employees,
+            companyID,
+            AsideItems,
+        },
+    };
+}
+const Employees = ({ employees, companyID, AsideItems }) => {
+    const navItems = [
+      ["Inicio", false, `/`],
+        ["Proyectos", false, `/project`],
+        ["Registro Horas", false, "/hours"],
+        ["Empleados", true, `/Employees`],
+        ["Deducciones", false, "/deductions"],
+        ["Beneficios", false, "/benefits"],
+    ];
 
-  if (searchText) {
-    employees = employees.filter(
-      (e) =>
-        e.nombre.toLowerCase().includes(searchText) ||
-        e.nombre.toUpperCase().includes(searchText.toUpperCase()) || e.cedula.toString().includes(searchText) || e.telefono.toString().includes(searchText));
-  }
+    const [searchText, setSearchText] = useState("");
 
-  return (
-    <>
-      <Navbar navItems={navItems} />
-      <Aside items={AsideItems} />
-      <div className={Styles.container}>
-        <h1 className={Styles.title}>Empleados</h1>
-        <SearchBar
-          handleChange={handleTextChange}
-          searchText={searchText}
-          placeholder={"Buscar Empleados"}
-        />
-        <div className={Styles.cards}>
-          {employees.map((item, index) => (
-            <CardEmployee
-              cardItems={item}
-              key={item.cedula}
-              removeCheckbox={true}
-            />
-          ))}
-        </div>
-      </div>
-    </>
-  );
+    const handleTextChange = (event) => {
+        setSearchText(event.target.value);
+    };
+
+    if (searchText) {
+        employees = employees.filter(
+            (e) =>
+                e.nombre.toLowerCase().includes(searchText) ||
+                e.nombre.toUpperCase().includes(searchText.toUpperCase()) ||
+                e.cedula.toString().includes(searchText) ||
+                e.telefono.toString().includes(searchText)
+        );
+    }
+
+    return (
+        <>
+            <Navbar navItems={navItems} />
+            <Aside items={AsideItems} />
+            <div className={Styles.container}>
+                <h1 className={Styles.title}>Empleados</h1>
+                <SearchBar
+                    handleChange={handleTextChange}
+                    searchText={searchText}
+                    placeholder={"Buscar Empleados"}
+                />
+                <div className={Styles.cards}>
+                    {employees.map((item, index) => (
+                        <CardEmployee
+                            cardItems={item}
+                            key={item.cedula}
+                            removeCheckbox={true}
+                        />
+                    ))}
+                </div>
+            </div>
+        </>
+    );
 };
 
 export default Employees;

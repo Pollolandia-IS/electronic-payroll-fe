@@ -22,8 +22,23 @@ const handleRequest = (req, userData) => {
         return handleHours(userData);
     } else if (url === `${BASEURL}/payroll`) {
         return handlePayroll(userData);
-    }
-    else {
+    } else if (url.match(/http:\/\/localhost:3000\/([0-9]+)\/verify/g)) {
+        let userID = url.match(/\/([0-9]+)/g)[0].substring(1);
+        try {
+            fetch(`${BASEURL}/api/verify`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userID,
+                }),
+            });
+        } catch (error) {
+            console.log("Error:", error);
+        }
+        let response = NextResponse.redirect(`${BASEURL}/LogIn`);
+        response.headers.append("verified", JSON.stringify(true));
+        return response;
+    } else {
         return NextResponse.next();
     }
 };
@@ -101,7 +116,7 @@ const handleHours = async (userData) => {
     } else {
         return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
-}
+};
 
 const handlePayroll = async (userData) => {
     if (userData) {

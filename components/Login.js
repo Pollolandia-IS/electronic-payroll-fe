@@ -208,9 +208,6 @@ function Login() {
       Cookies.set("token", data.token, { expires: 7 });
       router.push("/");
 
-    } else if (data.type === -1) {
-      console.log("Login failed");
-      console.log(data);
     }
     setEnabledAlert(true);
     setErrorType(data.type);
@@ -307,6 +304,7 @@ function Login() {
               value={email}
               onChange={(evt) => setEmail(evt.target.value)}
               error={errorType < 0}
+              inputProps={{"data-testid": "email-input"}}
             />
             <TextFieldOutlined1
               variant="outlined"
@@ -316,6 +314,7 @@ function Login() {
               value={password}
               onChange={(evt) => setPassword(evt.target.value)}
               error={errorType < 0}
+              inputProps={{"data-testid": "password-input"}}
             />
           </Input1>
           <Btm>
@@ -325,6 +324,7 @@ function Login() {
               color="primary"
               type="submit"
               disabled={email.length == 0 || password.length == 0}
+              data-testid="submit-button"
             >
               {" "}
               Iniciar Sesion{" "}

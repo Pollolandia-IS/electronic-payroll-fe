@@ -47,3 +47,15 @@
     width: 996px;
     height: 170px;
 }
+
+.main__noDeductions{
+    color: rgba(0, 0, 0, 0.87);
+    font-style: normal;
+    font-family: "Heebo", sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: 0px;
+    text-decoration: none;
+    line-height: 35px;
+    margin: 100px;
+}

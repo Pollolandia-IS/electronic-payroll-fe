@@ -39,30 +39,20 @@ function AgregarEmpleados({companyID}){
       }
       if (info) {
         const infoJSON = JSON.stringify(info);
-        //todo: enviar a la base de datos
-        console.log("Listo para enviar a la db")
         handleDataConfirmation(info)
       }
+      Router.push("/employees");
     }
     const [modalOpened, setModalOpened] = useState(true);
     const openModal = () => {
         setModalOpened(true);
     }
+
     const AsideItems = [
         {
-          name: 'Agregar Empleado',
+          name: 'Empleados',
           icon: 'profile',
-          dropDown: [['- Nuevo Empleado', `/${JSON.stringify(companyID).slice(14,JSON.stringify(companyID).length-2)}/AgregarEmpleados`],],
-        },
-        {
-          name: 'Perfil',
-          icon: 'profile',
-          dropDown: [],
-        },
-        {
-          name: 'Cerrar Sesión',
-          icon: 'logout',
-          dropDown: [],
+          dropDown: [['- Ver Empleados', `/employees`],],
         },
       ];
       

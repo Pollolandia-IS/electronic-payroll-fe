@@ -273,6 +273,8 @@ function EditProjectModal(props) {
   }
 
   const sendProject = async () => {
+    let benefitDataChanged = false;
+    (amountValue !== props.amount || benefitsValue !== props.benefits) ? benefitDataChanged = true : benefitDataChanged = false;
     const project = {
       companyID: props.companyID,
       oldname: props.name,
@@ -282,7 +284,9 @@ function EditProjectModal(props) {
       amount: amountValue,
       benefits: benefitsValue,
       date: dateValue.toISOString(),
+      benefitDataChanged: benefitDataChanged
     }
+
     await fetch('/api/project', {
       method: 'POST',
       headers: {
@@ -326,7 +330,7 @@ function EditProjectModal(props) {
                 <X  src={'/assets/img/x.png'} alt={"x"}/>
               </FrameX>
             </Frame1>
-            <TextFieldStandard variant="standard" size="medium"  label={`Nombre`} value={nameValue} onChange={handleNameChange} error={!isUniqueName} helperText={isUniqueName ? '': 'Este nombre de Proyecto ya existe' }/>
+            <TextFieldStandard variant="standard" size="medium"  label={`Nombre`} value={nameValue} onChange={handleNameChange} error={!isUniqueName} helperText={isUniqueName ? '': 'Este nombre de Proyecto ya existe' } maxLength={90}/>
             <Frame11 >
             <FormControl>
               <InputLabel sx={{marginLeft: -2}}>Frecuencia de Pago</InputLabel>

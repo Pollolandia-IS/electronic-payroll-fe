@@ -52,6 +52,7 @@ const Projects = ({ companyID, projectsString, name, isEmployer }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenRemove, setIsOpenRemove] = useState(false);
     const [selectedProject, setSelectedProject] = useState("");
+    const [searchText, setSearchText] = useState("");
 
     const convertDate = (date) => {
         let dateArray = date.split("-");
@@ -61,28 +62,56 @@ const Projects = ({ companyID, projectsString, name, isEmployer }) => {
     };
 
     const getProjects = () => {
-        return projectsString.map((project) => {
-            return (
-                <ProjectCard
-                    key={project.nombre}
-                    projects={projectsString}
-                    companyID={project.cedulaJuridica}
-                    name={project.nombre}
-                    employeeCount={project._count.esContratado}
-                    maxBen={project.cantidadMaximaBeneficios}
-                    maxAmountBen={project.montoMaximoBeneficio}
-                    currency={project.moneda}
-                    frequency={project.frecuenciaPago}
-                    date={convertDate(project.fechaInicio)}
-                    setIsOpen={setIsOpenRemove}
-                    setSelectedProject={setSelectedProject}
-                />
-            );
-        });
+        if (searchText === "") {
+            return projectsString.map((project) => {
+                return (
+                    <ProjectCard
+                        key={project.nombre}
+                        projects={projectsString}
+                        companyID={project.cedulaJuridica}
+                        name={project.nombre}
+                        employeeCount={project._count.esContratado}
+                        maxBen={project.cantidadMaximaBeneficios}
+                        maxAmountBen={project.montoMaximoBeneficio}
+                        currency={project.moneda}
+                        frequency={project.frecuenciaPago}
+                        date={convertDate(project.fechaInicio)}
+                        setIsOpen={setIsOpenRemove}
+                        setSelectedProject={setSelectedProject}
+                    />
+                );
+            });
+        } else {
+            return projectsString.map((project) => {
+                if (
+                    project.nombre.toLowerCase().includes(searchText.toLowerCase()) ||
+                    project.frecuenciaPago.toLowerCase().includes(searchText.toLowerCase()) 
+                ) {
+                    return (
+                        <ProjectCard
+                            key={project.nombre}
+                            projects={projectsString}
+                            companyID={project.cedulaJuridica}
+                            name={project.nombre}
+                            employeeCount={project._count.esContratado}
+                            maxBen={project.cantidadMaximaBeneficios}
+                            maxAmountBen={project.montoMaximoBeneficio}
+                            currency={project.moneda}
+                            frequency={project.frecuenciaPago}
+                            date={convertDate(project.fechaInicio)}
+                            setIsOpen={setIsOpenRemove}
+                            setSelectedProject={setSelectedProject}
+                        />
+                    );
+                }
+            });
+        }
     };
+
     const getRows = () => {
         let rows = [];
-        const projects = getProjects();
+        let projects = getProjects();
+        projects = projects.filter((project) => project != undefined); 
         for (let i = 0; i < projects.length; i += 2) {
             rows.push(
                 <div key={i} className={styles.main__row}>
@@ -111,6 +140,12 @@ const Projects = ({ companyID, projectsString, name, isEmployer }) => {
             console.error(error);
         }
     };
+
+    const handleTextChange = (event) => {
+        setSearchText(event.target.value);
+        getRows();
+    };
+
     return (
         <>
             <DeleteModal
@@ -129,12 +164,16 @@ const Projects = ({ companyID, projectsString, name, isEmployer }) => {
             <Sidebar selected={2} username={name} isEmployer={isEmployer} />
             <main className={styles.main}>
                 <div className={styles.main__header}>
-                    <Search placeholder="Buscar proyecto..." />
+                    <Search
+                        handleSearch={handleTextChange}
+                        searchText={searchText}
+                        placeholder="Buscar proyecto..."
+                    />
                     <IconBox action={() => setIsOpen(true)}>
                         <AddIcon fontSize="large" />
                     </IconBox>
                 </div>
-                <div className={styles.main__content}>{getRows()}</div>
+                { projectsString.length > 0 ? <div className={styles.main__content}>{getRows()}</div> : <div className={styles.main__noProjects}>Aún no hay proyectos <p style={{fontWeight: 400, fontSize: 20}}>Agrega tu primer proyecto en el botón +</p></div> }
             </main>
         </>
     );

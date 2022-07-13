@@ -39,7 +39,7 @@ export async function getServerSideProps(context) {
   let employees = (
     await prisma.empleado.findMany({
       where: { cedulaJuridica: companyID },
-      include: { persona: true },
+      include: { persona: { include: { hace_uso: true } } }
     })
   )
     .filter((e) =>
@@ -62,11 +62,12 @@ const AddEmployee = ({
   cedulaJuridica,
 }) => {
   const navItems = [
-    ["Proyectos", true, `/${cedulaJuridica}/project`],
-    ["Reportes", false, "/reports"],
-    ["Empleados", false, `/${cedulaJuridica}/Employees`],
-    ["Deducciones", false, "/deductions"],
-    ["Beneficios", false, "/benefits"],
+    ["Inicio", false, `/`],
+      ["Proyectos", false, `/project`],
+      ["Registro Horas", false, "/hours"],
+      ["Empleados", true, `/Employees`],
+      ["Deducciones", false, "/deductions"],
+      ["Beneficios", false, "/benefits"],
   ];
 
   const getCleanInputs = () => {
@@ -134,7 +135,7 @@ const AddEmployee = ({
     });
     setFormState(getCleanInputs());
     setModalOpen(false);
-    router.push(`/${cedulaJuridica}/project/${nombreProyecto}/addEmployee`);
+    router.reload();
   };
 
   const handleInputChange = (event) => {
@@ -170,7 +171,7 @@ const AddEmployee = ({
         modalOpened={modalOpen}
         setModalOpened={setModalOpen}
       >
-        <form className={Styles.form} onSubmit={handleSubmit}>
+        <form className={Styles.form} onSubmit={handleSubmit} autocomplete="off" >
           <label className={Styles.label}>
             <span>Monto de pago: </span>
             <input

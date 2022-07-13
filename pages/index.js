@@ -5,8 +5,10 @@ import Sidebar from "../components/Sidebar";
 import jwt from "jsonwebtoken";
 import Cookies from "js-cookie";
 import Dashboard from "../components/Dashboard";
+import { dateToString } from "../logic/DateTimeHelpers";
 
 export async function getServerSideProps(context) {
+    console.log(dateToString(new Date()));
     const { req, res } = context;
     const { cookies } = req;
     let decoded = null;

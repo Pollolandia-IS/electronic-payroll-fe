@@ -3,7 +3,7 @@ import styles from '../styles/RegisterForm.module.css';
 const RegisterForm = (props) => {
     return (
         <>
-            <form className={styles.RegisterForm} onSubmit={props.submitInfo}>
+            <form className={styles.RegisterForm} onSubmit={props.submitInfo} autocomplete="off" >
                 {props.titles.map(([title, type, isRequired, isFile]) => (
                     <div>
                         {isFile ? (

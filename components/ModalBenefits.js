@@ -269,7 +269,7 @@ function ModalBeneficio(props) {
                 <X  src={'/assets/img/x.png'} alt={"x"}/>
               </FrameX>
             </Frame1>
-            <TextFieldStandard id="benefitName" variant="standard" size="small" label={`Nombre`} onChange={handleChange} required={true} />
+            <TextFieldStandard id="benefitName" variant="standard" size="small" label={`Nombre`} onChange={handleChange} required={true} maxLength={90}/>
             <Frame11 >
               <FormControl>
                 <InputLabel id="select-label">Nombre de proyecto</InputLabel>
