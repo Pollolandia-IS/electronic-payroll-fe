@@ -28,7 +28,7 @@ async function deleteProject (req, res) {
             },
         });
         for (let i = 0; i < employeesEmail.length; i++) {
-            await sendAlertDeletedProject(
+            await sendAlertDeletedEntireProject(
                 employeesEmail[i].email,
                 projectName
             );
