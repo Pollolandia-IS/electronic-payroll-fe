@@ -1,5 +1,5 @@
 import {prisma} from '/.db';
-const { sendAlertDeletedProject } = require("/pages/api/services/mailServices");
+const { sendAlertDeletedEntireProject } = require("/pages/api/services/mailServices");
 
 export default function handler (req, res) {
     if (req.method == "POST") {
@@ -8,7 +8,7 @@ export default function handler (req, res) {
 }
 
 async function deleteProject (req, res) {
-    try {
+    /*try {*/
         const { companyID, projectName } = req.body;
         const newName = 'Borrado: ' + projectName;
         const employeesEmail = await getEmails(
@@ -27,25 +27,29 @@ async function deleteProject (req, res) {
                 habilitado: false,
             },
         });
+        console.log("pene");
         for (let i = 0; i < employeesEmail.length; i++) {
+            console.log("pene2");
+            console.log(employeesEmail[i].email);
             await sendAlertDeletedEntireProject(
                 employeesEmail[i].email,
                 projectName
             );
         }
         res.status(200).json(updateProject);
-    } catch (error) {
+    /*} catch (error) {
         res.status(500);
         res.send(error.message);
-    }
+    }*/
 };
 
 async function getEmails(res, companyID, projectName) {
     try {
+        console.log("llegue a getEmails");
         const employeesEmail = await prisma.$queryRaw`
-        SELECT email FROM hace_uso INNER JOIN escoge ON escoge.cedulaEmpleado = hace_uso.cedula
-        AND escoge.nombreProyecto = ${projectName}
-        AND escoge.cedulaJuridica = ${companyID};`;
+        SELECT email FROM hace_uso INNER JOIN esContratado ON esContratado.cedulaEmpleado = hace_uso.cedula
+        AND esContratado.nombreProyecto = ${projectName}
+        AND esContratado.cedulaJuridica = ${companyID};`;
 
         return employeesEmail;
     } catch (error) {
