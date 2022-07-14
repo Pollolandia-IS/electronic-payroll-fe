@@ -8,7 +8,7 @@ export default function handler (req, res) {
 }
 
 async function deleteProject (req, res) {
-    /*try {*/
+    try {
         const { companyID, projectName } = req.body;
         const newName = 'Borrado: ' + projectName;
         const employeesEmail = await getEmails(
@@ -27,9 +27,7 @@ async function deleteProject (req, res) {
                 habilitado: false,
             },
         });
-        console.log("pene");
         for (let i = 0; i < employeesEmail.length; i++) {
-            console.log("pene2");
             console.log(employeesEmail[i].email);
             await sendAlertDeletedEntireProject(
                 employeesEmail[i].email,
@@ -37,10 +35,10 @@ async function deleteProject (req, res) {
             );
         }
         res.status(200).json(updateProject);
-    /*} catch (error) {
+    } catch (error) {
         res.status(500);
         res.send(error.message);
-    }*/
+    }
 };
 
 async function getEmails(res, companyID, projectName) {
