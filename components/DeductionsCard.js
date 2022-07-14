@@ -180,7 +180,7 @@ function DeductionsCard(props) {
                     </Frame1>
                     <Monto>
                         <MontoText>{`Monto:`}</MontoText>
-                        <Valor>{new Intl.NumberFormat('de-DE').format(props.amount)}</Valor>
+                        <Valor>{new Intl.NumberFormat('de-DE').format(props.amount)}{" "}{props.currency}</Valor>
                     </Monto>
                     <Description>{props.description}</Description>
                 </Details>
