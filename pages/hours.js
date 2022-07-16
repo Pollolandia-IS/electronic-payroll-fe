@@ -121,7 +121,7 @@ const AddHoursEmployee = ({
     for (let hour of hoursWithId) {
         hoursUsers.push(hour);
     }
-    
+    const [hourToAdd, setHourToAdd] = useState([]);   
     const [showModal, setShowModal] = useState(false);
     const [hours, setHoursState] = useState(0);
     const [date, setDateState] = useState("2022-10-08 00:00:00");
@@ -135,12 +135,21 @@ const AddHoursEmployee = ({
         setHoursProject(value);
     };
     useEffect(() => {
+        console.log("On useEffect", hoursUsers);
         if (selectedProjectName === "Mostrar todos") {
-            setHoursProject(hoursUsers);
+            if (hourToAdd.length > 0) {
+                setHoursProject(
+                    hoursUsers.concat(hourToAdd)
+                );
+                
+            } else {
+                setHoursProject(hoursUsers);
+            }
         } else {
             handleChangeHoursProject(() => {
-                return hoursUsers.filter(
-                    (hour) => hour.nameProject === selectedProjectName
+                return (hoursUsers.filter(
+                    (hour) => hour.nameProject === selectedProjectName).concat(hourToAdd.filter(
+                        (hour) => hour.nameProject === selectedProjectName))
                 );
             });
         }
@@ -201,13 +210,15 @@ const AddHoursEmployee = ({
                 state: "Aprobado",
             };
             hoursUsers.push(newHour);
+            
+            setHourToAdd([...hourToAdd, newHour]);
             setHoursProject([...hoursProject, newHour]);
             
 
         }
     };
 
-    return projects.length > 0 ? (
+    return projects.length > 1 ? (
         <>
             <HourModal
                 date={date}

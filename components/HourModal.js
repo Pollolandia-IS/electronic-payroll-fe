@@ -196,7 +196,7 @@ function HourModal(props) {
                 <Cta>
                     <Links>
                         <Link1 onClick={() => props.setIsOpen(false)}>
-                            <Link2 sx={{ cursor: "pointer" }}>{`Cancel`}</Link2>
+                            <Link2 sx={{ cursor: "pointer" }}>{`Cancelar`}</Link2>
                         </Link1>
                         <Button
                             variant="contained"
