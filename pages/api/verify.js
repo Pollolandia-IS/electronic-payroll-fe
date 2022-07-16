@@ -17,8 +17,7 @@ async function verifyUser(req, res) {
                 email: true,
             },
         });
-
-        console.log("USER:", user);
+        
         if (user) {
             const credentials = await prisma.credenciales.update({
                 where: {

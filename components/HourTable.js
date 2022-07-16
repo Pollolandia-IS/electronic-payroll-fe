@@ -37,7 +37,6 @@ export default function HourTable(props) {
     ];
 
     return (
-        console.log("Rows",props),
         <DataTable
             rows={props.rows}
             columns={columns}

@@ -117,7 +117,6 @@ export function stringToDateWithTime(dateString, separator = "-") {
     let [date, time] = dateString.split(" ");
     time = time + ":00";
     const [day, month, year] = date.split(separator);
-    console.log(day, month, year, time);
 
     return new Date(`${year}-${month}-${day}T${time}`);
 }

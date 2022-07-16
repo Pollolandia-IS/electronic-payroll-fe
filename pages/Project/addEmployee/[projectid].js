@@ -1,7 +1,4 @@
-export async function getServerSideProps(context){ 
-                                                  
-  console.log(context.query);
-
+export async function getServerSideProps(context){                            
   //const proyectos = prisma.proyectos.findMany({where: { projectid: context.params.projectid}});
   
       return {

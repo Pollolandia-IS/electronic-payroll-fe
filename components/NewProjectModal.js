@@ -206,7 +206,6 @@ function NewProjectModal(props) {
   const [dateValue, setDateValue] = useState(new Date());
   const handleChange = (newValue) => {
     setDateValue(newValue);
-    console.log(newValue);
   };
   const [nameValue, setNameValue] = useState('');
   const [frequencyValue, setFrequencyValue] = useState('');
@@ -259,7 +258,6 @@ function NewProjectModal(props) {
       benefits: benefitsValue,
       date: dateValue.toISOString(),
     }
-    console.log(project);
     await fetch('/api/project', {
       method: 'POST',
       headers: {

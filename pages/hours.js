@@ -49,7 +49,6 @@ export async function getServerSideProps(context) {
 
     const hoursWithId = hours.map(
         (hourTime) => (
-            console.log(hourTime),
             {
                 id: counter++,
                 hours: hourTime.horasTrabajadas,
@@ -118,7 +117,11 @@ const AddHoursEmployee = ({
     isEmployer,
 }) => {
     const projects = proyectString;
-    let hoursUsers = hoursWithId;
+    let hoursUsers = [];
+    for (let hour of hoursWithId) {
+        hoursUsers.push(hour);
+    }
+    
     const [showModal, setShowModal] = useState(false);
     const [hours, setHoursState] = useState(0);
     const [date, setDateState] = useState("2022-10-08 00:00:00");
@@ -131,10 +134,7 @@ const AddHoursEmployee = ({
     const handleChangeHoursProject = (value) => {
         setHoursProject(value);
     };
-
-    console.log("Todos los proyectos", projects);
     useEffect(() => {
-        console.log("User hours project", hoursUsers);
         if (selectedProjectName === "Mostrar todos") {
             setHoursProject(hoursUsers);
         } else {
