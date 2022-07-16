@@ -26,14 +26,23 @@ export default function HourTable(props) {
             headerAlign: "center",
             disableColumnMenu: true,
         },
+        {
+            field: "nameProject",
+            headerName: "Nombre del Proyecto",
+            width: 200,
+            align: "center",
+            headerAlign: "center",
+            disableColumnMenu: true,
+        },
     ];
 
     return (
+        console.log("Rows",props),
         <DataTable
             rows={props.rows}
             columns={columns}
             height={797}
-            width={502}
+            width={802}
         />
     );
 }

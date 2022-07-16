@@ -9,6 +9,7 @@ import Search from "../components/Search";
 import Sidebar from "../components/Sidebar";
 import IconBox from "../components/IconBox";
 import Styles from "/styles/AddHoursEmployee.module.css";
+import EmptyProjects from "../components/EmptyProjects";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import jwt from "jsonwebtoken";
@@ -69,11 +70,14 @@ export async function getServerSideProps(context) {
     let employeeProjects = await prisma.esContratado.findMany({
         where: {
             cedulaEmpleado: employeeID,
+            tipoEmpleado: "Por horas",
         },
         select: {
             nombreProyecto: true,
         },
     });
+
+
     let projectQuery = (
         await prisma.proyecto.findMany({
             where: {
@@ -91,6 +95,9 @@ export async function getServerSideProps(context) {
     );
 
     const proyectString = JSON.parse(safeJsonStringify(projectQuery));
+    proyectString.push({
+        nombre: "Mostrar todos",
+    });
 
     return {
         props: {
@@ -111,12 +118,13 @@ const AddHoursEmployee = ({
     isEmployer,
 }) => {
     const projects = proyectString;
+    let hoursUsers = hoursWithId;
     const [showModal, setShowModal] = useState(false);
     const [hours, setHoursState] = useState(0);
     const [date, setDateState] = useState("2022-10-08 00:00:00");
     const [button, setButtonState] = useState(true);
     const [searchText, setSearchText] = useState("");
-    const [selectedProjectName, setSelectedProjectName] = useState("");
+    const [selectedProjectName, setSelectedProjectName] = useState( projects[0] ? projects[0].nombre : "");    
     const [hoursProject, setHoursProject] = useState([]);
     const router = useRouter();
 
@@ -124,12 +132,18 @@ const AddHoursEmployee = ({
         setHoursProject(value);
     };
 
+    console.log("Todos los proyectos", projects);
     useEffect(() => {
-        handleChangeHoursProject(() => {
-            return hoursWithId.filter(
-                (hour) => hour.nameProject === selectedProjectName
-            );
-        });
+        console.log("User hours project", hoursUsers);
+        if (selectedProjectName === "Mostrar todos") {
+            setHoursProject(hoursUsers);
+        } else {
+            handleChangeHoursProject(() => {
+                return hoursUsers.filter(
+                    (hour) => hour.nameProject === selectedProjectName
+                );
+            });
+        }
     }, [selectedProjectName]);
 
     const handleChangeProject = (e) => {
@@ -176,10 +190,24 @@ const AddHoursEmployee = ({
             }),
         });
         setShowModal(false);
-        router.reload();
+        
+        if (response.status === 200) {
+            // push to hoursProject array the new hour
+            const newHour = {
+                id: hoursUsers.length,
+                hours: parseInt(hours),
+                date: date.substring(0, 10),
+                nameProject: selectedProjectName,
+                state: "Aprobado",
+            };
+            hoursUsers.push(newHour);
+            setHoursProject([...hoursProject, newHour]);
+            
+
+        }
     };
 
-    return (
+    return projects.length > 0 ? (
         <>
             <HourModal
                 date={date}
@@ -218,12 +246,7 @@ const AddHoursEmployee = ({
                                 ))}
                             </TextFieldStandard>
                         </FormControl>
-                        <Search
-                            handleSearch={handleTextChange}
-                            searchText={searchText}
-                            placeholder="Buscar beneficio..."
-                        />
-                        <IconBox action={() => setShowModal(true)} isDisabled={selectedProjectName === ""}>
+                        <IconBox action={() => setShowModal(true)} isDisabled={selectedProjectName === "" || selectedProjectName === "Mostrar todos"}>
                             <AddIcon fontSize="large" />
                         </IconBox>
                     </div>
@@ -233,6 +256,15 @@ const AddHoursEmployee = ({
                 </div>
             </div>
         </>
+    ) : (
+        <div className={Styles.body}>
+            <div className={Styles.sidebar}>
+                <Sidebar selected={4} username={name} isEmployer={isEmployer} />
+            </div>
+            <div className={Styles.main}>
+                <EmptyProjects />
+            </div>
+        </div>
     );
 };
 
