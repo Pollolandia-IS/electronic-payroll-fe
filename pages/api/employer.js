@@ -23,7 +23,7 @@ async function insertEmployer(req, res) {
             data: {
                 cedula: id,
                 nombre: name,
-                telefono: parseInt(phoneNumber),
+                telefono: phoneNumber,
             },
         });
         const uses = await prisma.hace_uso.create({
