@@ -31,11 +31,10 @@ const TextFieldStandard = styled(Select)({
 });
 
 export async function getServerSideProps(context) {
-
     const { req, res } = context;
     const { cookies } = req;
     const ids = JSON.parse(res._headers.ids);
-    const {userData} = jwt.verify(cookies.token, process.env.JWT_SECRET);
+    const { userData } = jwt.verify(cookies.token, process.env.JWT_SECRET);
     const employeeID = ids.id;
     const companyID = ids.companyId;
 
@@ -47,24 +46,25 @@ export async function getServerSideProps(context) {
 
     let counter = 0;
 
-    const hoursWithId = hours.map(
-        (hourTime) => (
-            {
-                id: counter++,
-                hours: hourTime.horasTrabajadas,
-                date: JSON.stringify(hourTime.fechaHora)
-                    .split("T")[0]
-                    .substring(1),
-                nameProject: hourTime.nombreProyecto,
-                state:
-                    hourTime.estado == 0
-                        ? "Aprobado"
-                        : hourTime.estado == 1
-                        ? "Pendiente"
-                        : "Rechazado",
-            }
-        )
-    );
+    const hoursWithId = hours.map((hourTime) => ({
+        id: counter++,
+        hours: hourTime.horasTrabajadas,
+        // extract the date and time from the timestamp
+        date: JSON.stringify(hourTime.fechaHora)
+            .split("T")[0]
+            .substring(1)
+            .concat(" | ")
+            .concat(
+                JSON.stringify(hourTime.fechaHora).split("T")[1].substring(0, 8)
+            ),
+        nameProject: hourTime.nombreProyecto,
+        state:
+            hourTime.estado == 0
+                ? "Aprobado"
+                : hourTime.estado == 1
+                ? "Pendiente"
+                : "Rechazado",
+    }));
 
     let employeeProjects = await prisma.esContratado.findMany({
         where: {
@@ -76,17 +76,14 @@ export async function getServerSideProps(context) {
         },
     });
 
-
-    let projectQuery = (
-        await prisma.proyecto.findMany({
-            where: {
-                cedulaJuridica: companyID,
-            },
-            select: {
-                nombre: true,
-            },
-        })
-    );
+    let projectQuery = await prisma.proyecto.findMany({
+        where: {
+            cedulaJuridica: companyID,
+        },
+        select: {
+            nombre: true,
+        },
+    });
     projectQuery = projectQuery.filter((project) =>
         employeeProjects.some(
             (employee) => employee.nombreProyecto === project.nombre
@@ -121,13 +118,16 @@ const AddHoursEmployee = ({
     for (let hour of hoursWithId) {
         hoursUsers.push(hour);
     }
-    const [hourToAdd, setHourToAdd] = useState([]);   
+    const [hourToAdd, setHourToAdd] = useState([]);
+    const [nextId, setNextId] = useState(hoursUsers.length);
     const [showModal, setShowModal] = useState(false);
     const [hours, setHoursState] = useState(0);
     const [date, setDateState] = useState("2022-10-08 00:00:00");
     const [button, setButtonState] = useState(true);
     const [searchText, setSearchText] = useState("");
-    const [selectedProjectName, setSelectedProjectName] = useState( projects[0] ? projects[0].nombre : "");    
+    const [selectedProjectName, setSelectedProjectName] = useState(
+        projects[0] ? projects[0].nombre : ""
+    );
     const [hoursProject, setHoursProject] = useState([]);
     const router = useRouter();
 
@@ -135,22 +135,22 @@ const AddHoursEmployee = ({
         setHoursProject(value);
     };
     useEffect(() => {
-        console.log("On useEffect", hoursUsers);
         if (selectedProjectName === "Mostrar todos") {
             if (hourToAdd.length > 0) {
-                setHoursProject(
-                    hoursUsers.concat(hourToAdd)
-                );
-                
+                setHoursProject(hoursUsers.concat(hourToAdd));
             } else {
                 setHoursProject(hoursUsers);
             }
         } else {
             handleChangeHoursProject(() => {
-                return (hoursUsers.filter(
-                    (hour) => hour.nameProject === selectedProjectName).concat(hourToAdd.filter(
-                        (hour) => hour.nameProject === selectedProjectName))
-                );
+                return hoursUsers
+                    .filter((hour) => hour.nameProject === selectedProjectName)
+                    .concat(
+                        hourToAdd.filter(
+                            (hourAdd) =>
+                                hourAdd.nameProject === selectedProjectName
+                        )
+                    );
             });
         }
     }, [selectedProjectName]);
@@ -199,22 +199,21 @@ const AddHoursEmployee = ({
             }),
         });
         setShowModal(false);
-        
+
         if (response.status === 200) {
-            // push to hoursProject array the new hour
             const newHour = {
-                id: hoursUsers.length,
+                id: nextId,
                 hours: parseInt(hours),
-                date: date.substring(0, 10),
+                date: date
+                    .substring(0, 10)
+                    .concat(" | ")
+                    .concat(date.substring(11, 19)),
                 nameProject: selectedProjectName,
                 state: "Aprobado",
             };
-            hoursUsers.push(newHour);
-            
-            setHourToAdd([...hourToAdd, newHour]);
+            setNextId(nextId + 1);
+            setHourToAdd(hourToAdd.concat(newHour));
             setHoursProject([...hoursProject, newHour]);
-            
-
         }
     };
 
@@ -234,7 +233,11 @@ const AddHoursEmployee = ({
             />
             <div className={Styles.body}>
                 <div className={Styles.sidebar}>
-                    <Sidebar selected={4} username={name} isEmployer={isEmployer} />
+                    <Sidebar
+                        selected={4}
+                        username={name}
+                        isEmployer={isEmployer}
+                    />
                 </div>
                 <div className={Styles.main}>
                     <div className={Styles.main__header}>
@@ -257,7 +260,13 @@ const AddHoursEmployee = ({
                                 ))}
                             </TextFieldStandard>
                         </FormControl>
-                        <IconBox action={() => setShowModal(true)} isDisabled={selectedProjectName === "" || selectedProjectName === "Mostrar todos"}>
+                        <IconBox
+                            action={() => setShowModal(true)}
+                            isDisabled={
+                                selectedProjectName === "" ||
+                                selectedProjectName === "Mostrar todos"
+                            }
+                        >
                             <AddIcon fontSize="large" />
                         </IconBox>
                     </div>
