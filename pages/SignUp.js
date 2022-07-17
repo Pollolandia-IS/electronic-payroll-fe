@@ -40,7 +40,6 @@ const StateNormal = styled("div")({
     alignItems: `flex-start`,
     padding: `0px 662px 69px 662px`,
     boxSizing: `border-box`,
-    // overflow: `hidden`,
 });
 
 const SignUpForm = styled("div")({
@@ -54,7 +53,6 @@ const SignUpForm = styled("div")({
     boxSizing: `border-box`,
     alignSelf: `stretch`,
     margin: `0px`,
-    // overflow: `hidden`,
     zIndex: `1`,
 });
 
@@ -257,9 +255,9 @@ function SignUp() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [idType, setIdType] = useState("");
+    const [idType, setIdType] = useState("Cédula");
     const [existsIdType, setExistsIdType] = useState(false);
-    const [idLength, setIdLength] = useState(0);
+    const [idLength, setIdLength] = useState(9);
     const [isValidName, setIsValidName] = useState(true);
     const [isValidId, setIsValidId] = useState(true);
     const [isValidEmail, setIsValidEmail] = useState(true);
@@ -305,6 +303,7 @@ function SignUp() {
 
     const handleIdTypeChange = (event) => {
         setIdType(event.target.value);
+        setId("");
         if (event.target.value === "Dimex") {
             setIdLength(12);
             setExistsIdType(true);
@@ -413,16 +412,18 @@ function SignUp() {
                 </Name>
                 <Id>
                     <TextFieldOutlined1
+                        value={idType}
                         variant="outlined"
                         size="medium"
                         label={`Tipo`}
                         onChange={handleIdTypeChange}
                         select
                     >
-                        <MenuItem value={`Id`}>{`Cédula`}</MenuItem>
+                        <MenuItem value={`Cédula`}>{`Cédula`}</MenuItem>
                         <MenuItem value={`Dimex`}>{`DIMEX`}</MenuItem>
                     </TextFieldOutlined1>
                     <IdInput
+                        value={id}
                         variant="outlined"
                         size="medium"
                         label={`Identificación`}
@@ -482,13 +483,17 @@ function SignUp() {
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
-                                    <IconButton
-                                        color="default"
-                                        onClick={() =>
-                                            setShowPassword(!showPassword)
-                                        }
-                                    >
-                                        <VisibilityIcon color="action" />
+                                    <IconButton color="default">
+                                        <VisibilityIcon
+                                            color={
+                                                showPassword
+                                                    ? "primary"
+                                                    : "action"
+                                            }
+                                            onClick={() =>
+                                                setShowPassword(!showPassword)
+                                            }
+                                        />
                                     </IconButton>
                                 </InputAdornment>
                             ),
@@ -509,7 +514,11 @@ function SignUp() {
                                 <InputAdornment position="end">
                                     <IconButton color="default">
                                         <VisibilityIcon
-                                            color="action"
+                                            color={
+                                                showConfirmPassword
+                                                    ? "primary"
+                                                    : "action"
+                                            }
                                             onClick={() =>
                                                 setShowConfirmPassword(
                                                     !showConfirmPassword
