@@ -23,10 +23,9 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import { sub } from "date-fns";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Tooltip } from "@mui/material";
 import { getSelectUnstyledUtilityClass } from "@mui/base";
-import { useRouter } from "next/router";
 
 const StateNormal = styled("div")({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -250,148 +249,57 @@ const LinkTitle = styled("div")(({ theme }) => ({
     margin: `0px`,
 }));
 
-function SignUp() {
-    const [id, setId] = useState("");
+function SignUpPollolandia() {
+    const [completeInfo, setCompleteInfo] = useState(false);
     const [name, setName] = useState("");
     const [phone, setPhone] = useState(0);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [idType, setIdType] = useState("");
-    const [existsIdType, setExistsIdType] = useState(false);
+    const [id, setId] = useState("");
     const [idLength, setIdLength] = useState(0);
-    const [isValidName, setIsValidName] = useState(true);
     const [isValidId, setIsValidId] = useState(true);
-    const [isValidEmail, setIsValidEmail] = useState(true);
+    const [isValidName, setIsValidName] = useState(true);
     const [isValidPhone, setIsValidPhone] = useState(true);
+    const [isValidEmail, setIsValidEmail] = useState(true);
     const [isValidPassword, setIsValidPassword] = useState(true);
-    const [showPassword, setShowPassword] = useState(false);
     const [isValidConfirmPassword, setIsValidConfirmPassword] = useState(true);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [validFields, setValidFields] = useState(false);
-    const router = useRouter();
 
     const submitInfo = () => {
-        const info = {
-            id: id,
-            email: email,
-            phone: phone.toString(),
-            name: name,
-            password: password,
-            confirmPassword: confirmPassword,
+        setCompleteInfo(true);
+        console.log(completeInfo);
+        /*const info = {
+            id: event.target.Cedula.value,
+            email: event.target.Email.value,
+            phoneNumber: event.target.Teléfono.value,
+            name: event.target.Nombre.value,
+            password: event.target.Contraseña.value,
+            confirmPassword: event.target["Confirmar Contraseña"].value,
         };
-        sendData(info);
+        if (info) {
+            if (info.password == info.confirmPassword) {
+                if (!passwords) {
+                    verifyPasswords();
+                }
+                verifySubmittedInfo();
+                sendData(info);
+            } else {
+                unVerifyPasswords();
+            }
+        }*/
     };
 
-    const sendData = async (info) => {
-        const dataForDB = {
-            id: info.id,
-            email: info.email,
-            phoneNumber: info.phone,
-            name: info.name,
-            password: info.password,
-        };
-        try {
-            await fetch("/api/employer", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dataForDB),
-            });
-            await router.push(`/LogIn`);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const handleIdTypeChange = (event) => {
-        setIdType(event.target.value);
-        if (event.target.value === "Dimex") {
-            setIdLength(12);
-            setExistsIdType(true);
-        } else {
-            setIdLength(9);
-            setExistsIdType(true);
-        }
-    };
-
-    const handleIdChange = (event) => {
+    const setIdType = (event) => {
         setId(event.target.value);
-        if (event.target.value.length === idLength) {
-            setIsValidId(true);
+        if(event.target.value === "Cédula"){
+            setIdLength(9);
         } else {
-            setIsValidId(false);
+            setIdLength(12);
         }
-    };
+    }
+    const handleIdChange = (event) => {
 
-    const handleNameChange = (event) => {
-        setName(event.target.value);
-        if (event.target.value.length > 0) {
-            setIsValidName(true);
-        } else {
-            setIsValidName(false);
-        }
-    };
-
-    const handlePhoneChange = (event) => {
-        setPhone(event.target.value);
-        if (event.target.value.length === 8) {
-            setIsValidPhone(true);
-        } else {
-            setIsValidPhone(false);
-        }
-    };
-
-    const handleEmailChange = (event) => {
-        setEmail(event.target.value);
-        if (event.target.value.length > 3 && event.target.value.includes("@")) {
-            setIsValidEmail(true);
-        } else {
-            setIsValidEmail(false);
-        }
-    };
-
-    const handlePasswordChange = (event) => {
-        setPassword(event.target.value);
-        if (
-            event.target.value.length > 8 &&
-            event.target.value.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/)
-        ) {
-            setIsValidPassword(true);
-        } else {
-            setIsValidPassword(false);
-        }
-    };
-
-    const handleConfirmPasswordChange = (event) => {
-        setConfirmPassword(event.target.value);
-        if (event.target.value === password) {
-            setIsValidConfirmPassword(true);
-        } else {
-            setIsValidConfirmPassword(false);
-        }
-    };
-
-    useEffect(() => {
-        validateFields();
-    }, [name, id, phone, email, password, confirmPassword]);
-
-    const validateFields = () => {
-        setValidFields(
-            () =>
-                isValidName &&
-                name != "" &&
-                isValidId &&
-                id != "" &&
-                isValidEmail &&
-                email != "" &&
-                isValidPhone &&
-                phone != 0 &&
-                isValidPassword &&
-                password != "" &&
-                isValidConfirmPassword &&
-                confirmPassword != ""
-        );
-    };
+    }
 
     return (
         <StateNormal>
@@ -406,8 +314,6 @@ function SignUp() {
                         size="medium"
                         label={`Nombre`}
                         type="text"
-                        onChange={handleNameChange}
-                        error={!isValidName}
                         required={true}
                     />
                 </Name>
@@ -416,7 +322,7 @@ function SignUp() {
                         variant="outlined"
                         size="medium"
                         label={`Tipo`}
-                        onChange={handleIdTypeChange}
+                        onChange={setIdType}
                         select
                     >
                         <MenuItem value={`Id`}>{`Cédula`}</MenuItem>
@@ -430,14 +336,6 @@ function SignUp() {
                         onChange={handleIdChange}
                         error={!isValidId}
                         required={true}
-                        onInput={(e) => {
-                            e.target.value = Math.max(
-                                0,
-                                parseInt(e.target.value)
-                            )
-                                .toString()
-                                .slice(0, idLength);
-                        }}
                     />
                 </Id>
                 <Phone>
@@ -447,16 +345,6 @@ function SignUp() {
                         label={`Teléfono`}
                         type="number"
                         required={true}
-                        onChange={handlePhoneChange}
-                        error={!isValidPhone}
-                        onInput={(e) => {
-                            e.target.value = Math.max(
-                                0,
-                                parseInt(e.target.value)
-                            )
-                                .toString()
-                                .slice(0, 8);
-                        }}
                     />
                 </Phone>
                 <Email>
@@ -465,8 +353,6 @@ function SignUp() {
                         size="medium"
                         label={`Correo`}
                         type="email"
-                        onChange={handleEmailChange}
-                        error={!isValidEmail}
                         required={true}
                     />
                 </Email>
@@ -475,19 +361,12 @@ function SignUp() {
                         variant="outlined"
                         size="medium"
                         label={`Contraseña`}
-                        type={showPassword ? "text" : "password"}
+                        type="password"
                         required={true}
-                        onChange={handlePasswordChange}
-                        error={!isValidPassword}
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
-                                    <IconButton
-                                        color="default"
-                                        onClick={() =>
-                                            setShowPassword(!showPassword)
-                                        }
-                                    >
+                                    <IconButton color="default">
                                         <VisibilityIcon color="action" />
                                     </IconButton>
                                 </InputAdornment>
@@ -500,22 +379,13 @@ function SignUp() {
                         variant="outlined"
                         size="medium"
                         label={`Confirmar contraseña`}
-                        type={showConfirmPassword ? "text" : "password"}
+                        type="password"
                         required={true}
-                        onChange={handleConfirmPasswordChange}
-                        error={!isValidConfirmPassword}
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
                                     <IconButton color="default">
-                                        <VisibilityIcon
-                                            color="action"
-                                            onClick={() =>
-                                                setShowConfirmPassword(
-                                                    !showConfirmPassword
-                                                )
-                                            }
-                                        />
+                                        <VisibilityIcon color="action" />
                                     </IconButton>
                                 </InputAdornment>
                             ),
@@ -528,8 +398,7 @@ function SignUp() {
                         size="large"
                         color="primary"
                         type="submit"
-                        disabled={validFields ? false : true}
-                        onClick={submitInfo}
+                        onClick={() => submitInfo()}
                     >
                         {" "}
                         Registrarse{" "}
@@ -547,4 +416,4 @@ function SignUp() {
     );
 }
 
-export default SignUp;
+export default SignUpPollolandia;
