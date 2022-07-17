@@ -115,16 +115,16 @@ export function addBenefit(salary, benefit) {
  * If frequency is Mensual, next Payment is the last day of the month.
  * If frequency is Quincenal, next Payment is on the 15th of the month or the last day of the month
  * if frequency is weekly, next Payment is next Friday.
- * @param {Date} paymentDate The date of the last payment
+ * @param {Date} startDate The date the payroll period starts.
  * @param {string} frequency The frequency of the payment
  * @returns {Date} the next payday
- * @throws {Error} if the paymentDate is not a Date
+ * @throws {Error} if the startDate is not a Date
  * @throws {Error} if the frequency is not a string
  * @throws {Error} if the frequency is not Mensual, Quincenal or Semanal
- * @throws {Error} if the paymentDate is an invalid date
+ * @throws {Error} if the startDate is an invalid date
  */
-export function getNextPaymentDate(paymentDate, frequency) {
-    if (!(paymentDate instanceof Date)) {
+export function getNextPaymentDate(startDate, frequency) {
+    if (!(startDate instanceof Date)) {
         throw new Error("The payment date is not a date");
     }
     if (typeof frequency !== "string") {
@@ -133,12 +133,11 @@ export function getNextPaymentDate(paymentDate, frequency) {
     if (frequency !== "Mensual" && frequency !== "Quincenal" && frequency !== "Semanal") {
         throw new Error("The frequency is not Mensual, Quincenal or Semanal");
     }
-    if (paymentDate == "Invalid Date") {
+    if (startDate == "Invalid Date") {
         throw new Error("The payment date is an invalid date");
     }
-    const date = new Date(paymentDate);
+    const date = new Date(startDate);
     if (frequency === "Mensual") {
-        // last day of the month
         date.setDate(1);
         date.setMonth(date.getMonth() + 1);
         date.setDate(0);
@@ -226,9 +225,7 @@ export function createPayment(
         (accumulated, deduction) => accumulated + deduction.amount,
         0
     );
-    const netSalary =
-        // TODO ask if benefits should be added to the salary
-        salary - totalMandatoryDeductions - totalVoluntaryDeductions + totalBenefits;
+    const netSalary = salary - totalMandatoryDeductions - totalVoluntaryDeductions;
     return {
         salary,
         benefits,
@@ -239,4 +236,8 @@ export function createPayment(
         totalMandatoryDeductions,
         netSalary,
     };
+}
+
+export function calculateProjectState() {
+
 }
