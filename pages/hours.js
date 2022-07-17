@@ -46,25 +46,29 @@ export async function getServerSideProps(context) {
 
     let counter = 0;
 
-    const hoursWithId = hours.map((hourTime) => ({
-        id: counter++,
-        hours: hourTime.horasTrabajadas,
-        // extract the date and time from the timestamp
-        date: JSON.stringify(hourTime.fechaHora)
-            .split("T")[0]
-            .substring(1)
-            .concat(" | ")
-            .concat(
-                JSON.stringify(hourTime.fechaHora).split("T")[1].substring(0, 8)
-            ),
-        nameProject: hourTime.nombreProyecto,
-        state:
-            hourTime.estado == 0
-                ? "Aprobado"
-                : hourTime.estado == 1
-                ? "Pendiente"
-                : "Rechazado",
-    }));
+    const hoursWithId = hours.map((hourTime) => {
+        hourTime.fechaHora.setHours(hourTime.fechaHora.getHours() - 6);
+        return {
+            id: counter++,
+            hours: hourTime.horasTrabajadas,
+            date: JSON.stringify(hourTime.fechaHora)
+                .split("T")[0]
+                .substring(1)
+                .concat(" | ")
+                .concat(
+                    JSON.stringify(hourTime.fechaHora)
+                        .split("T")[1]
+                        .substring(0, 5)
+                ),
+            nameProject: hourTime.nombreProyecto,
+            state:
+                hourTime.estado == 0
+                    ? "Aprobado"
+                    : hourTime.estado == 1
+                    ? "Pendiente"
+                    : "Rechazado",
+        };
+    });
 
     let employeeProjects = await prisma.esContratado.findMany({
         where: {
@@ -92,7 +96,7 @@ export async function getServerSideProps(context) {
 
     const proyectString = JSON.parse(safeJsonStringify(projectQuery));
     proyectString.push({
-        nombre: "Mostrar todos",
+        nombre: "Todos los proyectos",
     });
 
     return {
@@ -113,6 +117,8 @@ const AddHoursEmployee = ({
     name,
     isEmployer,
 }) => {
+    const today = new Date();
+    today.setHours(today.getHours() - 6);
     const projects = proyectString;
     let hoursUsers = [];
     for (let hour of hoursWithId) {
@@ -122,20 +128,18 @@ const AddHoursEmployee = ({
     const [nextId, setNextId] = useState(hoursUsers.length);
     const [showModal, setShowModal] = useState(false);
     const [hours, setHoursState] = useState(0);
-    const [date, setDateState] = useState("2022-10-08 00:00:00");
+    const [date, setDateState] = useState(today.toISOString());
     const [button, setButtonState] = useState(true);
-    const [searchText, setSearchText] = useState("");
     const [selectedProjectName, setSelectedProjectName] = useState(
-        projects[0] ? projects[0].nombre : ""
+        "Todos los proyectos"
     );
     const [hoursProject, setHoursProject] = useState([]);
-    const router = useRouter();
 
     const handleChangeHoursProject = (value) => {
         setHoursProject(value);
     };
     useEffect(() => {
-        if (selectedProjectName === "Mostrar todos") {
+        if (selectedProjectName === "Todos los proyectos") {
             if (hourToAdd.length > 0) {
                 setHoursProject(hoursUsers.concat(hourToAdd));
             } else {
@@ -157,10 +161,6 @@ const AddHoursEmployee = ({
 
     const handleChangeProject = (e) => {
         setSelectedProjectName(e.target.value);
-    };
-
-    const handleTextChange = (e) => {
-        setSearchText(e.target.value);
     };
 
     const handleButtonState = (value) => {
@@ -207,7 +207,7 @@ const AddHoursEmployee = ({
                 date: date
                     .substring(0, 10)
                     .concat(" | ")
-                    .concat(date.substring(11, 19)),
+                    .concat(date.substring(11, 16)),
                 nameProject: selectedProjectName,
                 state: "Aprobado",
             };
@@ -264,7 +264,7 @@ const AddHoursEmployee = ({
                             action={() => setShowModal(true)}
                             isDisabled={
                                 selectedProjectName === "" ||
-                                selectedProjectName === "Mostrar todos"
+                                selectedProjectName === "Todos los proyectos"
                             }
                         >
                             <AddIcon fontSize="large" />
