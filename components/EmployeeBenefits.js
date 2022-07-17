@@ -51,8 +51,8 @@ const EmployeeBenefits = ({ props }) => {
             currentProject.cantidadMaximaBeneficios
         );
         const maxAmountSum = parseInt(currentProject.montoMaximoBeneficio);
-        const currentAmountBenefits = selectedBenefits.length;
-        const currentAmountSum = 0;
+        let currentAmountBenefits = selectedBenefits.length;
+        let currentAmountSum = 0;
         if (selectedBenefits.length === 0) {
             const benefitToAdd = benefits.find(
                 (benefit) => benefit.nombreBeneficio === selectedBenefit
