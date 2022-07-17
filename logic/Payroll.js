@@ -254,7 +254,6 @@ export function calculateProjectState(endDate) {
     today.setHours(today.getHours() - 6);
     const projectEndDate = new Date(endDate);
     const dayDifference = getDayDifference(projectEndDate, new Date(today));
-    console.log("Difference: " + dayDifference);
     if (dayDifference > 2) {
         return "Al Día";
     } else if (dayDifference >= 0) {

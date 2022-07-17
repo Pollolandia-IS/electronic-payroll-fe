@@ -7,7 +7,6 @@ import safeJsonStringify from "safe-json-stringify";
 export async function getServerSideProps(context) {
     const { req, res } = context;
     const { cookies } = req;
-    console.log(res._headers.ids);
     const ids = JSON.parse(res._headers.ids);
     const employeeID = ids.id;
     const companyID = ids.companyId;

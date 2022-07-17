@@ -30,11 +30,10 @@ const TextFieldStandard = styled(Select)({
 });
 
 export async function getServerSideProps(context) {
-
     const { req, res } = context;
     const { cookies } = req;
     const ids = JSON.parse(res._headers.ids);
-    const {userData} = jwt.verify(cookies.token, process.env.JWT_SECRET);
+    const { userData } = jwt.verify(cookies.token, process.env.JWT_SECRET);
     const employeeID = ids.id;
     const companyID = ids.companyId;
 
@@ -46,25 +45,18 @@ export async function getServerSideProps(context) {
 
     let counter = 0;
 
-    const hoursWithId = hours.map(
-        (hourTime) => (
-            console.log(hourTime),
-            {
-                id: counter++,
-                hours: hourTime.horasTrabajadas,
-                date: JSON.stringify(hourTime.fechaHora)
-                    .split("T")[0]
-                    .substring(1),
-                nameProject: hourTime.nombreProyecto,
-                state:
-                    hourTime.estado == 0
-                        ? "Aprobado"
-                        : hourTime.estado == 1
-                        ? "Pendiente"
-                        : "Rechazado",
-            }
-        )
-    );
+    const hoursWithId = hours.map((hourTime) => ({
+        id: counter++,
+        hours: hourTime.horasTrabajadas,
+        date: JSON.stringify(hourTime.fechaHora).split("T")[0].substring(1),
+        nameProject: hourTime.nombreProyecto,
+        state:
+            hourTime.estado == 0
+                ? "Aprobado"
+                : hourTime.estado == 1
+                ? "Pendiente"
+                : "Rechazado",
+    }));
 
     let employeeProjects = await prisma.esContratado.findMany({
         where: {
@@ -74,16 +66,14 @@ export async function getServerSideProps(context) {
             nombreProyecto: true,
         },
     });
-    let projectQuery = (
-        await prisma.proyecto.findMany({
-            where: {
-                cedulaJuridica: companyID,
-            },
-            select: {
-                nombre: true,
-            },
-        })
-    );
+    let projectQuery = await prisma.proyecto.findMany({
+        where: {
+            cedulaJuridica: companyID,
+        },
+        select: {
+            nombre: true,
+        },
+    });
     projectQuery = projectQuery.filter((project) =>
         employeeProjects.some(
             (employee) => employee.nombreProyecto === project.nombre
@@ -195,7 +185,11 @@ const AddHoursEmployee = ({
             />
             <div className={Styles.body}>
                 <div className={Styles.sidebar}>
-                    <Sidebar selected={4} username={name} isEmployer={isEmployer} />
+                    <Sidebar
+                        selected={4}
+                        username={name}
+                        isEmployer={isEmployer}
+                    />
                 </div>
                 <div className={Styles.main}>
                     <div className={Styles.main__header}>
@@ -223,7 +217,10 @@ const AddHoursEmployee = ({
                             searchText={searchText}
                             placeholder="Buscar beneficio..."
                         />
-                        <IconBox action={() => setShowModal(true)} isDisabled={selectedProjectName === ""}>
+                        <IconBox
+                            action={() => setShowModal(true)}
+                            isDisabled={selectedProjectName === ""}
+                        >
                             <AddIcon fontSize="large" />
                         </IconBox>
                     </div>

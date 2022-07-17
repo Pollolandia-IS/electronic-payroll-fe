@@ -71,7 +71,6 @@ const EmployeeDeductions = ({ props }) => {
             } else {
                 currentAmountSum += defaultAmount;
             }
-            console.log(currentAmountSum);
         }
         if (currentAmountSum <= maxAmountSum) {
             return true;
