@@ -13,7 +13,12 @@ const getTransporter = function () {
     return transporter;
 };
 
-exports.sendPasswordToEmployee = async (userEmail, password, cedulaEmpleado, nombreEmpresa) => {
+exports.sendPasswordToEmployee = async (
+    userEmail,
+    password,
+    cedulaEmpleado,
+    nombreEmpresa
+) => {
     const transporter = getTransporter();
     await transporter.sendMail({
         from: "Nueva contraseña generada <pollolandiaSolutions@gmail.com>",
@@ -65,7 +70,11 @@ exports.sendAccountToEmployeer = async (userEmail, cedulaEmpleador, nombre) => {
     });
 };
 
-exports.sendAlertDeletedProject = async (userEmail, nombreDeduccion, nombreProyecto) => {
+exports.sendAlertDeletedProject = async (
+    userEmail,
+    nombreDeduccion,
+    nombreProyecto
+) => {
     const transporter = getTransporter();
     await transporter.sendMail({
         from: "Notificación de la plataforma Pollolandia Solutions <pollolandiaSolutions@gmail.com>",
@@ -88,7 +97,11 @@ exports.sendAlertDeletedProject = async (userEmail, nombreDeduccion, nombreProye
     });
 };
 
-exports.sendAlertDeletedBenefit = async (userEmail, password, nombreBeneficio, nombreProyecto) => {
+exports.sendAlertDeletedBenefit = async (
+    userEmail,
+    nombreBeneficio,
+    nombreProyecto
+) => {
     const transporter = getTransporter();
     await transporter.sendMail({
         from: "Notificación de la plataforma Pollolandia Solutions <pollolandiaSolutions@gmail.com>",
@@ -111,7 +124,11 @@ exports.sendAlertDeletedBenefit = async (userEmail, password, nombreBeneficio, n
     });
 };
 
-exports.sendAlertDeletedDeduccion = async (userEmail, password, nombreDeduccion, nombreProyecto) => {
+exports.sendAlertDeletedDeduccion = async (
+    userEmail,
+    nombreDeduccion,
+    nombreProyecto
+) => {
     const transporter = getTransporter();
     await transporter.sendMail({
         from: "Notificación de la plataforma Pollolandia Solutions <pollolandiaSolutions@gmail.com>",
