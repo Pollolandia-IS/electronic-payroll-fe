@@ -53,7 +53,7 @@ const EmployeeDeductions = ({ props }) => {
         let maxAmountSum = 0;
         for (let i = 0; i < hiredIn.length; i++) {
             if (hiredIn[i].nombreProyecto === projectName) {
-                maxAmountSum += hiredIn[i].montoPago;
+                maxAmountSum += hiredIn[i].salario;
             }
         }
         if (selectedDeductions.length === 0) {
