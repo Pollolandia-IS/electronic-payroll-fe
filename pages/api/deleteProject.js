@@ -28,7 +28,6 @@ async function deleteProject (req, res) {
             },
         });
         for (let i = 0; i < employeesEmail.length; i++) {
-            console.log(employeesEmail[i].email);
             await sendAlertDeletedEntireProject(
                 employeesEmail[i].email,
                 projectName
@@ -43,7 +42,6 @@ async function deleteProject (req, res) {
 
 async function getEmails(res, companyID, projectName) {
     try {
-        console.log("llegue a getEmails");
         const employeesEmail = await prisma.$queryRaw`
         SELECT email FROM hace_uso INNER JOIN esContratado ON esContratado.cedulaEmpleado = hace_uso.cedula
         AND esContratado.nombreProyecto = ${projectName}
