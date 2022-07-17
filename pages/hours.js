@@ -117,8 +117,6 @@ const AddHoursEmployee = ({
     name,
     isEmployer,
 }) => {
-    const today = new Date();
-    today.setHours(today.getHours() - 6);
     const projects = proyectString;
     let hoursUsers = [];
     for (let hour of hoursWithId) {
@@ -128,7 +126,7 @@ const AddHoursEmployee = ({
     const [nextId, setNextId] = useState(hoursUsers.length);
     const [showModal, setShowModal] = useState(false);
     const [hours, setHoursState] = useState(0);
-    const [date, setDateState] = useState(today.toISOString());
+    const [date, setDateState] = useState(new Date());
     const [button, setButtonState] = useState(true);
     const [selectedProjectName, setSelectedProjectName] = useState(
         "Todos los proyectos"
@@ -178,7 +176,7 @@ const AddHoursEmployee = ({
 
     const handleDateChange = (event) => {
         if (event != "Invalid Date") {
-            setDateState(event.toISOString().slice(0, 19).replace("T", " "));
+            setDateState(event);
             handleButtonState(false);
         }
         handleHoursChange({ target: { value: hours } });
@@ -195,19 +193,23 @@ const AddHoursEmployee = ({
                 employeeID: cedulaEmpleado,
                 projectID: selectedProjectName,
                 hours,
-                date,
+                date: date.toISOString(),
             }),
         });
         setShowModal(false);
 
         if (response.status === 200) {
+            const newDate = new Date(date.toISOString());
+            newDate.setHours(newDate.getHours() - 6);
+
             const newHour = {
                 id: nextId,
                 hours: parseInt(hours),
-                date: date
+                date: newDate
+                    .toISOString()
                     .substring(0, 10)
                     .concat(" | ")
-                    .concat(date.substring(11, 16)),
+                    .concat(newDate.toISOString().substring(11, 16)),
                 nameProject: selectedProjectName,
                 state: "Aprobado",
             };
@@ -261,7 +263,10 @@ const AddHoursEmployee = ({
                             </TextFieldStandard>
                         </FormControl>
                         <IconBox
-                            action={() => setShowModal(true)}
+                            action={() => {
+                                setDateState(new Date());
+                                setShowModal(true);
+                            }}
                             isDisabled={
                                 selectedProjectName === "" ||
                                 selectedProjectName === "Todos los proyectos"
