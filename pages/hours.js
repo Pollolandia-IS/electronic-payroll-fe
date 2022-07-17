@@ -94,7 +94,27 @@ export async function getServerSideProps(context) {
         )
     );
 
+
     const proyectString = JSON.parse(safeJsonStringify(projectQuery));
+
+    let startFinishProjects = [];
+    for (let i = 0; i < proyectString.length; i++) {
+        const datesProject = await prisma.proyecto.findOne({
+            where: {
+                nombre: proyectString[i].nombre,
+            },
+            select: {
+                fechaInicio: true,
+                fechaFin: true,
+            },
+        });
+        
+        startFinishProjects.push({
+            name: proyectString[i].nombre,
+            startDate: datesProject.fechaInicio,
+            finishDate: datesProject.fechaFin,
+        });
+    }
     proyectString.push({
         nombre: "Todos los proyectos",
     });
@@ -106,6 +126,7 @@ export async function getServerSideProps(context) {
             proyectString,
             name: userData.name,
             isEmployer: userData.isEmployer,
+            startFinishProjects,
         },
     };
 }
@@ -116,6 +137,7 @@ const AddHoursEmployee = ({
     proyectString,
     name,
     isEmployer,
+    startFinishProjects,
 }) => {
     const projects = proyectString;
     let hoursUsers = [];
@@ -128,6 +150,8 @@ const AddHoursEmployee = ({
     const [hours, setHoursState] = useState(0);
     const [date, setDateState] = useState(new Date());
     const [button, setButtonState] = useState(true);
+    const [errorDate, setErrorDateState] = useState(false);
+    const [errorHours, setErrorHoursState] = useState(false);
     const [selectedProjectName, setSelectedProjectName] = useState(
         "Todos los proyectos"
     );
