@@ -7,7 +7,7 @@ export default function PayrollTable(props) {
         {
             field: "projectName",
             headerName: "Nombre del Proyecto",
-            width: 250,
+            width: 210,
             align: "left",
             headerAlign: "center",
             disableColumnMenu: true,
@@ -21,17 +21,17 @@ export default function PayrollTable(props) {
             disableColumnMenu: true,
         },
         {
-            field: "frequency",
-            headerName: "Frecuencia",
-            width:90,
+            field: "currency",
+            headerName: "Moneda",
+            width: 90,
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,
         },
         {
-            field: "currency",
-            headerName: "Moneda",
-            width: 92,
+            field: "startPayroll",
+            headerName: "Fecha de Inicio",
+            width: 130,
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,
@@ -39,7 +39,7 @@ export default function PayrollTable(props) {
         {
             field: "nextPayroll",
             headerName: "Próximo Pago",
-            width: 164,
+            width: 130,
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,
@@ -52,7 +52,7 @@ export default function PayrollTable(props) {
             headerAlign: "center",
             disableColumnMenu: true,
             renderCell: (cellValues) => {
-                if (cellValues.row.state === "Pagado") {
+                if (cellValues.row.state === "Al Día") {
                     return (
                         <Chip label={cellValues.row.state} color="success" variant="outlined" />
                     );
@@ -79,7 +79,7 @@ export default function PayrollTable(props) {
         {
             field: "payAction",
             headerName: "Pago",
-            width: 60,
+            width: 80,
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,
@@ -97,7 +97,7 @@ export default function PayrollTable(props) {
         {
             field: "historyAction",
             headerName: "Historial",
-            width: 60,
+            width: 80,
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,
