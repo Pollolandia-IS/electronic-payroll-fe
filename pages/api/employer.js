@@ -3,7 +3,6 @@ import { prisma } from "/.db";
 const { sendAccountToEmployeer } = require("/pages/api/services/mailServices");
 
 export default function handler(req, res) {
-    console.log("API");
     if (req.method == "POST") {
         insertEmployer(req, res);
     }

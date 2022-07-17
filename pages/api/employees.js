@@ -3,7 +3,6 @@ const { sendPasswordToEmployee } = require("/pages/api/services/mailServices");
 const { generatePassword } = require("/pages/api/services/generatePassword");
 
 export default function handler(req, res) {
-    console.log("API");
     if (req.method == "POST") {
         insertEmployeeToDatabase(req, res);
     }

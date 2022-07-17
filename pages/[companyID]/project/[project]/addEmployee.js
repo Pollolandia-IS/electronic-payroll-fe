@@ -1,6 +1,6 @@
 import Aside from "../../../../components/Aside.js";
-import Navbar from "../../../../components/Navbar.js";
-import HeaderEmployeeCard from "../../../../components/HeaderEmployeeCard.js";
+import Navbar from "../../../../components/NavBar.js";
+import HeaderEmployeeCard from "../../../../components/HeaderEmployeeCard"
 import CardEmployee from "../../../../components/CardEmployee.js";
 import Modal from "../../../../components/Modal.js";
 import Styles from "/styles/AddEmployee.module.css";
@@ -171,7 +171,7 @@ const AddEmployee = ({
         modalOpened={modalOpen}
         setModalOpened={setModalOpen}
       >
-        <form className={Styles.form} onSubmit={handleSubmit} autocomplete="off" >
+        <form className={Styles.form} onSubmit={handleSubmit} >
           <label className={Styles.label}>
             <span>Monto de pago: </span>
             <input

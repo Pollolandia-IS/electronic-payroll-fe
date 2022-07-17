@@ -6,8 +6,6 @@ import Checkbox from '@mui/material/Checkbox';
 
 
 const CardEmployee = (props) => {
-    console.log(props);
-
     return (
         <>
             <div className={styles.card}>
