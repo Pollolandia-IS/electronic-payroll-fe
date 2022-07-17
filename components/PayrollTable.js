@@ -1,4 +1,4 @@
-import { HistoryOutlined, PaymentsOutlined } from "@mui/icons-material";
+import { HistoryOutlined, LocalAtm } from "@mui/icons-material";
 import { Chip, IconButton, Tooltip } from "@mui/material";
 import DataTable from "./DataTable";
 
@@ -65,10 +65,11 @@ export default function PayrollTable(props) {
                             </div>
                         );
                     } else {
+                        const text = cellValues.row.state.endsWith("0") ? `Hoy es el Pago!` : `Quedan ${cellValues.row.state.split(" ")[1]} día(s)`;
                         return (
                             <div style={{display: 'flex', flexDirection: 'column'}} >
                             <Chip label={cellValues.row.state.split(" ")[0]} color="warning" variant="outlined" />
-                            <p style={{ color: "#ED6C02", fontFamily: "Roboto", fontSize: 14, margin: 0 }}> Quedan {cellValues.row.state.split(" ")[1]} día(s) </p>
+                            <p style={{ color: "#ED6C02", fontFamily: "Roboto", fontSize: 14, margin: 0 }}> text </p>
                             </div>
                         );
                     }
@@ -86,8 +87,8 @@ export default function PayrollTable(props) {
             renderCell: (cellValues) => {
                 return (
                     <Tooltip title="Pagar" arrow placement="top">
-                        <IconButton color="primary" >
-                            <PaymentsOutlined />
+                        <IconButton color="primary" disabled={!cellValues.row.payAction} >
+                            <LocalAtm sx={{ fontSize: 28}} />
                         </IconButton>
                     </Tooltip>
                 );
