@@ -208,7 +208,7 @@ function Sidebar(props) {
                                     href={"/benefits"}
                                 />
                                 <SidebarRow6
-                                    icon="benefit"
+                                    icon="receipt"
                                     text={"Pago de Planilla"}
                                     isSelected={props.selected == 7}
                                     href={"/payroll"}
@@ -230,7 +230,7 @@ function Sidebar(props) {
                                     href={"/project"}
                                 />
                                 <SidebarRow4
-                                    icon="report"
+                                    icon="addTime"
                                     text={"Registro de Horas"}
                                     isSelected={props.selected == 4}
                                     href={"/hours"}

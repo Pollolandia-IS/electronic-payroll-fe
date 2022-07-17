@@ -54,28 +54,76 @@ export default function PayrollTable(props) {
             renderCell: (cellValues) => {
                 if (cellValues.row.state === "Al Día") {
                     return (
-                        <Chip label={cellValues.row.state} color="success" variant="outlined" />
+                        <Chip
+                            label={cellValues.row.state}
+                            color="success"
+                            variant="outlined"
+                        />
                     );
                 } else if (cellValues.row.state.startsWith("Pendiente")) {
                     if (cellValues.row.state.split(" ")[1].startsWith("-")) {
                         return (
-                            <div style={{display: 'flex', flexDirection: 'column'}} >
-                            <Chip label={cellValues.row.state.split(" ")[0]} color="error" variant="outlined" />
-                            <p style={{ color: "#D32F2F", fontFamily: "Roboto", fontSize: 14, margin: 0 }}> Atrasado {cellValues.row.state.split("-")[1]} día(s) </p>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                }}
+                            >
+                                <Chip
+                                    label={cellValues.row.state.split(" ")[0]}
+                                    color="error"
+                                    variant="outlined"
+                                />
+                                <p
+                                    style={{
+                                        color: "#D32F2F",
+                                        fontFamily: "Roboto",
+                                        fontSize: 14,
+                                        margin: 0,
+                                    }}
+                                >
+                                    {" "}
+                                    Atrasado{" "}
+                                    {
+                                        cellValues.row.state.split("-")[1]
+                                    } día(s){" "}
+                                </p>
                             </div>
                         );
                     } else {
-                        const text = cellValues.row.state.endsWith("0") ? `Hoy es el Pago!` : `Quedan ${cellValues.row.state.split(" ")[1]} día(s)`;
+                        const text = cellValues.row.state.endsWith("0")
+                            ? `Hoy es el Pago!`
+                            : `Quedan ${
+                                  cellValues.row.state.split(" ")[1]
+                              } día(s)`;
                         return (
-                            <div style={{display: 'flex', flexDirection: 'column'}} >
-                            <Chip label={cellValues.row.state.split(" ")[0]} color="warning" variant="outlined" />
-                            <p style={{ color: "#ED6C02", fontFamily: "Roboto", fontSize: 14, margin: 0 }}> text </p>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                }}
+                            >
+                                <Chip
+                                    label={cellValues.row.state.split(" ")[0]}
+                                    color="warning"
+                                    variant="outlined"
+                                />
+                                <p
+                                    style={{
+                                        color: "#ED6C02",
+                                        fontFamily: "Roboto",
+                                        fontSize: 14,
+                                        margin: 0,
+                                    }}
+                                >
+                                    {" "}
+                                    text{" "}
+                                </p>
                             </div>
                         );
                     }
                 }
-
-            }
+            },
         },
         {
             field: "payAction",
@@ -87,8 +135,11 @@ export default function PayrollTable(props) {
             renderCell: (cellValues) => {
                 return (
                     <Tooltip title="Pagar" arrow placement="top">
-                        <IconButton color="primary" disabled={!cellValues.row.payAction} >
-                            <LocalAtm sx={{ fontSize: 28}} />
+                        <IconButton
+                            color="primary"
+                            disabled={!cellValues.row.payAction}
+                        >
+                            <LocalAtm sx={{ fontSize: 28 }} />
                         </IconButton>
                     </Tooltip>
                 );
@@ -105,7 +156,7 @@ export default function PayrollTable(props) {
             renderCell: (cellValues) => {
                 return (
                     <Tooltip title="Ver Historial" arrow placement="top">
-                        <IconButton color="primary" >
+                        <IconButton color="primary">
                             <HistoryOutlined />
                         </IconButton>
                     </Tooltip>
