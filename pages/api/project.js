@@ -17,6 +17,11 @@ async function insertProject(req, res) {
     try {
         let { companyID, name, frequency, currency, amount, benefits, date } =
             req.body;
+        const endDate = getNextPaymentDate(
+            new Date(date),
+            frequency
+        );
+        endDate.setHours(endDate.getHours() - 6);
         const result = await prisma.proyecto.create({
             data: {
                 cedulaJuridica: companyID,
@@ -26,10 +31,7 @@ async function insertProject(req, res) {
                 frecuenciaPago: frequency,
                 moneda: currency,
                 fechaInicio: date,
-                fechaFin: getNextPaymentDate(
-                    new Date(date),
-                    frequency
-                ).toISOString(),
+                fechaFin: endDate.toISOString(),
                 fechaUltimoPago: null,
                 habilitado: true,
             },
@@ -59,11 +61,12 @@ async function editProject(req, res) {
         const endDate = getNextPaymentDate(
             new Date(date),
             frequency
-        ).toISOString();
+        );
+        endDate.setHours(endDate.getHours() - 6);
         const emails = await getEmails(res, companyID, oldname);
 
         const result =
-            await prisma.$executeRaw`EXEC [dbo].[editarproyecto]${companyID}, ${oldname}, ${name}, ${benefits}, ${amount}, ${frequency}, ${currency}, ${date}, ${endDate}`;
+            await prisma.$executeRaw`EXEC [dbo].[editarproyecto]${companyID}, ${oldname}, ${name}, ${benefits}, ${amount}, ${frequency}, ${currency}, ${date}, ${endDate.toISOString()}`;
 
         if (benefitDataChanged) {
             for (let i = 0; i < emails.length; i++) {

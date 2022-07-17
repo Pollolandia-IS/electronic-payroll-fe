@@ -254,6 +254,7 @@ const NewProjectModal = (props) => {
     };
 
     const sendProject = async () => {
+        dateValue.setHours(dateValue.getHours() - 6);
         const project = {
             companyID: props.companyID,
             name: nameValue,
@@ -263,7 +264,6 @@ const NewProjectModal = (props) => {
             benefits: benefitsValue,
             date: dateValue.toISOString(),
         };
-        console.log(project);
         await fetch("/api/project", {
             method: "POST",
             headers: {
