@@ -1,6 +1,10 @@
 import { PrismaClient } from '@prisma/client'
 
-  
+ 
+// export const prisma =
+//   global.prisma ||
+//   new PrismaClient();
+//logging mode
 export const prisma =
   global.prisma ||
   new PrismaClient({
