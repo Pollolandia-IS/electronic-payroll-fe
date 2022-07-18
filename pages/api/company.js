@@ -8,19 +8,15 @@ export default function handler(req, res){
 
 async function insertCompanytoDataBase(req, res){
     try{
-        const{employerId, Values} = req.body;
-        console.log(employerId, Values);
-        const {legalid, businessname, physicaladdress,phone,companyemail,website} = Values;
-        
+        const {name, email, phone, id, location, employerId} = req.body;
         const createCompany = await prisma.empresa.create({
             data:{
-                cedulaJuridica : legalid,
-                razonSocial : businessname,
-                direccion : physicaladdress,
-                telefono : parseInt(phone),
-                email : companyemail,
-                paginaWeb : website,
-                cedulaEmpleador : employerId[2],
+                cedulaJuridica : id,
+                razonSocial : name,
+                direccion : location,
+                telefono : phone,
+                email : email,
+                cedulaEmpleador : employerId,
                 habilitado : true,
             }
         });
