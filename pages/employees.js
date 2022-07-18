@@ -10,7 +10,13 @@ import { Avatar } from "@mui/material";
 import { IoTrashSharp } from "react-icons/io5";
 import EmployeeTable from "../components/EmployeeTable";
 import ProjectsTable from "../components/ProjectsTable";
+import EmployeeDrawer from "../components/EmployeeDrawer";
+import ModalCompanyEmployee from "../components/ModalCompanyEmployee";
+import ModalProjectEmployee from "../components/ModalProjectEmployee";
 import safeJsonStringify from "safe-json-stringify";
+import IconBox from "../components/IconBox";
+import AddIcon from "@mui/icons-material/Add";
+import { set } from "date-fns";
 
 const Avatar1 = styled(Avatar)({
     width: `32px`,
@@ -112,20 +118,32 @@ export async function getServerSideProps(context) {
             isEmployer: userData.isEmployer,
             employees,
             contractsEmployee,
-            JSONProjectContract
+            JSONProjectContract,
+            companyID,
         },
     };
 }
-const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contractsEmployee, JSONProjectContract }) => {
+const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contractsEmployee, JSONProjectContract, companyID }) => {
 
-    const [searchText, setSearchText] = useState("");
     const [selectedProjectName, setSelectedProjectName] = useState("Todos los proyectos");
     const [projectsRow, setProjectsRow] = useState([]);
     const [employeesRow, setEmployeesRow] = useState([]);
+    const [indexCompany, setIndexCompany] = useState(0);
+    const [indexProject, setIndexProject] = useState(0);
     const [contractsOfProject, setContractsOfProject] = useState([]);
     const [isProjectSelected, setIsProjectSelected] = useState(false);
+    const [showModalCompany, setShowModalCompany] = useState(false);
+    const [showModalProject, setShowModalProject] = useState(false);
+    const [openDrawer, setOpenDrawer] = useState(false);
+    const [newEmployeeInfo, setNewEmployeeInfo] = useState({ name: "", id: "", email: "", phone: "",});
 
-    console.log("Projects from client", employees)
+    const toggleDrawer = (open) => (event) => {
+        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+          return;
+        }
+        setOpenDrawer(open);
+    };
+
     useEffect(() => {
         if (selectedProjectName === "Todos los proyectos") {
             setProjectsRow(employeesRow);
@@ -151,7 +169,6 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
                 }}
             );
 
-            console.log("data", projectsContracted)
             setContractsOfProject(projectsContracted);
             setIsProjectSelected(true);
         }
@@ -191,26 +208,57 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
         setProjectsRow(array);
     }, []);
 
-    const handleTextChange = (event) => {
-        setSearchText(event.target.value);
-    };
-
     const handleChangeProject = (e) => {
         setSelectedProjectName(e.target.value);
     };
 
-    if (searchText) {
-        employees = employees.filter(
-            (e) =>
-                e.nombre.toLowerCase().includes(searchText) ||
-                e.nombre.toUpperCase().includes(searchText.toUpperCase()) ||
-                e.cedula.toString().includes(searchText) ||
-                e.telefono.toString().includes(searchText)
-        );
+    const handleSubmitCompanyEmployee = async (e) => {
+        try {
+            const response = await fetch('/api/employees', {
+              method: "POST",
+              headers: { 'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                Nombre: newEmployeeInfo.name,
+                Cedula: newEmployeeInfo.id.toString(),
+                Email: newEmployeeInfo.email,
+                Telefono: newEmployeeInfo.phone.toString(),
+                CedJuridica: companyID,
+              }),
+            });
+
+            if (response.status === 200) {
+                setShowModalCompany(false);
+                setNewEmployeeInfo({ name: "", id: "", email: "", phone: "",});
+                // append to employeesRow and projectsRow
+                if (indexCompany === 0) {
+                    setIndexCompany(employeesRow.length);
+                }
+
+                const newEmployee = {
+                    id: indexCompany,
+                    cedula: newEmployeeInfo.id,
+                    name: newEmployeeInfo.name,
+                    mail: newEmployeeInfo.email,
+                    phone: newEmployeeInfo.phone,
+                    projects: 0,
+                    reports: 0,
+                    button: handleSayHello,
+                };
+
+                setEmployeesRow([...employeesRow, newEmployee]);
+                setProjectsRow([...projectsRow, newEmployee]);
+                setIndexCompany(indexCompany + 1);
+            }
+          } catch (error) {
+              console.error(error);
+          }
     }
 
     return (
         <>
+            <EmployeeDrawer open={openDrawer} toggleDrawer={toggleDrawer} />
+            <ModalCompanyEmployee employeeInfo={newEmployeeInfo} setEmployeeInfo={setNewEmployeeInfo} isOpen={showModalCompany} setIsOpen={setShowModalCompany} handleSubmit={handleSubmitCompanyEmployee} />
+            <ModalProjectEmployee isOpen={showModalProject} setIsOpen={setShowModalProject} projectSelected={selectedProjectName} />
             <Sidebar
                 selected={3}
                 username={name}
@@ -238,6 +286,12 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
                             </TextFieldStandard>
                         </FormControl>
                     <Search placeholder="Buscar empleado..." />
+                    <IconBox
+                            action={() => (selectedProjectName === "Todos los proyectos" ? setShowModalCompany(true): setShowModalProject(true))}
+                            isDisabled={selectedProjectName === ""}
+                        >
+                            <AddIcon fontSize="large" />
+                    </IconBox>
                 </div>
                 <div className={Styles.cards}>
                     {

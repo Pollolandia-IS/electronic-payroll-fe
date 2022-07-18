@@ -12,11 +12,13 @@ async function insertEmployeeToDatabase(req, res) {
     let userPassword = generatePassword();
     try {
         const { Nombre, Cedula, Email, Telefono, CedJuridica } = req.body;
+
+        console.log("Im in API", Nombre, Cedula, Email, Telefono, CedJuridica);
         const person = await prisma.persona.create({
             data: {
                 cedula: Cedula,
                 nombre: Nombre,
-                telefono: parseInt(Telefono),
+                telefono: Telefono,
             },
         });
 
@@ -54,10 +56,10 @@ async function insertEmployeeToDatabase(req, res) {
             Cedula,
             nombreEmpresa.razonSocial
         );
-        let result = [person, employee, credentials, uses];
-        res.status(200).json({ result });
+
+        return res.status(200).json({ message: "success" });
     } catch (error) {
-        res.status(500);
-        res.send(error.message);
+        console.log(error);
+        return res.status(500);
     }
 }
