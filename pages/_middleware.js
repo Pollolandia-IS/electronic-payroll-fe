@@ -4,6 +4,7 @@ const BASEURL = "http://localhost:3000";
 export default async function middleware(req) {
     const userData = await decodeToken(req);
     return handleRequest(req, userData);
+
 }
 
 const handleRequest = (req, userData) => {
@@ -20,6 +21,8 @@ const handleRequest = (req, userData) => {
         return handleDeductions(userData);
     } else if (url === `${BASEURL}/hours`) {
         return handleHours(userData);
+    } else if (url === `${BASEURL}/profile`) {
+        return handleProfile(userData);
     } else if (url.match(/http:\/\/localhost:3000\/([0-9]+)\/verify/g)) {
         let userID = url.match(/\/([0-9]+)/g)[0].substring(1);
         try {
@@ -111,6 +114,18 @@ const handleHours = async (userData) => {
         } else {
             return NextResponse.redirect(`${BASEURL}/coming-soon`);
         }
+    } else {
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
+    }
+};
+
+const handleProfile = async(userData) => {
+    if (userData) {
+        const ids = await fetchIds(userData);
+        let response = NextResponse.next();
+        response.headers.append("userdata", JSON.stringify(userData));
+        response.headers.append("ids", JSON.stringify(ids));
+        return response;
     } else {
         return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
