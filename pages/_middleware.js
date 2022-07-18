@@ -20,6 +20,8 @@ const handleRequest = (req, userData) => {
         return handleDeductions(userData);
     } else if (url === `${BASEURL}/hours`) {
         return handleHours(userData);
+    } else if (url === `${BASEURL}/RegisterCompany`) {
+        return handleRegisterCompany(userData);
     } else if (url === `${BASEURL}/payroll`) {
         return handlePayroll(userData);
     } else if (url.match(/http:\/\/localhost:3000\/([0-9]+)\/verify/g)) {
@@ -45,7 +47,14 @@ const handleRequest = (req, userData) => {
 
 const handleIndex = async (userData) => {
     if (userData) {
-        return NextResponse.next();
+        if (userData.isEmployer) {
+            const id = await fetchIds(userData, false);
+            let response = NextResponse.next();
+            response.headers.append("id", JSON.stringify(id));
+            return response;
+        } else {
+            return NextResponse.next();
+        }
     } else {
         return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
@@ -53,7 +62,7 @@ const handleIndex = async (userData) => {
 
 const handleBenefits = async (userData) => {
     if (userData) {
-        const ids = await fetchIds(userData);
+        const ids = await fetchIds(userData, true);
         let response = NextResponse.next();
         response.headers.append("ids", JSON.stringify(ids));
         return response;
@@ -65,7 +74,7 @@ const handleBenefits = async (userData) => {
 const handleProject = async (userData) => {
     if (userData) {
         if (userData.isEmployer) {
-            const ids = await fetchIds(userData);
+            const ids = await fetchIds(userData, true);
             let response = NextResponse.next();
             response.headers.append("ids", JSON.stringify(ids));
             return response;
@@ -80,7 +89,7 @@ const handleProject = async (userData) => {
 const handleEmployees = async (userData) => {
     if (userData) {
         if (userData.isEmployer) {
-            const ids = await fetchIds(userData);
+            const ids = await fetchIds(userData, true);
             let response = NextResponse.next();
             response.headers.append("ids", JSON.stringify(ids));
             return response;
@@ -94,7 +103,7 @@ const handleEmployees = async (userData) => {
 
 const handleDeductions = async (userData) => {
     if (userData) {
-        const ids = await fetchIds(userData);
+        const ids = await fetchIds(userData, true);
         let response = NextResponse.next();
         response.headers.append("ids", JSON.stringify(ids));
         return response;
@@ -106,7 +115,7 @@ const handleDeductions = async (userData) => {
 const handleHours = async (userData) => {
     if (userData) {
         if (!userData.isEmployer) {
-            const ids = await fetchIds(userData);
+            const ids = await fetchIds(userData, true);
             let response = NextResponse.next();
             response.headers.append("ids", JSON.stringify(ids));
             return response;
@@ -118,10 +127,25 @@ const handleHours = async (userData) => {
     }
 };
 
+const handleRegisterCompany = async (userData) => {
+    if (userData) {
+        if (userData.isEmployer) {
+            const id = await fetchIds(userData, false);
+            let response = NextResponse.next();
+            response.headers.append("id", JSON.stringify(id));
+            return response;
+        } else {
+            return NextResponse.redirect(`${BASEURL}/unauthorized`);
+        }
+    } else {
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
+    }
+}
+
 const handlePayroll = async (userData) => {
     if (userData) {
         if (userData.isEmployer) {
-            const ids = await fetchIds(userData);
+            const ids = await fetchIds(userData, true);
             let response = NextResponse.next();
             response.headers.append("ids", JSON.stringify(ids));
             return response;
@@ -150,7 +174,7 @@ const decodeToken = async (req) => {
     return null;
 };
 
-const fetchIds = async (userData) => {
+const fetchIds = async (userData, fetchCompanyId) => {
     if (userData) {
         const ids = await (
             await fetch(`${BASEURL}/api/services/fetchIds`, {
@@ -158,6 +182,7 @@ const fetchIds = async (userData) => {
                 headers: {
                     "Content-Type": "application/json",
                     email: userData.email,
+                    fetchCompanyId,
                 },
             })
         ).json();
