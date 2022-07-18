@@ -32,12 +32,6 @@ async function addHoursEmployee(req, res) {
         })
     ).cedulaEmpleador;
 
-    console.log(employeeID);
-    console.log(cedulaEmpleador);
-    console.log(cedulaJuridica);
-    console.log(projectID);
-    console.log(new Date(date).toISOString().slice(0, 19) + "Z");
-
     await prisma.reporteHoras.create({
         data: {
             cedulaEmpleado: employeeID,

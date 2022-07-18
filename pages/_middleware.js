@@ -23,6 +23,8 @@ const handleRequest = (req, userData) => {
         return handleHours(userData);
     } else if (url === `${BASEURL}/profile`) {
         return handleProfile(userData);
+    } else if (url === `${BASEURL}/payroll`) {
+        return handlePayroll(userData);
     } else if (url.match(/http:\/\/localhost:3000\/([0-9]+)\/verify/g)) {
         let userID = url.match(/\/([0-9]+)/g)[0].substring(1);
         try {
@@ -130,6 +132,20 @@ const handleProfile = async(userData) => {
         return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
 };
+const handlePayroll = async (userData) => {
+    if (userData) {
+        if (userData.isEmployer) {
+            const ids = await fetchIds(userData);
+            let response = NextResponse.next();
+            response.headers.append("ids", JSON.stringify(ids));
+            return response;
+        } else {
+            return NextResponse.redirect(`${BASEURL}/coming-soon`);
+        }
+    } else {
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
+    }
+}
 
 const decodeToken = async (req) => {
     const { cookies } = req;

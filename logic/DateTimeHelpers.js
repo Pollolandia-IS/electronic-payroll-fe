@@ -31,7 +31,7 @@ export function dateToString(date, separator = "-") {
 }
 
 /**
- *  convert a dd-mm-yyyy string with any separator to a date 
+ *  convert a dd-mm-yyyy string with any separator to a date
  * @param {string} dateString
  * @param {string} separator
  * @returns {Date}
@@ -84,7 +84,15 @@ export function dateToStringWithTime(date, separator = "-") {
     if (separator.length === 0) {
         throw new Error("The separator is empty");
     }
-    return dateToString(date, separator) + " " + date.toLocaleTimeString('en-Gb', {hour: '2-digit', minute:'2-digit', hour12: false});
+    return (
+        dateToString(date, separator) +
+        " " +
+        date.toLocaleTimeString("en-Gb", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+        })
+    );
 }
 
 /**
@@ -117,7 +125,6 @@ export function stringToDateWithTime(dateString, separator = "-") {
     let [date, time] = dateString.split(" ");
     time = time + ":00";
     const [day, month, year] = date.split(separator);
-    console.log(day, month, year, time);
 
     return new Date(`${year}-${month}-${day}T${time}`);
 }
@@ -156,9 +163,13 @@ export function getDayDifference(date1, date2) {
     if (!(date1 instanceof Date) || !(date2 instanceof Date)) {
         throw new Error("One of the dates is not a date");
     }
-    if (date1.toString() === "Invalid Date" || date2.toString() === "Invalid Date") {
+    if (
+        date1.toString() === "Invalid Date" ||
+        date2.toString() === "Invalid Date"
+    ) {
         throw new Error("One of the dates is an invalid date");
     }
-    return Math.floor((date1.getTime() - date2.getTime()) / (1000 * 60 * 60 * 24));
+    return Math.floor(
+        (date1.getTime() - date2.getTime()) / (1000 * 60 * 60 * 24)
+    );
 }
-

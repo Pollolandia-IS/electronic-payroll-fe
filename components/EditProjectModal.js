@@ -275,6 +275,7 @@ function EditProjectModal(props) {
   const sendProject = async () => {
     let benefitDataChanged = false;
     (amountValue !== props.amount || benefitsValue !== props.benefits) ? benefitDataChanged = true : benefitDataChanged = false;
+    dateValue.setHours(dateValue.getHours() - 6);
     const project = {
       companyID: props.companyID,
       oldname: props.name,

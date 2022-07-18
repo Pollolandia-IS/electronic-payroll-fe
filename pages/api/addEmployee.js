@@ -7,7 +7,6 @@ export default function handler(req, res) {
 }
 
 async function addEmployeeToProject(req, res) {
-  console.log(req.body);
   if (!req.body || !req.body.form || !req.body.selectedEmployees) {
     return res.status(400).json({ error: "Faltan datos" });
   }

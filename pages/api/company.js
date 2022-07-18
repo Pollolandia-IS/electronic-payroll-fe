@@ -9,7 +9,6 @@ export default function handler(req, res){
 async function insertCompanytoDataBase(req, res){
     try{
         const{employerId, Values} = req.body;
-        console.log(employerId, Values);
         const {legalid, businessname, physicaladdress,phone,companyemail,website} = Values;
         
         const createCompany = await prisma.empresa.create({

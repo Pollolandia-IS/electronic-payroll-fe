@@ -13,7 +13,12 @@ const getTransporter = function () {
     return transporter;
 };
 
-exports.sendPasswordToEmployee = async (userEmail, password, cedulaEmpleado, nombreEmpresa) => {
+exports.sendPasswordToEmployee = async (
+    userEmail,
+    password,
+    cedulaEmpleado,
+    nombreEmpresa
+) => {
     const transporter = getTransporter();
     await transporter.sendMail({
         from: "Nueva contraseña generada <pollolandiaSolutions@gmail.com>",
@@ -65,7 +70,11 @@ exports.sendAccountToEmployeer = async (userEmail, cedulaEmpleador, nombre) => {
     });
 };
 
-exports.sendAlertDeletedProject = async (userEmail, nombreDeduccion, nombreProyecto) => {
+exports.sendAlertDeletedProject = async (
+    userEmail,
+    nombreDeduccion,
+    nombreProyecto
+) => {
     const transporter = getTransporter();
     await transporter.sendMail({
         from: "Notificación de la plataforma Pollolandia Solutions <pollolandiaSolutions@gmail.com>",
@@ -87,8 +96,34 @@ exports.sendAlertDeletedProject = async (userEmail, nombreDeduccion, nombreProye
         ],
     });
 };
+exports.sendAlertDeletedEntireProject = async (userEmail, nombreProyecto) => {
+    const transporter = getTransporter();
+    await transporter.sendMail({
+        from: "Notificación de la plataforma Pollolandia Solutions <pollolandiaSolutions@gmail.com>",
+        to: userEmail,
+        subject: "Notificación de la plataforma Pollolandia Solutions",
+        text: `Notificación de la plataforma Pollolandia Solutions`,
+        html: `
+        <div style="text-align:center;">
+            <img src="cid:logo1"/>
+            <div> <h1 styles="font-size: 40px;"> Notificación de la plataforma Pollolandia Solutions:</h1> </div>
+            <h1>Estimado trabajador, el projecto ${nombreProyecto} al cual usted pertenecía ha sido eliminado, por favor revisar en su perfil y tomar las previsiones del caso.</h1>
+        </div>`,
+        attachments: [
+            {
+                filename: "Logo.png",
+                path: "https://res.cloudinary.com/dwb71vld4/image/upload/v1655428531/Logo_cfddx3.png",
+                cid: "logo1",
+            },
+        ],
+    });
+};
 
-exports.sendAlertDeletedBenefit = async (userEmail, password, nombreBeneficio, nombreProyecto) => {
+exports.sendAlertDeletedBenefit = async (
+    userEmail,
+    nombreBeneficio,
+    nombreProyecto
+) => {
     const transporter = getTransporter();
     await transporter.sendMail({
         from: "Notificación de la plataforma Pollolandia Solutions <pollolandiaSolutions@gmail.com>",
@@ -111,7 +146,11 @@ exports.sendAlertDeletedBenefit = async (userEmail, password, nombreBeneficio, n
     });
 };
 
-exports.sendAlertDeletedDeduccion = async (userEmail, password, nombreDeduccion, nombreProyecto) => {
+exports.sendAlertDeletedDeduccion = async (
+    userEmail,
+    nombreDeduccion,
+    nombreProyecto
+) => {
     const transporter = getTransporter();
     await transporter.sendMail({
         from: "Notificación de la plataforma Pollolandia Solutions <pollolandiaSolutions@gmail.com>",
