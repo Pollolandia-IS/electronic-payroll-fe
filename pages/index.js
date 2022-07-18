@@ -16,8 +16,9 @@ export async function getServerSideProps(context) {
     if (cookies.token) {
       decoded = jwt.verify(cookies.token, process.env.JWT_SECRET);
     }
-    const id = JSON.parse(res._headers.id).id;
+    
     if (decoded.userData.isEmployer) {
+        const id = JSON.parse(res._headers.id).id;
         const hasCompany = await prisma.empresa.findMany({
             where: {
                 cedulaEmpleador: id,

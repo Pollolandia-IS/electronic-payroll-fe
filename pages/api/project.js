@@ -1,4 +1,5 @@
 import { ErrorSharp } from "@mui/icons-material";
+import { getNextPaymentDate } from "../../logic/Payroll";
 import { prisma } from "/.db";
 const { sendAlertEditProject } = require("/pages/api/services/mailServices");
 
@@ -16,21 +17,29 @@ async function insertProject(req, res) {
     try {
         let { companyID, name, frequency, currency, amount, benefits, date } =
             req.body;
+        const endDate = getNextPaymentDate(
+            new Date(date),
+            frequency
+        );
+        endDate.setHours(endDate.getHours() - 6);
         const result = await prisma.proyecto.create({
             data: {
                 cedulaJuridica: companyID,
                 nombre: name,
-                moneda: currency,
                 cantidadMaximaBeneficios: parseInt(benefits),
                 montoMaximoBeneficio: parseInt(amount),
                 frecuenciaPago: frequency,
+                moneda: currency,
                 fechaInicio: date,
+                fechaFin: endDate.toISOString(),
+                fechaUltimoPago: null,
                 habilitado: true,
             },
         });
         res.status(200).json(result);
         res.status(200);
     } catch (error) {
+        console.log(error);
         res.status(500);
         res.send(error.message);
     }
@@ -49,11 +58,15 @@ async function editProject(req, res) {
             date,
             benefitDataChanged,
         } = req.body;
-
+        const endDate = getNextPaymentDate(
+            new Date(date),
+            frequency
+        );
+        endDate.setHours(endDate.getHours() - 6);
         const emails = await getEmails(res, companyID, oldname);
 
         const result =
-            await prisma.$executeRaw`EXEC [dbo].[editarproyecto]${companyID}, ${oldname}, ${name}, ${benefits}, ${amount}, ${frequency}, ${currency}, ${date}`;
+            await prisma.$executeRaw`EXEC [dbo].[editarproyecto]${companyID}, ${oldname}, ${name}, ${benefits}, ${amount}, ${frequency}, ${currency}, ${date}, ${endDate.toISOString()}`;
 
         if (benefitDataChanged) {
             for (let i = 0; i < emails.length; i++) {

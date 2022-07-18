@@ -30,8 +30,6 @@ export async function getServerSideProps(context) {
 }
 
 const Project = ({projectData, companyData, companyID, project}) => {
-  console.log(companyData);
-
   const navItems = [
     ["Proyectos", true, "/RegisterCompany"],
     ["Reportes", false, "/RegisterCompany"],

@@ -130,6 +130,17 @@ const ButtonContained = styled(Button)({
     margin: `0px`,
 });
 
+export async function getServerSideProps(context) {
+    const { res } = context;
+    const employerId = JSON.parse(res._headers.id).id;
+    console.log(employerId);
+    return {
+        props: {
+            employerId,
+        },
+    };
+}
+
 function RegisterCompany({ employerId }) {
     const [companyName, setCompanyName] = useState("");
     const [companyId, setCompanyId] = useState("");
@@ -221,7 +232,7 @@ function RegisterCompany({ employerId }) {
     };
 
     const sendData = async (info) => {
-        dataForDB = {
+        const dataForDB = {
             employerId: employerId,
             name: info.name,
             id: info.id,

@@ -1,4 +1,4 @@
-import { addDays } from "./DateTimeHelpers";
+import { addDays, getDayDifference } from "./DateTimeHelpers";
 
 /**
  * Applies a percentage deduction (mandatory deduction) to the salary.
@@ -8,7 +8,7 @@ import { addDays } from "./DateTimeHelpers";
  * @throws {Error} if the salary is not a number
  * @throws {Error} if the percentage is not a number
  * @throws {Error} if the salary is less than 0
- * @throws {Error} if the percentage is less than 0 
+ * @throws {Error} if the percentage is less than 0
  */
 export function applyPercentageDeduction(totalSalary, percentageDeduction) {
     if (isNaN(totalSalary)) {
@@ -115,30 +115,34 @@ export function addBenefit(salary, benefit) {
  * If frequency is Mensual, next Payment is the last day of the month.
  * If frequency is Quincenal, next Payment is on the 15th of the month or the last day of the month
  * if frequency is weekly, next Payment is next Friday.
- * @param {Date} paymentDate The date of the last payment
+ * @param {Date} startDate The date the payroll period starts.
  * @param {string} frequency The frequency of the payment
  * @returns {Date} the next payday
- * @throws {Error} if the paymentDate is not a Date
+ * @throws {Error} if the startDate is not a Date
  * @throws {Error} if the frequency is not a string
  * @throws {Error} if the frequency is not Mensual, Quincenal or Semanal
- * @throws {Error} if the paymentDate is an invalid date
+ * @throws {Error} if the startDate is an invalid date
  */
-export function getNextPaymentDate(paymentDate, frequency) {
-    if (!(paymentDate instanceof Date)) {
+export function getNextPaymentDate(startDate, frequency) {
+    if (!(startDate instanceof Date)) {
         throw new Error("The payment date is not a date");
     }
     if (typeof frequency !== "string") {
         throw new Error("The frequency is not a string");
     }
-    if (frequency !== "Mensual" && frequency !== "Quincenal" && frequency !== "Semanal") {
+    if (
+        frequency !== "Mensual" &&
+        frequency !== "Quincenal" &&
+        frequency !== "Semanal"
+    ) {
         throw new Error("The frequency is not Mensual, Quincenal or Semanal");
     }
-    if (paymentDate == "Invalid Date") {
+    if (startDate == "Invalid Date") {
         throw new Error("The payment date is an invalid date");
     }
-    const date = new Date(paymentDate);
+    const date = new Date(startDate);
+    date.setHours(date.getHours() + 6);
     if (frequency === "Mensual") {
-        // last day of the month
         date.setDate(1);
         date.setMonth(date.getMonth() + 1);
         date.setDate(0);
@@ -151,7 +155,7 @@ export function getNextPaymentDate(paymentDate, frequency) {
             date.setDate(0);
         }
     } else if (frequency === "Semanal") {
-        const daysToAdd = ((7 - date.getDay() + 5) % 7);
+        const daysToAdd = (7 - date.getDay() + 5) % 7;
         date.setDate(date.getDate() + daysToAdd);
     }
     return date;
@@ -227,8 +231,7 @@ export function createPayment(
         0
     );
     const netSalary =
-        // TODO ask if benefits should be added to the salary
-        salary - totalMandatoryDeductions - totalVoluntaryDeductions + totalBenefits;
+        salary - totalMandatoryDeductions - totalVoluntaryDeductions;
     return {
         salary,
         benefits,
@@ -239,4 +242,23 @@ export function createPayment(
         totalMandatoryDeductions,
         netSalary,
     };
+}
+/**
+ * Calculates if project is up to date, close to next payment date or if it is overdue.
+ * @param {string} endDate The day the payroll period ends in iso string format.
+ * @returns {string} The status of the project. Al dia if the project is up to date, Pendiente and a
+ * positive number of days left if the project is close to the next payment date or Pendiente and a negative number of days left if the project is overdue.
+ */
+export function calculateProjectState(endDate) {
+    const today = new Date();
+    today.setHours(today.getHours() - 6);
+    const projectEndDate = new Date(endDate);
+    const dayDifference = getDayDifference(projectEndDate, new Date(today));
+    if (dayDifference > 2) {
+        return "Al Día";
+    } else if (dayDifference >= 0) {
+        return "Pendiente " + dayDifference;
+    } else {
+        return "Pendiente " + dayDifference;
+    }
 }

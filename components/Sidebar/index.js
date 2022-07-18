@@ -207,6 +207,12 @@ function Sidebar(props) {
                                     isSelected={props.selected == 6}
                                     href={"/benefits"}
                                 />
+                                <SidebarRow6
+                                    icon="receipt"
+                                    text={"Pago de Planilla"}
+                                    isSelected={props.selected == 7}
+                                    href={"/payroll"}
+                                />
                             </>
                         )}
                         {props.isEmployer === false && (
@@ -224,7 +230,7 @@ function Sidebar(props) {
                                     href={"/project"}
                                 />
                                 <SidebarRow4
-                                    icon="report"
+                                    icon="addTime"
                                     text={"Registro de Horas"}
                                     isSelected={props.selected == 4}
                                     href={"/hours"}

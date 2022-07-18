@@ -160,7 +160,6 @@ const EmployerBenefits = ({ props }) => {
                 projectName: selectedProjectName,
                 benefitName: selectedBenefit,
             };
-            console.log(selectedBenefit);
             try {
                 await fetch(`/api/employerDeleteBenefit/`, {
                     method: "POST",

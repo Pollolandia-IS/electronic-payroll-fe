@@ -1,7 +1,7 @@
 import Modal from '/components/Modal';
 import Aside from "/components/Aside";
 import NavBar from "/components/NavBar";
-import ProjectCard from "/components/projectCard";
+import ProjectCard from "/components/ProjectCard";
 import styles from "/styles/newProject.module.css";
 import Router from "next/router";
 import { useState } from "react";
@@ -15,7 +15,7 @@ export async function getServerSideProps(context) {
 };
 }
 
-const newProject = ({companyID}) => {
+const NewProject = ({companyID}) => {
 
   const submitInfo = async (event) => {
     event.preventDefault();
@@ -162,4 +162,4 @@ const newProject = ({companyID}) => {
   );
 }
 
-export default newProject;
+export default NewProject;
