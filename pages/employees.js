@@ -1,24 +1,45 @@
-import Aside from "../components/Aside";
-import Navbar from "../components/NavBar.js";
-import CardEmployee from "../components/CardEmployee.js";
+import Sidebar from "../components/Sidebar";
 import Styles from "/styles/Empleados.module.css";
 import { prisma } from "/.db";
-import SearchBar from "../components/SearchBar.js";
-import { useState } from "react";
+import Search from "../components/Search.js";
+import { Select, FormControl, InputLabel, MenuItem } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { useState, useEffect } from "react";
+import jwt from "jsonwebtoken";
+import { Avatar } from "@mui/material";
+import { IoTrashSharp } from "react-icons/io5";
+import EmployeeTable from "../components/EmployeeTable";
+import ProjectsTable from "../components/ProjectsTable";
+import safeJsonStringify from "safe-json-stringify";
+
+const Avatar1 = styled(Avatar)({
+    width: `32px`,
+    height: `32px`,
+});
+
+const TextFieldStandard = styled(Select)({
+    backgroundColor: `rgba(255, 255, 255, 1)`,
+    boxShadow: `0px 2px 5px rgba(0, 0, 0, 0.15)`,
+    borderRadius: `7px`,
+    display: `flex`,
+    flexDirection: `row`,
+    width: `343px`,
+    height: `50px`,
+    justifyContent: `flex-start`,
+    alignItems: `center`,
+    gap: `24px`,
+    padding: `0px`,
+    boxSizing: `border-box`,
+    overflow: `hidden`,
+});
 
 export async function getServerSideProps(context) {
     const { req, res } = context;
     const { cookies } = req;
     const ids = JSON.parse(res._headers.ids);
+    const { userData } = jwt.verify(cookies.token, process.env.JWT_SECRET);
+    const employeeID = ids.id;
     const companyID = ids.companyId;
-
-    const AsideItems = [
-      {
-        name: 'Empleados',
-        icon: 'profile',
-        dropDown: [['- Nuevo Empleado', `${companyID}/registerEmployeeModal`],],
-      },
-  ];
 
     let employees = (
         await prisma.empleado.findMany({
@@ -36,31 +57,146 @@ export async function getServerSideProps(context) {
         } else {
             return 0;
         }
-    }
-    );
+    });
+
+    const projectsContracted = ( await prisma.esContratado.findMany({
+        where: {
+            cedulaJuridica: companyID,
+        },
+        select: {
+            nombreProyecto: true,
+            cedulaEmpleado: true,
+            tipoEmpleado: true,
+            puesto: true,
+            fechaInicio: true,
+            fechaFin: true,
+            jornada: true,
+            salario: true,
+        },
+    }))
+
+    let contractsEmployee = [];
+    employees.map((employee) => {
+        let count = 0;
+        projectsContracted.map((project) => {
+            if (employee.cedula === project.cedulaEmpleado) {
+                count++;
+            }
+        });
+
+        contractsEmployee.push({
+            id: employee.cedula,
+            name: employee.nombre,
+            count: count,
+        });
+    });
+
+
+
+    const projects = await prisma.proyecto.findMany({
+        where: { 
+            cedulaJuridica: companyID,
+            habilitado: true,
+        },
+        select: { nombre: true },
+    });
+
+    projects.push({ nombre: "Todos los proyectos" });
+    const JSONProjectContract = JSON.parse(safeJsonStringify(projectsContracted));
 
     return {
         props: {
+            projects,
+            cedulaEmpleado: employeeID,
+            name: userData.name,
+            isEmployer: userData.isEmployer,
             employees,
-            companyID,
-            AsideItems,
+            contractsEmployee,
+            JSONProjectContract
         },
     };
 }
-const Employees = ({ employees, companyID, AsideItems }) => {
-    const navItems = [
-      ["Inicio", false, `/`],
-        ["Proyectos", false, `/project`],
-        ["Registro Horas", false, "/hours"],
-        ["Empleados", true, `/Employees`],
-        ["Deducciones", false, "/deductions"],
-        ["Beneficios", false, "/benefits"],
-    ];
+const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contractsEmployee, JSONProjectContract }) => {
 
     const [searchText, setSearchText] = useState("");
+    const [selectedProjectName, setSelectedProjectName] = useState("Todos los proyectos");
+    const [projectsRow, setProjectsRow] = useState([]);
+    const [employeesRow, setEmployeesRow] = useState([]);
+    const [contractsOfProject, setContractsOfProject] = useState([]);
+    const [isProjectSelected, setIsProjectSelected] = useState(false);
+
+    console.log("Projects from client", employees)
+    useEffect(() => {
+        if (selectedProjectName === "Todos los proyectos") {
+            setProjectsRow(employeesRow);
+            setIsProjectSelected(false);
+        } else {
+            let indexID = 0;
+            const projectsContracted = JSONProjectContract.filter(
+                (project) => project.nombreProyecto === selectedProjectName
+            ).map((contract) => {
+                indexID++;
+                return {
+                    ...contract,
+                    id: indexID,
+                    name: employees.find((employee) => employee.cedula === contract.cedulaEmpleado).nombre,
+                    cedula: contract.cedulaEmpleado,
+                    tipoEmpleado: contract.tipoEmpleado,
+                    puesto: contract.puesto,
+                    fechaInicio: contract.fechaInicio.split("T")[0],
+                    fechaFin: contract.fechaFin.split("T")[0],
+                    jornada: contract.jornada,
+                    salario: contract.salario,
+                    button: handleSayHello,
+                }}
+            );
+
+            console.log("data", projectsContracted)
+            setContractsOfProject(projectsContracted);
+            setIsProjectSelected(true);
+        }
+    }, [selectedProjectName]);
+
+    const handleSayHello = (event) => {
+        console.log(event);
+    }
+
+    const deleteEmployee =  (event) => {
+        console.log(event);
+    }
+
+    useEffect(() => {
+        console.log(employees);
+        let array = [];
+        let index = 0;
+        let projectsRow = employees.map((employee) => {
+            index++;
+            return (
+                {
+                    id: index,
+                    cedula: employee.cedula,
+                    name: employee.nombre,
+                    mail: employee.hace_uso[0].email,
+                    phone: employee.telefono,
+                    projects: contractsEmployee.find((contract) => contract.id === employee.cedula).count,
+                    reports: 1,
+                    button: handleSayHello,
+                }
+            )
+        });
+        for (let i = 0; i < projectsRow.length; i++) {
+            array.push(projectsRow[i]);
+        }
+        setEmployeesRow(array);
+        setProjectsRow(array);
+    }, []);
 
     const handleTextChange = (event) => {
         setSearchText(event.target.value);
+    };
+
+    const handleChangeProject = (e) => {
+        setSelectedProjectName(e.target.value);
     };
 
     if (searchText) {
@@ -75,23 +211,47 @@ const Employees = ({ employees, companyID, AsideItems }) => {
 
     return (
         <>
-            <Navbar navItems={navItems} />
-            <Aside items={AsideItems} />
+            <Sidebar
+                selected={3}
+                username={name}
+                isEmployer={isEmployer}
+            />
             <div className={Styles.container}>
-                <h1 className={Styles.title}>Empleados</h1>
-                <SearchBar
-                    handleChange={handleTextChange}
-                    searchText={searchText}
-                    placeholder={"Buscar Empleados"}
-                />
+                <div className={Styles.main__header}>
+                        <FormControl>
+                            <InputLabel id="select-label"></InputLabel>
+                            <TextFieldStandard
+                                id="projectName"
+                                value={selectedProjectName}
+                                size="medium"
+                                onChange={handleChangeProject}
+                            >
+                                {projects.map((project) => (
+                                    <MenuItem
+                                        key={project.nombre}
+                                        value={project.nombre}
+                                    >
+                                        {" "}
+                                        {project.nombre}{" "}
+                                    </MenuItem>
+                                ))}
+                            </TextFieldStandard>
+                        </FormControl>
+                    <Search placeholder="Buscar empleado..." />
+                </div>
                 <div className={Styles.cards}>
-                    {employees.map((item, index) => (
-                        <CardEmployee
-                            cardItems={item}
-                            key={item.cedula}
-                            removeCheckbox={true}
-                        />
-                    ))}
+                    {
+                        projectsRow && projectsRow.length > 0 ? (
+                            isProjectSelected ? (
+                                contractsOfProject.length > 0 ? <ProjectsTable rows={contractsOfProject} deleteEmployee={deleteEmployee} /> : <div className={Styles.main__noContracts}>No hay contrataciones para este proyecto</div>
+                            ) : (
+                                projectsRow.length > 0 ? <EmployeeTable rows={projectsRow} deleteEmployee={deleteEmployee} /> : <div className={Styles.main__noEmployees}>No hay empleados agregados aún</div>
+                            )
+                        ) : (
+                                <div></div>
+                        )
+                    }
+                    
                 </div>
             </div>
         </>
