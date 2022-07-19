@@ -5,7 +5,7 @@ import styles from "/styles/profile.module.css";
 
 export async function getServerSideProps(context) {
     const { req, res } = context;
-    console.log('headers ', res._headers.userdata);
+    const userIds = JSON.parse(res._headers.ids);
     const userData = JSON.parse(res._headers.userdata);
     const { cookies } = req;
     let decoded = null;
@@ -16,30 +16,42 @@ export async function getServerSideProps(context) {
     let credentialsQuery = await prisma.credenciales.findUnique({
         where: {
             email: userData.email,
-        },
-        include: {
-            hace_uso: {
-                select: {
-                    cedula: true,
-                }
-            },
         }
     });
 
     let userQuery = await prisma.persona.findUnique({
         where: {
-            cedula: credentialsQuery.hace_uso[0].cedula,
-        },
-        select: {
-            nombre: true,
-            telefono: true,
+            cedula: userIds.id,
         }
     });
-    console.log(credentialsQuery, 'persona', userQuery);
+
+    let userCompanyQuery = await prisma.empresa.findUnique({
+        where: {
+            cedulaJuridica: userIds.companyId,
+        }
+    });
+
+    let profileUserData = {
+        name: userQuery.nombre,
+        id: userQuery.cedula,
+        phone: userQuery.telefono,
+        email: credentialsQuery.email,
+        password: credentialsQuery.contrasenna,
+    };
+
+    let profileCompanyData = {
+        name: userCompanyQuery.razonSocial,
+        legalid: userCompanyQuery.cedulaJuridica,
+        phone: userCompanyQuery.telefono,
+        email: userCompanyQuery.email,
+        address: userCompanyQuery.direccion,
+    };
+
     return {
         props: {
             isEmployer: decoded ? decoded.userData.isEmployer : null,
-            name: decoded ? decoded.userData.name : null,
+            userData: profileUserData,
+            companyData: profileCompanyData,
         },
     };
 }
@@ -50,7 +62,7 @@ export default function ProfilePage (props) {
         <>
             <Sidebar selected={1} username={props.name} isEmployer={props.isEmployer} />
             <main className={styles.main}>
-                <Profile/>
+                <Profile userData={props.userData} companyData={props.companyData} isEmployer={props.isEmployer}/>
             </main>
         </>
     )

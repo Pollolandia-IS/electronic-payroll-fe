@@ -1,6 +1,7 @@
 import { TextField, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Router from "next/router";
 import Image from 'next/image';
 
  
@@ -192,23 +193,163 @@ const SaveChangesButton = styled(Button)({
   margin: `63px 0px 0px 0px`,  
 });
  
-function Profile() {
+function Profile(props) {
+
+  const [isValidName, setIsValidName] = useState(true);
+  const [isValidId, setIsValidId] = useState(true);
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isValidPhone, setIsValidPhone] = useState(true);  
+  const [validFields, setValidFields] = useState(false);
+  const [userDataChanged, setUserDataChanged] = useState(false);
+
+  const [isValidCompanyName, setIsValidCompanyName] = useState(true);
+  const [isValidCompanyId, setIsValidCompanyId] = useState(true);
+  const [isValidCompanyEmail, setIsValidCompanyEmail] = useState(true);
+  const [isValidCompanyPhone, setIsValidCompanyPhone] = useState(true);
+  const [isValidAddress, setIsValidAddress] = useState(true);
+  const [validCompanyFields, setValidCompanyFields] = useState(false);
+  const [companyDataChanged, setCompanyDataChanged] = useState(false);
 
   const [UserValues, setUserValues] = useState({
-    Username: "",
-    UserId: "",
-    UserEmail: "",
-    UserPhone: "",
-});
+    Username: props.userData.name,
+    UserId: props.userData.id,
+    Useremail: props.userData.email,
+    Userphone: props.userData.phone,
+  });
 
-const [CompanyValues, setCompanyValues] = useState({
-    companyName: "",
-    companyID: "",
-    businessName: "",
-    companyPhone:"",
-    companyEmail: "",
-    companyAddress: "",
-});
+  const [CompanyValues, setCompanyValues] = useState({
+      Companyname: props.companyData.name,
+      Companyid: props.companyData.legalid,
+      Companyphone: props.companyData.phone,
+      Companyemail: props.companyData.email,
+      Companyaddress: props.companyData.address,
+  });
+
+  const handleUserDataChange = (event) => {
+    setUserValues({ ...UserValues, [event.target.id]: event.target.value });
+    if(event.target.id === 'Username'){
+      //console.log((event.target.value) !== props.userData.name, event.target.value, props.userData.name );
+      event.target.value.length > 0 ? setIsValidName(true) : setIsValidName(false);
+    };
+    if(event.target.id === 'UserId'){
+      event.target.value.length === 9 ? setIsValidId(true) : setIsValidId(false);
+      if( isNaN(event.target.value) ) {
+        setIsValidId(false);
+      };
+    };
+    if(event.target.id === 'Userphone'){
+      event.target.value.length === 8 ? setIsValidPhone(true) : setIsValidPhone(false);
+      if( isNaN(event.target.value) ) {
+        setIsValidPhone(false);
+      };
+    };
+    if(event.target.id === 'Useremail'){
+      event.target.value.length > 3 && event.target.value.includes("@") ? setIsValidEmail(true) : setIsValidEmail(false);
+    };
+  };
+
+  const handleCompanyDataChange = (event) => {
+    setCompanyValues({ ...CompanyValues, [event.target.id]: event.target.value });
+    if(event.target.id == 'Companyname'){
+      event.target.value.length > 0 ? setIsValidCompanyName(true) : setIsValidCompanyName(false);
+    };
+    if(event.target.id == 'Companyid'){
+      event.target.value.length === 12 ? setIsValidCompanyId(true) : setIsValidCompanyId(false);
+      if( isNaN(event.target.value)) {
+        setIsValidCompanyId(false);
+      };
+    };
+    if(event.target.id == 'Companyphone'){
+      event.target.value.length === 8 ? setIsValidCompanyPhone(true) : setIsValidCompanyPhone(false);
+      if( isNaN(event.target.value)) {
+        setIsValidCompanyPhone(false);
+      };
+    };
+    if(event.target.id == 'Companyemail'){
+      event.target.value.length > 3 && event.target.value.includes("@") ? setIsValidCompanyEmail(true) : setIsValidCompanyEmail(false);
+    };
+    if(event.target.id == 'Companyaddress'){
+      event.target.value.length > 0 ? setIsValidAddress(true) : setIsValidAddress(false);
+    };
+  };
+
+  const validateUserFields = () => {
+    const userInputsChanged = 
+      UserValues.Username !== props.userData.name ||
+      UserValues.UserId !== props.userData.id ||
+      UserValues.Useremail !== props.userData.email ||
+      UserValues.Userphone !== props.userData.phone;
+      setUserDataChanged(userInputsChanged);
+    setValidFields(() => {
+      return (isValidName && isValidId && isValidEmail && isValidPhone && userInputsChanged );
+    });
+
+  };
+
+  const validateCompanyFields = () => {
+    const companyInputsChanged =
+    CompanyValues.Companyname !==  props.companyData.name ||
+    CompanyValues.Companyid !== props.companyData.legalid ||
+    CompanyValues.Companyphone !== props.companyData.phone||
+    CompanyValues.Companyemail !== props.companyData.email||
+    CompanyValues.Companyaddress !== props.companyData.address;
+    setCompanyDataChanged(companyInputsChanged);
+    setValidCompanyFields(() => {
+      return (isValidCompanyName && isValidCompanyId && isValidCompanyEmail && isValidCompanyPhone && isValidAddress && companyInputsChanged);
+    });
+
+    console.log('company ', isValidCompanyName, isValidCompanyId, isValidCompanyEmail, isValidCompanyPhone, isValidAddress, companyInputsChanged);
+  };
+
+  useEffect(() => { validateUserFields(); validateCompanyFields(); console.log(validFields,validCompanyFields ) });
+
+  const handleSubmit = async () => {
+    if(userDataChanged) {
+      console.log('userfetch');
+      const newUserData = {
+        userName: UserValues.Username,
+        userId: UserValues.UserId,
+        oldId: props.userData.id,
+        userEmail: UserValues.Useremail,
+        oldEmail: props.userData.email,
+        userPhone: UserValues.Userphone,
+      }
+      try {
+        await fetch(`/api/editProfile/`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newUserData),
+        });
+      } catch (error) {
+      console.error(error);
+      }
+    }
+    if(companyDataChanged){
+      console.log('companyfetch');
+      const newCompanyData = {
+        companyName: CompanyValues.Companyname,
+        companyId: CompanyValues.Companyid,
+        oldCompanyId: props.companyData.legalid,
+        companyPhone: CompanyValues.Companyphone,
+        companyEmail: CompanyValues.Companyemail,
+        companyAddress: CompanyValues.Companyaddress
+      }
+      try {
+        await fetch(`/api/editCompany/`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newCompanyData),
+        });
+      } catch (error) {
+      console.error(error);
+      }
+    }
+    if(UserValues.Useremail !== props.userData.id){
+      //Router.push('/LogIn');
+    } else {
+      //Router.reload();
+    }
+  }
 
   return (
     <Container>
@@ -220,11 +361,11 @@ const [CompanyValues, setCompanyValues] = useState({
                  </ProfileTitle>
            </ProfileTitleFrame>
            <ProfileForm>
-             <UserName variant="outlined" size="medium"  label={`Nombre`} />
-             <UserId variant="outlined" size="medium"  label={`Cédula`} />
-             <UserPhone variant="outlined" size="medium"  label={`Teléfono`} />
-             <UserEmail variant="outlined" size="medium"  label={`Email`} />
-             <UserPassword variant="outlined" size="medium"  label={`Contraseña`} />
+             <UserName id="Username" variant="outlined" size="medium"  label={`Nombre`} defaultValue={props.userData.name} onChange={handleUserDataChange}/>
+             <UserId id="UserId" variant="outlined" size="medium"  label={`Cédula`} defaultValue={props.userData.id} onChange={handleUserDataChange} inputProps={{ maxLength: 9 }}  />
+             <UserPhone id="Userphone" variant="outlined" size="medium"  label={`Teléfono`} defaultValue={props.userData.phone} onChange={handleUserDataChange} inputProps={{ maxLength: 8 }} />
+             <UserEmail id="Useremail" variant="outlined" size="medium"  label={`Email`} defaultValue={props.userData.email} onChange={handleUserDataChange}/>
+             <UserPassword type="password" variant="outlined" size="medium"  label={`Contraseña`} defaultValue={props.userData.password}/>
            </ProfileForm>
          </ProfileSection>
          <CompanySection>
@@ -232,17 +373,17 @@ const [CompanyValues, setCompanyValues] = useState({
              {`Tu Empresa`}
                </CompanyTitle>
            <CompanyForm>
-             <CompanyName variant="outlined" size="medium"  label={`Razón Social`} />
-             <CompanyId variant="outlined" size="medium"  label={`Cédula Jurídica`} />
-             <CompanyPhone variant="outlined" size="medium"  label={`Teléfono`} />
-             <CompanyEmail variant="outlined" size="medium"  label={`Email`} />
-             <CompanyLocation variant="outlined" size="medium"  label={`Dirección`} />
+             <CompanyName id="Companyname" variant="outlined" size="medium"  label={`Razón Social`} defaultValue={props.companyData.name} onChange={handleCompanyDataChange} disabled={!props.isEmployer}/>
+             <CompanyId id="Companyid" variant="outlined" size="medium"  label={`Cédula Jurídica`} defaultValue={props.companyData.legalid} onChange={handleCompanyDataChange} inputProps={{ maxLength: 12 }} disabled={!props.isEmployer}/>
+             <CompanyPhone id="Companyphone" variant="outlined" size="medium"  label={`Teléfono`} defaultValue={props.companyData.phone} onChange={handleCompanyDataChange} disabled={!props.isEmployer}/>
+             <CompanyEmail id="Companyemail" variant="outlined" size="medium"  label={`Email`} defaultValue={props.companyData.email} onChange={handleCompanyDataChange} disabled={!props.isEmployer}/>
+             <CompanyLocation id="Companyaddress" variant="outlined" size="medium" multiline rows={3} label={`Dirección`} defaultValue={props.companyData.address} onChange={handleCompanyDataChange} disabled={!props.isEmployer}/>
            </CompanyForm>
          </CompanySection>
        </LeftColumn>
        <RightColumn>
          <Image  src={"/assets/img/womanWork.png"} alt={"Woman Working"} height={400} width={500} />
-         <SaveChangesButton type="submit" variant="contained" size="large" color="primary" > GUARDAR CAMBIOS </SaveChangesButton>
+         <SaveChangesButton type="submit" variant="contained" size="large" color="primary" disabled={!validFields && !validCompanyFields} onClick={handleSubmit}> GUARDAR CAMBIOS </SaveChangesButton>
        </RightColumn>
      </Container>
    );
