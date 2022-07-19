@@ -372,7 +372,7 @@ function ModalProjectEmployee(props) {
         }
 
         // check if the hours are valid
-        if (props.projectNewContract.type !== "Por horas" && (props.projectNewContract.hours <= 0 || props.projectNewContract.hours > 24)) {
+        if (props.projectNewContract.type !== "Por horas" && (props.projectNewContract.hours <= 0 || props.projectNewContract.hours > 45)) {
             setErrorInput(true);
             return;
         } else {
