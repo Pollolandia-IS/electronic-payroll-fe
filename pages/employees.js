@@ -140,12 +140,16 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
     const [newProjectContract, setNewProjectContract] = useState({ name: "", id: "", type: "", position: "", startDate: new Date(), endDate: new Date(new Date().getTime() + 60 * 60 * 24 * 1000), salary: "", hours: 0, });
 
     const toggleDrawer = (open) => (event) => {
-        console.log("Im called");
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
           return;
         }
         setOpenDrawer(open);
     };
+
+    const handleClearNewInfo = () => {
+        setNewEmployeeInfo({ name: "", id: "", email: "", phone: "",});
+        setNewProjectContract({ name: "", id: "", type: "", position: "", startDate: new Date(), endDate: new Date(new Date().getTime() + 60 * 60 * 24 * 1000), salary: "", hours: 0, });
+    }
 
     useEffect(() => {
         if (selectedProjectName === "Todos los proyectos") {
@@ -184,6 +188,7 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
                 };
             });
             
+            setIndexProject(indexID + 1);
             setEmployeesNotContracted(projectsNotContracted);
             setContractsOfProject(projectsContracted);
             setIsProjectSelected(true);
@@ -199,7 +204,7 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
     }
 
     useEffect(() => {
-        console.log(employees);
+
         let array = [];
         let index = 0;
         let projectsRow = employees.map((employee) => {
@@ -249,8 +254,29 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
             });
             
             if (response.status === 200) {
+                setProjectsRow(projectsRow.map((project) => {
+                    if (project.cedula === newContract.cedulaEmpleado) {
+                        return {
+                            ...project,
+                            projects: project.projects + 1,
+                        }
+                    } else {
+                        return project;
+                    }
+                }));
+
+                newContract.cedula = newContract.cedulaEmpleado;
+                newContract.button = handleSayHello;
+                newContract.jornada = newContract.jornada ? newContract.jornada : 0;
+                newContract.name = employees.find((employee) => employee.cedula === newContract.cedulaEmpleado).nombre;
+                newContract.fechaInicio = newContract.fechaInicio.split("T")[0];
+                newContract.fechaFin = newContract.fechaFin.split("T")[0];
+
+                newContract.id = indexProject;
+                setIndexProject(indexProject + 1);
                 JSONProjectContract.push(newContract);
-                setSelectedProjectName("Todos los proyectos");
+                setEmployeesNotContracted(employeesNotContracted.filter((employee) => employee.cedula !== newContract.cedulaEmpleado));
+                setContractsOfProject([...contractsOfProject, newContract]);
                 setShowModalProject(false);
                 setNewProjectContract({ name: "", id: "", type: "", position: "", startDate: new Date(), endDate: new Date(new Date().getTime() + 60 * 60 * 24 * 1000), salary: "", hours: 0, });
             }
@@ -258,7 +284,6 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
         } catch (error) {
             console.log(error);
         }
-        console.log(JSONProjectContract,newContract);
     }
 
     const handleSubmitCompanyEmployee = async (e) => {
@@ -336,7 +361,7 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
                         </FormControl>
                     <Search placeholder="Buscar empleado..." />
                     <IconBox
-                            action={() => (selectedProjectName === "Todos los proyectos" ? setShowModalCompany(true): setShowModalProject(true))}
+                            action={() => {(selectedProjectName === "Todos los proyectos" ? setShowModalCompany(true): setShowModalProject(true)); handleClearNewInfo();}}
                             isDisabled={selectedProjectName === ""}
                         >
                             <AddIcon fontSize="large" />

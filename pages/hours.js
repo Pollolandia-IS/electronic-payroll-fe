@@ -169,7 +169,6 @@ const AddHoursEmployee = ({
         router.reload();
     };
 
-    console.log("Hours ", hoursProject);
     return (
         <>
             <HourModal

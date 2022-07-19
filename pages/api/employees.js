@@ -12,8 +12,6 @@ async function insertEmployeeToDatabase(req, res) {
     let userPassword = generatePassword();
     try {
         const { Nombre, Cedula, Email, Telefono, CedJuridica } = req.body;
-
-        console.log("Im in API", Nombre, Cedula, Email, Telefono, CedJuridica);
         const person = await prisma.persona.create({
             data: {
                 cedula: Cedula,
