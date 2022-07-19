@@ -137,7 +137,7 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
     const [showModalProject, setShowModalProject] = useState(false);
     const [openDrawer, setOpenDrawer] = useState(false);
     const [newEmployeeInfo, setNewEmployeeInfo] = useState({ name: "", id: "", email: "", phone: "",});
-    const [newProjectContract, setNewProjectContract] = useState({ name: "", id: "", type: "", position: "", startDate: new Date(), endDate: new Date(), salary: "", hours: "", });
+    const [newProjectContract, setNewProjectContract] = useState({ name: "", id: "", type: "", position: "", startDate: new Date(), endDate: new Date(new Date().getTime() + 60 * 60 * 24 * 1000), salary: "", hours: 0, });
 
     const toggleDrawer = (open) => (event) => {
         console.log("Im called");
@@ -228,9 +228,37 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
         setSelectedProjectName(e.target.value);
     };
 
-    const handleSubmitProjectContract = () => {
+    const handleSubmitProjectContract = async () => {
+        const newContract = {
+            cedulaJuridica: companyID,
+            nombreProyecto: selectedProjectName,
+            cedulaEmpleado: newProjectContract.id,
+            tipoEmpleado: newProjectContract.type,
+            puesto: newProjectContract.position,
+            fechaInicio: newProjectContract.startDate.toISOString(),
+            fechaFin: newProjectContract.endDate.toISOString(),
+            jornada: newProjectContract.type !== "Por horas" ?  newProjectContract.hours : null,
+            salario: parseFloat(newProjectContract.salary),
+        }
 
-        console.log("On employee",newProjectContract);
+        try {
+            const response = await fetch('/api/addEmployee', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(newContract),
+            });
+            
+            if (response.status === 200) {
+                JSONProjectContract.push(newContract);
+                setSelectedProjectName("Todos los proyectos");
+                setShowModalProject(false);
+                setNewProjectContract({ name: "", id: "", type: "", position: "", startDate: new Date(), endDate: new Date(new Date().getTime() + 60 * 60 * 24 * 1000), salary: "", hours: 0, });
+            }
+        
+        } catch (error) {
+            console.log(error);
+        }
+        console.log(JSONProjectContract,newContract);
     }
 
     const handleSubmitCompanyEmployee = async (e) => {
@@ -277,9 +305,9 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
 
     return (
         <>
-            <EmployeeDrawer  projectNewContract={newProjectContract} setProjectNewContract={setNewProjectContract} projectNoContracted={employeesNotContracted} isOpen={showModalProject} setIsOpen={setShowModalProject} open={openDrawer} toggleDrawer={toggleDrawer} />
             <ModalCompanyEmployee employeeInfo={newEmployeeInfo} setEmployeeInfo={setNewEmployeeInfo} isOpen={showModalCompany} setIsOpen={setShowModalCompany} handleSubmit={handleSubmitCompanyEmployee} />
             <ModalProjectEmployee submitContract={handleSubmitProjectContract} openDrawer={openDrawer} toggleDrawer={setOpenDrawer} projectNewContract={newProjectContract} setProjectNewContract={setNewProjectContract} isOpen={showModalProject} setIsOpen={setShowModalProject} projectSelected={selectedProjectName} />
+            <EmployeeDrawer  projectNewContract={newProjectContract} setProjectNewContract={setNewProjectContract} projectNoContracted={employeesNotContracted} isOpen={showModalProject} setIsOpen={setShowModalProject} open={openDrawer} toggleDrawer={toggleDrawer} />
             <Sidebar
                 selected={3}
                 username={name}

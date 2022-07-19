@@ -1,7 +1,7 @@
 import DataTable from "./DataTable";
 import { Avatar } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { IoTrashSharp } from "react-icons/io5";
+import { IoPencilSharp } from "react-icons/io5";
 
 const Avatar1 = styled(Avatar)({
     width: `32px`,
@@ -82,7 +82,7 @@ export default function EmployeeTable(props) {
             disableColumnMenu: true,
             renderCell: (params) => {
                 return (
-                    <IoTrashSharp size={23} style={{color: "red"}} onClick={() => props.deleteEmployee(params.row.cedula)}/>
+                    <IoPencilSharp size={23} style={{color: "#1976D2", cursor: "pointer"}} onClick={() => props.deleteEmployee(params.row.cedula)}/>
                 );
             }
         },

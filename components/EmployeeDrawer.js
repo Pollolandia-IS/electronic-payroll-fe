@@ -42,6 +42,7 @@ const EmployeeDrawer = (props) => {
             anchor='right'
             open={props.open}
             onClose={props.toggleDrawer(false)}
+            sx={{ zIndex: 500,}}
           >
             <div>
                 <h1 className={Styles.main__noContracts}>Seleccione un empleado</h1>

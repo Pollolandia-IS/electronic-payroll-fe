@@ -295,140 +295,117 @@ function ModalProjectEmployee(props) {
     {
       value: "Tiempo completo",
       label: "Tiempo completo",
+    },
+    {
+        value: "Medio tiempo",
+        label: "Medio tiempo",
     }];
 
-    const [nameError, setNameError] = useState("");
-    const [salarioError, setSalarioError] = useState("");
-    const [puestoError, setPuestoError] = useState("");
-    const [fechaInicioError, setFechaInicioError] = useState("");
-    const [fechaFinError, setFechaFinError] = useState("");
-    const [tipoEmpleadoError, setTipoEmpleadoError] = useState("");
-    const [horasError, setHorasError] = useState("");
+    const [errorInput, setErrorInput] = useState(false);
 
     const [openFirst, setOpenFirst] = useState(false);
-    
-    useEffect(() => {
-        if (!props.openDrawer && openFirst) {
-            props.setIsOpen(true);
-        }
-    } , [props.openDrawer]);
 
-    const handleSubmit = (e) => {
+    useEffect(() => {
         // check if all fields are filled
-        if (props.projectNewContract.name === "" || props.projectNewContract.salary === "" || props.projectNewContract.position === "" || props.projectNewContract.startDate === "" || props.projectNewContract.endDate === "" || props.projectNewContract.type === "") {
             if (props.projectNewContract.name === "") {
-                setNameError("El nombre es requerido");
+                setErrorInput(true);
+                return;
             } else {
-                setNameError("");
+                setErrorInput(false);
             }
             
             if (props.projectNewContract.salary === "") {
-                setSalarioError("El salario es requerido");
+                setErrorInput(true);
+                return;
             } else {
-                setSalarioError("");
+                setErrorInput(false);
             }
             if (props.projectNewContract.position === "") {
-                setPuestoError("El puesto es requerido");
+                setErrorInput(true);
+                return;
             } else {
-                setPuestoError("");
+                setErrorInput(false);
             }
             if (props.projectNewContract.startDate === "") {
-                console.log("entro vacio");
-                setFechaInicioError("red");
+                setErrorInput(true);
+                return;
             } else {
-                setFechaInicioError("");
+                setErrorInput(false);
             }
             
             if (props.projectNewContract.endDate === "") {
-                console.log("entro vacio");
-                setFechaFinError("red");
+                setErrorInput(true);
+                return;
             } else {
-                setFechaFinError("");
+                setErrorInput(false);
             }
             if (props.projectNewContract.type === "") {
-                setTipoEmpleadoError("El tipo de empleado es requerido");
+                setErrorInput(true);
+                return;
             } else {
-                setTipoEmpleadoError("");
+                setErrorInput(false);
             }
-            return;
-        } else {
-            setNameError("");
-            setSalarioError("");
-            setPuestoError("");
-            setFechaInicioError("");
-            setFechaFinError("");
-            setTipoEmpleadoError("");
-            setHorasError("");
-        }
+
         
-        if (props.projectNewContract.hours === "" && props.projectNewContract.type === "Por horas") {
-            setHorasError("Las horas son requeridas");
+        if ((props.projectNewContract.hours === null || props.projectNewContract.hours === "") && props.projectNewContract.type !== "Por horas") {
+            setErrorInput(true);
             return;
         } else {
-            setHorasError("");
+            setErrorInput(false);
         }
 
         // check if the dates not is undifined
         if (props.projectNewContract.startDate == "Invalid Date" || props.projectNewContract.endDate == "Invalid Date") {
-            setFechaInicioError("red");
-            setFechaFinError("red");
+            setErrorInput(true);
             return;
         } else {
-            setFechaInicioError("");
-            setFechaFinError("");
+            setErrorInput(false);
         }
 
         // check if the dates are valid
-        console.log(props.projectNewContract.startDate, props.projectNewContract.endDate);
+        
         if (props.projectNewContract.startDate > props.projectNewContract.endDate) {
-            console.log("entro menor");
-            setFechaInicioError("red");
-            setFechaFinError("red");
+            setErrorInput(true);
             return;
         } else {
-            setFechaInicioError("");
-            setFechaFinError("");
+            setErrorInput(false);
         }
 
         // check if the hours are valid
-        if (props.projectNewContract.type === "Por horas" && (props.projectNewContract.hours < 0 || props.projectNewContract.hours > 24)) {
-            setHorasError("Las horas deben ser entre 0 y 24");
+        if (props.projectNewContract.type !== "Por horas" && (props.projectNewContract.hours <= 0 || props.projectNewContract.hours > 24)) {
+            setErrorInput(true);
             return;
         } else {
-            setHorasError("");
+            setErrorInput(false);
         }
 
         // check if the salary is valid
         if (props.projectNewContract.salary < 0 || props.projectNewContract.salary > 99999999) {
-            setSalarioError("El salario es inválido");
+            setErrorInput(true);
             return;
         } else {
-            setSalarioError("");
+            setErrorInput(false);
         }
 
         // check if the name is valid
         if (props.projectNewContract.name > 50) {
-            setNameError("El nombre no puede tener más de 50 caracteres");
+            setErrorInput(true);
             return;
         } else {
-            setNameError("");
+            setErrorInput(false);
         }
 
         // check if the position is valid
         if (props.projectNewContract.position.length > 50) {
-            setPuestoError("El puesto no puede tener más de 50 caracteres");
+            setErrorInput(true);
             return;
         }
 
-        // check if the type is diferent from por horas, if it not is por horas, the hours null
-        if (props.projectNewContract.type !== "Por horas") {
-            props.setProjectNewContract({...props.projectNewContract, hours: null});
-        }
-        props.submitContract();
-    }
+        
+    } , [props.projectNewContract.name, props.projectNewContract.salary, props.projectNewContract.position, props.projectNewContract.startDate, props.projectNewContract.endDate, props.projectNewContract.type, props.projectNewContract.hours]);
 
     return (
-        <Dialog open={props.isOpen} onClose={() => props.setIsOpen(false)}>
+        <Dialog sx={{zIndex: 200}} open={props.isOpen} onClose={() => props.setIsOpen(false)}>
             <ModalProjectEmployee1>
                 <Content>
                     <Frame2>
@@ -454,9 +431,7 @@ function ModalProjectEmployee(props) {
                                 size="small"
                                 label={`Nombre`}
                                 value={props.projectNewContract.name}
-                                onClick={() => {props.setIsOpen(false); props.toggleDrawer(true); setOpenFirst(true);}}
-                                helperText={nameError}
-                                error={nameError !== ""}
+                                onClick={() => {props.toggleDrawer(true); setOpenFirst(true);}}
                                 required
                             />
                             <TextFieldStandard1
@@ -466,8 +441,6 @@ function ModalProjectEmployee(props) {
                                 type="number"
                                 value={props.projectNewContract.salary}
                                 onChange={(e) => { props.setProjectNewContract({...props.projectNewContract, salary: e.target.value})}}
-                                helperText={salarioError}
-                                error={salarioError !== ""}
                                 required
                             />
                             <TextFieldStandard2
@@ -476,8 +449,6 @@ function ModalProjectEmployee(props) {
                                 label={`Puesto`}
                                 value={props.projectNewContract.position}
                                 onChange={(e) => { props.setProjectNewContract({...props.projectNewContract, position: e.target.value})}}
-                                helperText={puestoError}
-                                error={puestoError !== ""}
                                 required
                             />
                         </Group1>
@@ -492,7 +463,7 @@ function ModalProjectEmployee(props) {
                                         <TextField
                                             {...params}
                                             variant="standard"
-                                            sx={{ width: 195, label: { color: fechaInicioError } }}
+                                            sx={{ width: 195 }}
                                         />
                                     )}
                                 />
@@ -503,14 +474,12 @@ function ModalProjectEmployee(props) {
                                 <DesktopDateTimePicker
                                     label="Fecha de finalización *"
                                     value={props.projectNewContract.endDate}
-                                    helperText={fechaFinError}
-                                    error={fechaFinError !== ""}
                                     onChange={(date) => { props.setProjectNewContract({...props.projectNewContract, endDate: date})}}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
                                             variant="standard"
-                                            sx={{ width: 195, label:{color: fechaInicioError} }}
+                                            sx={{ width: 195 }}
                                         />
                                     )}
                                 />
@@ -525,8 +494,6 @@ function ModalProjectEmployee(props) {
                                 select
                                 required
                                 value={props.projectNewContract.type}
-                                helperText={tipoEmpleadoError}
-                                error={tipoEmpleadoError !== ""}
                                 onChange={(e) => props.setProjectNewContract({ ...props.projectNewContract, type: e.target.value })}
                             > 
                                 {currencies.map((option) => (
@@ -536,7 +503,7 @@ function ModalProjectEmployee(props) {
                                 ))}
                             </TextFieldStandard5>
                             {
-                                props.projectNewContract.type === "Por horas" ? (
+                                props.projectNewContract.type !== "Por horas" ? (
                                   <TextFieldStandard6
                                     variant="standard"
                                     size="small"
@@ -544,8 +511,6 @@ function ModalProjectEmployee(props) {
                                     type="number"
                                     required
                                     value={props.projectNewContract.hours}
-                                    helperText={horasError}
-                                    error={horasError !== ""}
                                     onChange={(e) => props.setProjectNewContract({ ...props.projectNewContract, hours: e.target.value })}
                                   />
                                 ) : ( <div /> )
@@ -562,7 +527,8 @@ function ModalProjectEmployee(props) {
                             variant="outlined"
                             size="large"
                             color="primary"
-                            onClick={() => { handleSubmit(); }}
+                            disabled={errorInput}
+                            onClick={props.submitContract}
                         >
                             {" "}
                             Agregar{" "}
