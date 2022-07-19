@@ -28,8 +28,8 @@ export default function EmployeeTable(props) {
         {
             field: "name",
             headerName: "Nombre",
-            width:350,
-            align: "center",
+            width:280,
+            align: "left",
             headerAlign: "center",
             disableColumnMenu: true,
         },
@@ -93,7 +93,7 @@ export default function EmployeeTable(props) {
             rows={props.rows}
             columns={columns}
             height={824}
-            width={1366}
+            width={1296}
         />
     );
 }

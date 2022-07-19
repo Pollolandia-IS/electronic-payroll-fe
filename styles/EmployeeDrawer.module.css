@@ -1,0 +1,15 @@
+.main__noContracts{
+    text-align: left;
+    white-space: pre-wrap;
+    color: rgba(0, 0, 0, 0.87);
+    font-style: normal;
+    font-family: Heebo;
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: 0px;
+    text-decoration: none;
+    text-transform: none;
+    align-self: stretch;
+    margin-left: 10px;
+    margin-top: 10px;
+}

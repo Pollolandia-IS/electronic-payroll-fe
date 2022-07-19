@@ -9,6 +9,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import Styles from '/styles/EmployeeDrawer.module.css';
+import { Avatar } from "@mui/material";
 
 const EmployeeDrawer = (props) => {
 
@@ -20,13 +22,13 @@ const EmployeeDrawer = (props) => {
       sx={{ width: "20vw",}}
     >
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
+        {props.projectNoContracted.map(project => (
+          <ListItem key={project.name} disablePadding onClick={(e) => props.setProjectNewContract({...props.projectNewContract, id: project.cedula, name: project.name})}>
             <ListItemButton>
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                <Avatar variant="circular" > {(project.name).charAt(0)} </Avatar>
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={project.name} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -36,18 +38,16 @@ const EmployeeDrawer = (props) => {
 
   return (
     <div>
-      {['left', 'right', 'top', 'bottom'].map((anchor) => (
-        <Fragment key={anchor}>
-          <Button onClick={props.toggleDrawer(true)}>{anchor}</Button>
           <Drawer
             anchor='right'
             open={props.open}
             onClose={props.toggleDrawer(false)}
           >
-            {list(anchor)}
+            <div>
+                <h1 className={Styles.main__noContracts}>Seleccione un empleado</h1>
+                {list()}
+            </div>
           </Drawer>
-        </Fragment>
-      ))}
     </div>
   );
 }

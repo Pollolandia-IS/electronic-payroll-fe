@@ -1,6 +1,12 @@
 import { TextField, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import Stack from "@mui/material/Stack";
+import { DesktopDateTimePicker } from "@mui/x-date-pickers/DesktopDateTimePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import MenuItem from '@mui/material/MenuItem';
+import { useState, useEffect } from "react";
 
 const ModalProjectEmployee1 = styled("div")(({ theme }) => ({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -179,7 +185,7 @@ const Frame11 = styled("div")({
     position: `relative`,
     isolation: `isolate`,
     flexDirection: `row`,
-    justifyContent: `flex-start`,
+    justifyContent: `space-between`,
     alignItems: `flex-start`,
     padding: `0px`,
     boxSizing: `border-box`,
@@ -258,6 +264,7 @@ const Link1 = styled("div")({
     padding: `0px`,
     boxSizing: `border-box`,
     margin: `0px`,
+    cursor: `pointer`,
 });
 
 const Cancelar = styled("div")(({ theme }) => ({
@@ -280,6 +287,146 @@ const ButtonOutlined = styled(Button)({
 });
 
 function ModalProjectEmployee(props) {
+  const currencies = [
+    {
+      value: "Por horas",
+      label: "Por horas",
+    },
+    {
+      value: "Tiempo completo",
+      label: "Tiempo completo",
+    }];
+
+    const [nameError, setNameError] = useState("");
+    const [salarioError, setSalarioError] = useState("");
+    const [puestoError, setPuestoError] = useState("");
+    const [fechaInicioError, setFechaInicioError] = useState("");
+    const [fechaFinError, setFechaFinError] = useState("");
+    const [tipoEmpleadoError, setTipoEmpleadoError] = useState("");
+    const [horasError, setHorasError] = useState("");
+
+    const [openFirst, setOpenFirst] = useState(false);
+    
+    useEffect(() => {
+        if (!props.openDrawer && openFirst) {
+            props.setIsOpen(true);
+        }
+    } , [props.openDrawer]);
+
+    const handleSubmit = (e) => {
+        // check if all fields are filled
+        if (props.projectNewContract.name === "" || props.projectNewContract.salary === "" || props.projectNewContract.position === "" || props.projectNewContract.startDate === "" || props.projectNewContract.endDate === "" || props.projectNewContract.type === "") {
+            if (props.projectNewContract.name === "") {
+                setNameError("El nombre es requerido");
+            } else {
+                setNameError("");
+            }
+            
+            if (props.projectNewContract.salary === "") {
+                setSalarioError("El salario es requerido");
+            } else {
+                setSalarioError("");
+            }
+            if (props.projectNewContract.position === "") {
+                setPuestoError("El puesto es requerido");
+            } else {
+                setPuestoError("");
+            }
+            if (props.projectNewContract.startDate === "") {
+                console.log("entro vacio");
+                setFechaInicioError("red");
+            } else {
+                setFechaInicioError("");
+            }
+            
+            if (props.projectNewContract.endDate === "") {
+                console.log("entro vacio");
+                setFechaFinError("red");
+            } else {
+                setFechaFinError("");
+            }
+            if (props.projectNewContract.type === "") {
+                setTipoEmpleadoError("El tipo de empleado es requerido");
+            } else {
+                setTipoEmpleadoError("");
+            }
+            return;
+        } else {
+            setNameError("");
+            setSalarioError("");
+            setPuestoError("");
+            setFechaInicioError("");
+            setFechaFinError("");
+            setTipoEmpleadoError("");
+            setHorasError("");
+        }
+        
+        if (props.projectNewContract.hours === "" && props.projectNewContract.type === "Por horas") {
+            setHorasError("Las horas son requeridas");
+            return;
+        } else {
+            setHorasError("");
+        }
+
+        // check if the dates not is undifined
+        if (props.projectNewContract.startDate == "Invalid Date" || props.projectNewContract.endDate == "Invalid Date") {
+            setFechaInicioError("red");
+            setFechaFinError("red");
+            return;
+        } else {
+            setFechaInicioError("");
+            setFechaFinError("");
+        }
+
+        // check if the dates are valid
+        console.log(props.projectNewContract.startDate, props.projectNewContract.endDate);
+        if (props.projectNewContract.startDate > props.projectNewContract.endDate) {
+            console.log("entro menor");
+            setFechaInicioError("red");
+            setFechaFinError("red");
+            return;
+        } else {
+            setFechaInicioError("");
+            setFechaFinError("");
+        }
+
+        // check if the hours are valid
+        if (props.projectNewContract.type === "Por horas" && (props.projectNewContract.hours < 0 || props.projectNewContract.hours > 24)) {
+            setHorasError("Las horas deben ser entre 0 y 24");
+            return;
+        } else {
+            setHorasError("");
+        }
+
+        // check if the salary is valid
+        if (props.projectNewContract.salary < 0 || props.projectNewContract.salary > 99999999) {
+            setSalarioError("El salario es inválido");
+            return;
+        } else {
+            setSalarioError("");
+        }
+
+        // check if the name is valid
+        if (props.projectNewContract.name > 50) {
+            setNameError("El nombre no puede tener más de 50 caracteres");
+            return;
+        } else {
+            setNameError("");
+        }
+
+        // check if the position is valid
+        if (props.projectNewContract.position.length > 50) {
+            setPuestoError("El puesto no puede tener más de 50 caracteres");
+            return;
+        }
+
+        // check if the type is diferent from por horas, if it not is por horas, the hours null
+        if (props.projectNewContract.type !== "Por horas") {
+            props.setProjectNewContract({...props.projectNewContract, hours: null});
+        }
+        props.submitContract();
+    }
+
     return (
         <Dialog open={props.isOpen} onClose={() => props.setIsOpen(false)}>
             <ModalProjectEmployee1>
@@ -306,53 +453,116 @@ function ModalProjectEmployee(props) {
                                 variant="standard"
                                 size="small"
                                 label={`Nombre`}
+                                value={props.projectNewContract.name}
+                                onClick={() => {props.setIsOpen(false); props.toggleDrawer(true); setOpenFirst(true);}}
+                                helperText={nameError}
+                                error={nameError !== ""}
+                                required
                             />
                             <TextFieldStandard1
                                 variant="standard"
                                 size="small"
                                 label={`Salario`}
+                                type="number"
+                                value={props.projectNewContract.salary}
+                                onChange={(e) => { props.setProjectNewContract({...props.projectNewContract, salary: e.target.value})}}
+                                helperText={salarioError}
+                                error={salarioError !== ""}
+                                required
                             />
                             <TextFieldStandard2
                                 variant="standard"
                                 size="small"
                                 label={`Puesto`}
+                                value={props.projectNewContract.position}
+                                onChange={(e) => { props.setProjectNewContract({...props.projectNewContract, position: e.target.value})}}
+                                helperText={puestoError}
+                                error={puestoError !== ""}
+                                required
                             />
                         </Group1>
                         <Frame11>
-                            <TextFieldStandard3
-                                variant="standard"
-                                size="small"
-                                label={`Tipo de Empleado`}
-                            />
-                            <TextFieldStandard4
-                                variant="standard"
-                                size="small"
-                                label={`Horas Semanales`}
-                            />
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <Stack spacing={3} alignItems="stretch">
+                                <DesktopDateTimePicker
+                                    label= "Fecha de inicio *"
+                                    value={props.projectNewContract.startDate}
+                                    onChange={(date) => { props.setProjectNewContract({...props.projectNewContract, startDate: date})}}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            variant="standard"
+                                            sx={{ width: 195, label: { color: fechaInicioError } }}
+                                        />
+                                    )}
+                                />
+                            </Stack>
+                        </LocalizationProvider>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <Stack spacing={3} alignItems="stretch">
+                                <DesktopDateTimePicker
+                                    label="Fecha de finalización *"
+                                    value={props.projectNewContract.endDate}
+                                    helperText={fechaFinError}
+                                    error={fechaFinError !== ""}
+                                    onChange={(date) => { props.setProjectNewContract({...props.projectNewContract, endDate: date})}}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            variant="standard"
+                                            sx={{ width: 195, label:{color: fechaInicioError} }}
+                                        />
+                                    )}
+                                />
+                            </Stack>
+                        </LocalizationProvider>
                         </Frame11>
                         <Frame22>
                             <TextFieldStandard5
                                 variant="standard"
                                 size="small"
                                 label={`Tipo de Empleado`}
-                            />
-                            <TextFieldStandard6
-                                variant="standard"
-                                size="small"
-                                label={`Horas Semanales`}
-                            />
+                                select
+                                required
+                                value={props.projectNewContract.type}
+                                helperText={tipoEmpleadoError}
+                                error={tipoEmpleadoError !== ""}
+                                onChange={(e) => props.setProjectNewContract({ ...props.projectNewContract, type: e.target.value })}
+                            > 
+                                {currencies.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </TextFieldStandard5>
+                            {
+                                props.projectNewContract.type === "Por horas" ? (
+                                  <TextFieldStandard6
+                                    variant="standard"
+                                    size="small"
+                                    label={`Horas Semanales`}
+                                    type="number"
+                                    required
+                                    value={props.projectNewContract.hours}
+                                    helperText={horasError}
+                                    error={horasError !== ""}
+                                    onChange={(e) => props.setProjectNewContract({ ...props.projectNewContract, hours: e.target.value })}
+                                  />
+                                ) : ( <div /> )
+                            }
                         </Frame22>
                     </Details>
                 </Content>
                 <Cta>
                     <Links>
                         <Link1>
-                            <Cancelar>{`Cancelar`}</Cancelar>
+                            <Cancelar onClick={() => props.setIsOpen(false)}>{`Cancelar`}</Cancelar>
                         </Link1>
                         <ButtonOutlined
                             variant="outlined"
                             size="large"
                             color="primary"
+                            onClick={() => { handleSubmit(); }}
                         >
                             {" "}
                             Agregar{" "}

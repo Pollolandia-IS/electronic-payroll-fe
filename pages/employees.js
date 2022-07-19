@@ -131,13 +131,16 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
     const [indexCompany, setIndexCompany] = useState(0);
     const [indexProject, setIndexProject] = useState(0);
     const [contractsOfProject, setContractsOfProject] = useState([]);
+    const [employeesNotContracted, setEmployeesNotContracted] = useState([]);
     const [isProjectSelected, setIsProjectSelected] = useState(false);
     const [showModalCompany, setShowModalCompany] = useState(false);
     const [showModalProject, setShowModalProject] = useState(false);
     const [openDrawer, setOpenDrawer] = useState(false);
     const [newEmployeeInfo, setNewEmployeeInfo] = useState({ name: "", id: "", email: "", phone: "",});
+    const [newProjectContract, setNewProjectContract] = useState({ name: "", id: "", type: "", position: "", startDate: new Date(), endDate: new Date(), salary: "", hours: "", });
 
     const toggleDrawer = (open) => (event) => {
+        console.log("Im called");
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
           return;
         }
@@ -150,6 +153,7 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
             setIsProjectSelected(false);
         } else {
             let indexID = 0;
+            let indexName = 0;
             const projectsContracted = JSONProjectContract.filter(
                 (project) => project.nombreProyecto === selectedProjectName
             ).map((contract) => {
@@ -169,6 +173,18 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
                 }}
             );
 
+            const projectsNotContracted = employees.filter(
+                (employee) => !projectsContracted.find((contract) => contract.cedula === employee.cedula)
+            ).map((employee) => {
+                indexName++;
+                return {
+                    id: indexName,
+                    name: employee.nombre,
+                    cedula: employee.cedula,
+                };
+            });
+            
+            setEmployeesNotContracted(projectsNotContracted);
             setContractsOfProject(projectsContracted);
             setIsProjectSelected(true);
         }
@@ -211,6 +227,11 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
     const handleChangeProject = (e) => {
         setSelectedProjectName(e.target.value);
     };
+
+    const handleSubmitProjectContract = () => {
+
+        console.log("On employee",newProjectContract);
+    }
 
     const handleSubmitCompanyEmployee = async (e) => {
         try {
@@ -256,9 +277,9 @@ const Employees = ({ cedulaEmpleado, name, isEmployer, projects,employees, contr
 
     return (
         <>
-            <EmployeeDrawer open={openDrawer} toggleDrawer={toggleDrawer} />
+            <EmployeeDrawer  projectNewContract={newProjectContract} setProjectNewContract={setNewProjectContract} projectNoContracted={employeesNotContracted} isOpen={showModalProject} setIsOpen={setShowModalProject} open={openDrawer} toggleDrawer={toggleDrawer} />
             <ModalCompanyEmployee employeeInfo={newEmployeeInfo} setEmployeeInfo={setNewEmployeeInfo} isOpen={showModalCompany} setIsOpen={setShowModalCompany} handleSubmit={handleSubmitCompanyEmployee} />
-            <ModalProjectEmployee isOpen={showModalProject} setIsOpen={setShowModalProject} projectSelected={selectedProjectName} />
+            <ModalProjectEmployee submitContract={handleSubmitProjectContract} openDrawer={openDrawer} toggleDrawer={setOpenDrawer} projectNewContract={newProjectContract} setProjectNewContract={setNewProjectContract} isOpen={showModalProject} setIsOpen={setShowModalProject} projectSelected={selectedProjectName} />
             <Sidebar
                 selected={3}
                 username={name}
