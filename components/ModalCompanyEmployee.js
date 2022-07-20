@@ -1,7 +1,9 @@
 import { TextField, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import Dialog from '@mui/material/Dialog';
+import Dialog from "@mui/material/Dialog";
 import { useEffect, useState } from "react";
+import { set } from "date-fns";
+import { is } from "date-fns/locale";
 
 const ModalCompanyEmployee1 = styled("div")(({ theme }) => ({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -192,72 +194,98 @@ const ButtonOutlined = styled(Button)({
 });
 
 function ModalCompanyEmployee(props) {
-    const [nameError, setNameError] = useState("");
-    const [idError, setIdError] = useState("");
-    const [phoneError, setPhoneError] = useState("");
-    const [emailError, setEmailError] = useState("");
+    const [sendData, setSendData] = useState(true);
 
-    const handleSubmit = (e) => {
-        if (props.employeeInfo.name === "" || props.employeeInfo.id === "" || props.employeeInfo.phone === "" || props.employeeInfo.email === "") {
-            if (props.employeeInfo.name === "") {
-                setNameError("El nombre es requerido");
-            }else {
-                setNameError("");
-            }
-            if (props.employeeInfo.id === "") {
-                setIdError("El ID es requerido");
-            } else {
-                setIdError("");
-            }
-            if (props.employeeInfo.phone === "") {
-                setPhoneError("El teléfono es requerido");
-            } else {
-                setPhoneError("");
-            }
-            if (props.employeeInfo.email === "") {
-                setEmailError("El email es requerido");
-            } else {
-                setEmailError("");
-            }
-            return;
-        }
-
-
-        if (props.employeeInfo.name.length > 20) {
-            setNameError("El nombre no puede tener más de 20 caracteres");
+    useEffect(() => {
+        if (props.employeeInfo.name === "") {
+            setSendData(true);
             return;
         } else {
-            setNameError("");
+            setSendData(false);
+        }
+        if (props.employeeInfo.id === "") {
+            setSendData(true);
+            return;
+        } else {
+            setSendData(false);
+        }
+        if (props.employeeInfo.phone === "") {
+            setSendData(true);
+            return;
+        } else {
+            setSendData(false);
+        }
+        if (props.employeeInfo.email === "") {
+            setSendData(true);
+            return;
+        } else {
+            setSendData(false);
+        }
+
+        if (props.employeeInfo.name.length > 50) {
+            setSendData(true);
+            return;
+        } else {
+            setSendData(false);
         }
 
         if (props.employeeInfo.id.length > 12) {
-            setIdError("La cedula no puede tener más de 12 caracteres");
+            setSendData(true);
             return;
-        }else {
-            setIdError("");
+        } else {
+            setSendData(false);
         }
 
         if (props.employeeInfo.phone.length > 10) {
-            setPhoneError("El telefono no puede tener más de 10 caracteres");
+            setSendData(true);
             return;
         } else {
-            setPhoneError("");
+            setSendData(false);
         }
 
         if (props.employeeInfo.email.length > 0) {
-            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            const re =
+                /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if (!re.test(props.employeeInfo.email)) {
-                setEmailError("El email no es valido");
+                setSendData(true);
                 return;
             } else {
-                setEmailError("");
+                setSendData(false);
             }
         }
 
-        props.handleSubmit(e);
-
-    }
-
+        if (props.isEditing) {
+            if (props.employeeInfoCopy.name === props.employeeInfo.name) {
+                setSendData(true);
+            } else {
+                setSendData(false);
+                return;
+            }
+            if (props.employeeInfoCopy.id === props.employeeInfo.id) {
+                setSendData(true);
+            } else {
+                setSendData(false);
+                return;
+            }
+            if (props.employeeInfoCopy.phone === props.employeeInfo.phone) {
+                setSendData(true);
+            } else {
+                setSendData(false);
+                return;
+            }
+            if (props.employeeInfoCopy.email === props.employeeInfo.email) {
+                setSendData(true);
+            } else {
+                setSendData(false);
+                return;
+            }
+        }
+    }, [
+        props.employeeInfo.name,
+        props.employeeInfo.id,
+        props.employeeInfo.phone,
+        props.employeeInfo.email,
+    ]);
 
     return (
         <Dialog open={props.isOpen} onClose={() => props.setIsOpen(false)}>
@@ -276,20 +304,29 @@ function ModalCompanyEmployee(props) {
                             size="small"
                             label={`Nombre del empleado`}
                             value={props.employeeInfo.name}
-                            onChange={(e) => props.setEmployeeInfo({ ...props.employeeInfo, name: e.target.value })}
-                            helperText={nameError}
-                            error={nameError.length > 0}
+                            onChange={(e) =>
+                                props.setEmployeeInfo({
+                                    ...props.employeeInfo,
+                                    name: e.target.value,
+                                })
+                            }
                             required
                         />
                         <TextFieldStandard1
                             variant="standard"
                             size="small"
                             label={`Cédula`}
+                            inputProps={{
+                                readOnly: props.isEditing,
+                            }}
                             value={props.employeeInfo.id}
-                            onChange={(e) => props.setEmployeeInfo({ ...props.employeeInfo, id: e.target.value })}
+                            onChange={(e) =>
+                                props.setEmployeeInfo({
+                                    ...props.employeeInfo,
+                                    id: e.target.value,
+                                })
+                            }
                             type="number"
-                            helperText={idError}
-                            error={idError.length > 0}
                             required
                         />
                         <TextFieldStandard2
@@ -297,10 +334,13 @@ function ModalCompanyEmployee(props) {
                             size="small"
                             label={`Email`}
                             value={props.employeeInfo.email}
-                            onChange={(e) => props.setEmployeeInfo({ ...props.employeeInfo, email: e.target.value })}
+                            onChange={(e) =>
+                                props.setEmployeeInfo({
+                                    ...props.employeeInfo,
+                                    email: e.target.value,
+                                })
+                            }
                             type="email"
-                            helperText={emailError}
-                            error={emailError.length > 0}
                             required
                         />
                         <TextFieldStandard2
@@ -308,10 +348,13 @@ function ModalCompanyEmployee(props) {
                             size="small"
                             label={`Teléfono`}
                             value={props.employeeInfo.phone}
-                            onChange={(e) => props.setEmployeeInfo({ ...props.employeeInfo, phone: e.target.value })}
+                            onChange={(e) =>
+                                props.setEmployeeInfo({
+                                    ...props.employeeInfo,
+                                    phone: e.target.value,
+                                })
+                            }
                             type="number"
-                            helperText={phoneError}
-                            error={phoneError.length > 0}
                             required
                         />
                     </Details>
@@ -327,10 +370,10 @@ function ModalCompanyEmployee(props) {
                             variant="outlined"
                             size="large"
                             color="primary"
-                            onClick={() => {handleSubmit()}}
+                            disabled={sendData}
+                            onClick={props.handleSubmit}
                         >
-                            {" "}
-                            Contratar{" "}
+                            {`${props.isEditing ? `Editar` : `Agregar`}`}
                         </ButtonOutlined>
                     </Links>
                 </Cta>

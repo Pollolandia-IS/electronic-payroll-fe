@@ -3,11 +3,6 @@ import { Avatar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { IoPencilSharp } from "react-icons/io5";
 
-const Avatar1 = styled(Avatar)({
-    width: `32px`,
-    height: `32px`,
-});
-
 export default function EmployeeTable(props) {
     const columns = [
         {
@@ -17,18 +12,19 @@ export default function EmployeeTable(props) {
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,
-            // in this row print <Avatar1 variant="circular" alt={employee.name}/>
             renderCell: (params) => {
                 return (
-                    <Avatar variant="circular" > {(params.row.name).charAt(0)} </Avatar>
+                    <Avatar variant="circular">
+                        {" "}
+                        {params.row.name.charAt(0)}{" "}
+                    </Avatar>
                 );
-            }
-            
+            },
         },
         {
             field: "name",
             headerName: "Nombre",
-            width:280,
+            width: 280,
             align: "left",
             headerAlign: "center",
             disableColumnMenu: true,
@@ -36,7 +32,7 @@ export default function EmployeeTable(props) {
         {
             field: "cedula",
             headerName: "Cedula",
-            width:110,
+            width: 110,
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,
@@ -74,7 +70,7 @@ export default function EmployeeTable(props) {
             disableColumnMenu: true,
         },
         {
-            field: "delete",
+            field: "edit",
             headerName: "",
             width: 100,
             align: "center",
@@ -82,9 +78,15 @@ export default function EmployeeTable(props) {
             disableColumnMenu: true,
             renderCell: (params) => {
                 return (
-                    <IoPencilSharp size={23} style={{color: "#1976D2", cursor: "pointer"}} onClick={() => props.deleteEmployee(params.row.cedula)}/>
+                    <IoPencilSharp
+                        size={23}
+                        style={{ color: "#1976D2", cursor: "pointer" }}
+                        onClick={() =>
+                            props.editEmployeeCompany(params.row.cedula)
+                        }
+                    />
                 );
-            }
+            },
         },
     ];
 

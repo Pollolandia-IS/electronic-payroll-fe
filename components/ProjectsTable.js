@@ -73,19 +73,6 @@ export default function ProjectsTable(props) {
             headerAlign: "center",
             disableColumnMenu: true,
         },
-        {
-            field: "delete",
-            headerName: "",
-            width: 100,
-            align: "center",
-            headerAlign: "center",
-            disableColumnMenu: true,
-            renderCell: (params) => {
-                return (
-                    <IoTrashSharp size={23} style={{color: "red"}} onClick={() => props.deleteEmployee(params.row.name)}/>
-                );
-            }
-        },
     ];
 
     return (
@@ -93,7 +80,7 @@ export default function ProjectsTable(props) {
             rows={props.rows}
             columns={columns}
             height={824}
-            width={1366}
+            width={1266}
         />
     );
 }

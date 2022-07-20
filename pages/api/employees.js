@@ -5,6 +5,34 @@ const { generatePassword } = require("/pages/api/services/generatePassword");
 export default function handler(req, res) {
     if (req.method == "POST") {
         insertEmployeeToDatabase(req, res);
+    } else if (req.method == "PATCH") {
+        updateEmployee(req, res);
+    }
+}
+
+async function updateEmployee(req, res) {
+    try {
+        const { Nombre, Cedula, Email, Telefono } = req.body;
+        const person = await prisma.persona.update({
+            where: {
+                cedula: Cedula,
+            },
+            data: {
+                nombre: Nombre,
+                telefono: Telefono,
+            },
+        });
+        const credentials = await prisma.credenciales.update({
+            where: {
+                email: Email,
+            },
+            data: {
+                email: Email,
+            },
+        });
+        return res.status(200).json({ message: "success" });
+    } catch (error) {
+        console.log(error);
     }
 }
 

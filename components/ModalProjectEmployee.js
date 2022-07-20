@@ -5,7 +5,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Stack from "@mui/material/Stack";
 import { DesktopDateTimePicker } from "@mui/x-date-pickers/DesktopDateTimePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import MenuItem from '@mui/material/MenuItem';
+import MenuItem from "@mui/material/MenuItem";
 import { useState, useEffect } from "react";
 
 const ModalProjectEmployee1 = styled("div")(({ theme }) => ({
@@ -287,107 +287,119 @@ const ButtonOutlined = styled(Button)({
 });
 
 function ModalProjectEmployee(props) {
-  const currencies = [
-    {
-      value: "Por horas",
-      label: "Por horas",
-    },
-    {
-      value: "Tiempo completo",
-      label: "Tiempo completo",
-    },
-    {
-        value: "Medio tiempo",
-        label: "Medio tiempo",
-    }];
-
+    const currencies = [
+        {
+            value: "Por horas",
+            label: "Por horas",
+        },
+        {
+            value: "Tiempo completo",
+            label: "Tiempo completo",
+        },
+        {
+            value: "Medio tiempo",
+            label: "Medio tiempo",
+        },
+        {
+            value: "Servicio profesional",
+            label: "Servicio profesional",
+        },
+    ];
+    const [openFirst, setOpenFirst] = useState(false);
     const [errorInput, setErrorInput] = useState(false);
 
-    const [openFirst, setOpenFirst] = useState(false);
-
     useEffect(() => {
-        // check if all fields are filled
-            if (props.projectNewContract.name === "") {
-                setErrorInput(true);
-                return;
-            } else {
-                setErrorInput(false);
-            }
-            
-            if (props.projectNewContract.salary === "") {
-                setErrorInput(true);
-                return;
-            } else {
-                setErrorInput(false);
-            }
-            if (props.projectNewContract.position === "") {
-                setErrorInput(true);
-                return;
-            } else {
-                setErrorInput(false);
-            }
-            if (props.projectNewContract.startDate === "") {
-                setErrorInput(true);
-                return;
-            } else {
-                setErrorInput(false);
-            }
-            
-            if (props.projectNewContract.endDate === "") {
-                setErrorInput(true);
-                return;
-            } else {
-                setErrorInput(false);
-            }
-            if (props.projectNewContract.type === "") {
-                setErrorInput(true);
-                return;
-            } else {
-                setErrorInput(false);
-            }
-
-        
-        if ((props.projectNewContract.hours === null || props.projectNewContract.hours === "") && props.projectNewContract.type !== "Por horas") {
+        if (props.projectNewContract.name === "") {
             setErrorInput(true);
             return;
         } else {
             setErrorInput(false);
         }
 
-        // check if the dates not is undifined
-        if (props.projectNewContract.startDate == "Invalid Date" || props.projectNewContract.endDate == "Invalid Date") {
+        if (props.projectNewContract.salary === "") {
+            setErrorInput(true);
+            return;
+        } else {
+            setErrorInput(false);
+        }
+        if (props.projectNewContract.position === "") {
+            setErrorInput(true);
+            return;
+        } else {
+            setErrorInput(false);
+        }
+        if (props.projectNewContract.startDate === "") {
             setErrorInput(true);
             return;
         } else {
             setErrorInput(false);
         }
 
-        // check if the dates are valid
-        
-        if (props.projectNewContract.startDate > props.projectNewContract.endDate) {
+        if (props.projectNewContract.endDate === "") {
+            setErrorInput(true);
+            return;
+        } else {
+            setErrorInput(false);
+        }
+        if (props.projectNewContract.type === "") {
             setErrorInput(true);
             return;
         } else {
             setErrorInput(false);
         }
 
-        // check if the hours are valid
-        if (props.projectNewContract.type !== "Por horas" && (props.projectNewContract.hours <= 0 || props.projectNewContract.hours > 45)) {
+        if (
+            (props.projectNewContract.hours === null ||
+                props.projectNewContract.hours === "") &&
+            props.projectNewContract.type !== "Por horas"
+        ) {
             setErrorInput(true);
             return;
         } else {
             setErrorInput(false);
         }
 
-        // check if the salary is valid
-        if (props.projectNewContract.salary < 0 || props.projectNewContract.salary > 99999999) {
+        if (
+            props.projectNewContract.startDate == "Invalid Date" ||
+            props.projectNewContract.endDate == "Invalid Date"
+        ) {
             setErrorInput(true);
             return;
         } else {
             setErrorInput(false);
         }
 
-        // check if the name is valid
+        if (
+            props.projectNewContract.startDate >
+            props.projectNewContract.endDate
+        ) {
+            setErrorInput(true);
+            return;
+        } else {
+            setErrorInput(false);
+        }
+
+        if (
+            props.projectNewContract.type !== "Por horas" &&
+            (props.projectNewContract.hours <= 0 ||
+                props.projectNewContract.hours > 45)
+        ) {
+            setErrorInput(true);
+            return;
+        } else {
+            setErrorInput(false);
+        }
+
+        if (
+            props.projectNewContract.salary < 0 ||
+            props.projectNewContract.salary > 99999999
+        ) {
+            setErrorInput(true);
+            return;
+        } else {
+            setErrorInput(false);
+        }
+
         if (props.projectNewContract.name > 50) {
             setErrorInput(true);
             return;
@@ -395,17 +407,26 @@ function ModalProjectEmployee(props) {
             setErrorInput(false);
         }
 
-        // check if the position is valid
         if (props.projectNewContract.position.length > 50) {
             setErrorInput(true);
             return;
         }
-
-        
-    } , [props.projectNewContract.name, props.projectNewContract.salary, props.projectNewContract.position, props.projectNewContract.startDate, props.projectNewContract.endDate, props.projectNewContract.type, props.projectNewContract.hours]);
+    }, [
+        props.projectNewContract.name,
+        props.projectNewContract.salary,
+        props.projectNewContract.position,
+        props.projectNewContract.startDate,
+        props.projectNewContract.endDate,
+        props.projectNewContract.type,
+        props.projectNewContract.hours,
+    ]);
 
     return (
-        <Dialog sx={{zIndex: 200}} open={props.isOpen} onClose={() => props.setIsOpen(false)}>
+        <Dialog
+            sx={{ zIndex: 200 }}
+            open={props.isOpen}
+            onClose={() => props.setIsOpen(false)}
+        >
             <ModalProjectEmployee1>
                 <Content>
                     <Frame2>
@@ -431,7 +452,10 @@ function ModalProjectEmployee(props) {
                                 size="small"
                                 label={`Nombre`}
                                 value={props.projectNewContract.name}
-                                onClick={() => {props.toggleDrawer(true); setOpenFirst(true);}}
+                                onClick={() => {
+                                    props.toggleDrawer(true);
+                                    setOpenFirst(true);
+                                }}
                                 required
                             />
                             <TextFieldStandard1
@@ -440,7 +464,12 @@ function ModalProjectEmployee(props) {
                                 label={`Salario`}
                                 type="number"
                                 value={props.projectNewContract.salary}
-                                onChange={(e) => { props.setProjectNewContract({...props.projectNewContract, salary: e.target.value})}}
+                                onChange={(e) => {
+                                    props.setProjectNewContract({
+                                        ...props.projectNewContract,
+                                        salary: e.target.value,
+                                    });
+                                }}
                                 required
                             />
                             <TextFieldStandard2
@@ -448,43 +477,60 @@ function ModalProjectEmployee(props) {
                                 size="small"
                                 label={`Puesto`}
                                 value={props.projectNewContract.position}
-                                onChange={(e) => { props.setProjectNewContract({...props.projectNewContract, position: e.target.value})}}
+                                onChange={(e) => {
+                                    props.setProjectNewContract({
+                                        ...props.projectNewContract,
+                                        position: e.target.value,
+                                    });
+                                }}
                                 required
                             />
                         </Group1>
                         <Frame11>
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <Stack spacing={3} alignItems="stretch">
-                                <DesktopDateTimePicker
-                                    label= "Fecha de inicio *"
-                                    value={props.projectNewContract.startDate}
-                                    onChange={(date) => { props.setProjectNewContract({...props.projectNewContract, startDate: date})}}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            variant="standard"
-                                            sx={{ width: 195 }}
-                                        />
-                                    )}
-                                />
-                            </Stack>
-                        </LocalizationProvider>
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <Stack spacing={3} alignItems="stretch">
-                                <DesktopDateTimePicker
-                                    label="Fecha de finalización *"
-                                    value={props.projectNewContract.endDate}
-                                    onChange={(date) => { props.setProjectNewContract({...props.projectNewContract, endDate: date})}}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            variant="standard"
-                                            sx={{ width: 195 }}
-                                        />
-                                    )}
-                                />
-                            </Stack>
-                        </LocalizationProvider>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <Stack spacing={3} alignItems="stretch">
+                                    <DesktopDateTimePicker
+                                        label="Fecha de inicio *"
+                                        value={
+                                            props.projectNewContract.startDate
+                                        }
+                                        onChange={(date) => {
+                                            props.setProjectNewContract({
+                                                ...props.projectNewContract,
+                                                startDate: date,
+                                            });
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                variant="standard"
+                                                sx={{ width: 195 }}
+                                            />
+                                        )}
+                                    />
+                                </Stack>
+                            </LocalizationProvider>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <Stack spacing={3} alignItems="stretch">
+                                    <DesktopDateTimePicker
+                                        label="Fecha de finalización *"
+                                        value={props.projectNewContract.endDate}
+                                        onChange={(date) => {
+                                            props.setProjectNewContract({
+                                                ...props.projectNewContract,
+                                                endDate: date,
+                                            });
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                variant="standard"
+                                                sx={{ width: 195 }}
+                                            />
+                                        )}
+                                    />
+                                </Stack>
+                            </LocalizationProvider>
                         </Frame11>
                         <Frame22>
                             <TextFieldStandard5
@@ -494,34 +540,49 @@ function ModalProjectEmployee(props) {
                                 select
                                 required
                                 value={props.projectNewContract.type}
-                                onChange={(e) => props.setProjectNewContract({ ...props.projectNewContract, type: e.target.value })}
-                            > 
+                                onChange={(e) =>
+                                    props.setProjectNewContract({
+                                        ...props.projectNewContract,
+                                        type: e.target.value,
+                                    })
+                                }
+                            >
                                 {currencies.map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
+                                    <MenuItem
+                                        key={option.value}
+                                        value={option.value}
+                                    >
                                         {option.label}
                                     </MenuItem>
                                 ))}
                             </TextFieldStandard5>
-                            {
-                                props.projectNewContract.type !== "Por horas" ? (
-                                  <TextFieldStandard6
+                            {props.projectNewContract.type !== "Por horas" ? (
+                                <TextFieldStandard6
                                     variant="standard"
                                     size="small"
                                     label={`Horas Semanales`}
                                     type="number"
                                     required
                                     value={props.projectNewContract.hours}
-                                    onChange={(e) => props.setProjectNewContract({ ...props.projectNewContract, hours: e.target.value })}
-                                  />
-                                ) : ( <div /> )
-                            }
+                                    onChange={(e) =>
+                                        props.setProjectNewContract({
+                                            ...props.projectNewContract,
+                                            hours: e.target.value,
+                                        })
+                                    }
+                                />
+                            ) : (
+                                <div />
+                            )}
                         </Frame22>
                     </Details>
                 </Content>
                 <Cta>
                     <Links>
                         <Link1>
-                            <Cancelar onClick={() => props.setIsOpen(false)}>{`Cancelar`}</Cancelar>
+                            <Cancelar
+                                onClick={() => props.setIsOpen(false)}
+                            >{`Cancelar`}</Cancelar>
                         </Link1>
                         <ButtonOutlined
                             variant="outlined"
