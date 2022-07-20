@@ -20,7 +20,6 @@ async function insertCompanytoDataBase(req, res){
                 email : companyemail,
                 paginaWeb : website,
                 cedulaEmpleador : employerId[2],
-                habilitado : true,
             }
         });
 
