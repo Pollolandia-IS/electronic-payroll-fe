@@ -10,14 +10,13 @@ async function editCompany(req, res){
 
     try{
         console.log(req.body);
-        const { companyName, companyId, oldCompanyId, companyPhone, companyEmail, companyAddress } = req.body;
+        const { companyName, companyId, companyPhone, companyEmail, companyAddress } = req.body;
 
         const updateCompany = await prisma.empresa.update({
             where: {
-                cedulaJuridica: oldCompanyId,
+                cedulaJuridica: companyId,
             },
             data:{
-                cedulaJuridica: companyId,
                 razonSocial : companyName,
                 telefono: companyPhone,
                 email: companyEmail,
