@@ -230,7 +230,6 @@ function Profile(props) {
   const handleUserDataChange = (event) => {
     setUserValues({ ...UserValues, [event.target.id]: event.target.value });
     if(event.target.id === 'Username'){
-      //console.log((event.target.value) !== props.userData.name, event.target.value, props.userData.name );
       event.target.value.length > 0 ? setIsValidName(true) : setIsValidName(false);
     };
     if(event.target.id === 'UserId'){
@@ -300,7 +299,6 @@ function Profile(props) {
       return (isValidCompanyName && isValidCompanyId && isValidCompanyEmail && isValidCompanyPhone && isValidAddress && companyInputsChanged);
     });
 
-    console.log('company ', isValidCompanyName, isValidCompanyId, isValidCompanyEmail, isValidCompanyPhone, isValidAddress, companyInputsChanged);
   };
 
   useEffect(() => { validateUserFields(); validateCompanyFields(); });
@@ -323,7 +321,6 @@ function Profile(props) {
             body: JSON.stringify(newUserData),
         });
         const token = await response.json();
-        console.log('FROM Profile ', token)
         Cookies.set("token", token, { expires: 7 });
       } catch (error) {
       console.error(error);
