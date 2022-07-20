@@ -3,8 +3,9 @@ import { styled } from '@mui/material/styles';
 import { useState, useEffect } from 'react'
 import Router from "next/router";
 import Image from 'next/image';
+import PasswordModal from '../components/ChangePasswordModal'
+import Cookies from "js-cookie";
 
- 
 const Container = styled("div")({  
   backgroundColor: `rgba(255, 255, 255, 1)`,  
   display: `flex`,  
@@ -82,15 +83,15 @@ const ProfileForm = styled("div")({
   boxSizing: `border-box`,  
   margin: `0px`,  
 });
-  
-const UserName = styled(TextField)({  
-  width: `356px`,  
-  margin: `0px`,  
-});
-  
+
 const UserId = styled(TextField)({  
   width: `356px`,  
-  margin: `15px 0px 0px 0px`,  
+  margin: `0px`,
+});
+
+const UserName = styled(TextField)({
+  width: `356px`,  
+  margin: `15px 0px 0px 0px`,   
 });
   
 const UserPhone = styled(TextField)({  
@@ -105,7 +106,8 @@ const UserEmail = styled(TextField)({
   
 const UserPassword = styled(TextField)({  
   width: `356px`,  
-  margin: `15px 0px 0px 0px`,  
+  margin: `15px 0px 0px 0px`,
+  cursor: `pointer`,
 });
   
 const CompanySection = styled("div")({  
@@ -150,15 +152,15 @@ const CompanyForm = styled("div")({
   left: `0px`,  
   top: `38px`,  
 });
-  
+
+const CompanyId = styled(TextField)({
+  width: `356px`,  
+  margin: `0px`, 
+});
+
 const CompanyName = styled(TextField)({  
   width: `356px`,  
-  margin: `0px`,  
-});
-  
-const CompanyId = styled(TextField)({  
-  width: `356px`,  
-  margin: `15px 0px 0px 0px`,  
+  margin: `15px 0px 0px 0px`, 
 });
   
 const CompanyPhone = styled(TextField)({  
@@ -194,7 +196,7 @@ const SaveChangesButton = styled(Button)({
 });
  
 function Profile(props) {
-
+  const [passwordModalOpened, setpasswordModalOpened] = useState(false);
   const [isValidName, setIsValidName] = useState(true);
   const [isValidId, setIsValidId] = useState(true);
   const [isValidEmail, setIsValidEmail] = useState(true);
@@ -301,11 +303,10 @@ function Profile(props) {
     console.log('company ', isValidCompanyName, isValidCompanyId, isValidCompanyEmail, isValidCompanyPhone, isValidAddress, companyInputsChanged);
   };
 
-  useEffect(() => { validateUserFields(); validateCompanyFields(); console.log(validFields,validCompanyFields ) });
+  useEffect(() => { validateUserFields(); validateCompanyFields(); });
 
   const handleSubmit = async () => {
     if(userDataChanged) {
-      console.log('userfetch');
       const newUserData = {
         userName: UserValues.Username,
         userId: UserValues.UserId,
@@ -313,26 +314,29 @@ function Profile(props) {
         userEmail: UserValues.Useremail,
         oldEmail: props.userData.email,
         userPhone: UserValues.Userphone,
+        isEmployer: props.isEmployer,
       }
       try {
-        await fetch(`/api/editProfile/`, {
+        const response = await fetch(`/api/editProfile/`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newUserData),
         });
+        const token = await response.json();
+        console.log('FROM Profile ', token)
+        Cookies.set("token", token, { expires: 7 });
       } catch (error) {
       console.error(error);
       }
     }
     if(companyDataChanged){
-      console.log('companyfetch');
       const newCompanyData = {
         companyName: CompanyValues.Companyname,
         companyId: CompanyValues.Companyid,
         oldCompanyId: props.companyData.legalid,
         companyPhone: CompanyValues.Companyphone,
         companyEmail: CompanyValues.Companyemail,
-        companyAddress: CompanyValues.Companyaddress
+        companyAddress: CompanyValues.Companyaddress,
       }
       try {
         await fetch(`/api/editCompany/`, {
@@ -344,15 +348,13 @@ function Profile(props) {
       console.error(error);
       }
     }
-    if(UserValues.Useremail !== props.userData.id){
-      //Router.push('/LogIn');
-    } else {
-      //Router.reload();
-    }
+    Router.reload();
   }
 
   return (
-    <Container>
+    <>
+      <Container>
+       <PasswordModal isOpen={passwordModalOpened} setpasswordModalOpened={setpasswordModalOpened} pw={props.userData.password} email={props.userData.email}/>
        <LeftColumn>
          <ProfileSection>
            <ProfileTitleFrame>
@@ -361,11 +363,11 @@ function Profile(props) {
                  </ProfileTitle>
            </ProfileTitleFrame>
            <ProfileForm>
+             <UserId id="UserId" variant="outlined" size="medium"  label={`Cédula`} defaultValue={props.userData.id} onChange={handleUserDataChange} inputProps={{ maxLength: 9, readOnly: true}} />
              <UserName id="Username" variant="outlined" size="medium"  label={`Nombre`} defaultValue={props.userData.name} onChange={handleUserDataChange}/>
-             <UserId id="UserId" variant="outlined" size="medium"  label={`Cédula`} defaultValue={props.userData.id} onChange={handleUserDataChange} inputProps={{ maxLength: 9 }}  />
              <UserPhone id="Userphone" variant="outlined" size="medium"  label={`Teléfono`} defaultValue={props.userData.phone} onChange={handleUserDataChange} inputProps={{ maxLength: 8 }} />
              <UserEmail id="Useremail" variant="outlined" size="medium"  label={`Email`} defaultValue={props.userData.email} onChange={handleUserDataChange}/>
-             <UserPassword type="password" variant="outlined" size="medium"  label={`Contraseña`} defaultValue={props.userData.password}/>
+             <UserPassword type="password" variant="outlined" size="medium"  label={`Contraseña`} defaultValue={props.userData.password} onClick={()=> setpasswordModalOpened(true)} inputProps={{ readOnly: true, }} sx={{cursor: `pointer`}} />
            </ProfileForm>
          </ProfileSection>
          <CompanySection>
@@ -373,8 +375,8 @@ function Profile(props) {
              {`Tu Empresa`}
                </CompanyTitle>
            <CompanyForm>
+             <CompanyId id="Companyid" variant="outlined" size="medium"  label={`Cédula Jurídica`} defaultValue={props.companyData.legalid} onChange={handleCompanyDataChange} inputProps={{ maxLength: 12, readOnly: true, }}/>
              <CompanyName id="Companyname" variant="outlined" size="medium"  label={`Razón Social`} defaultValue={props.companyData.name} onChange={handleCompanyDataChange} disabled={!props.isEmployer}/>
-             <CompanyId id="Companyid" variant="outlined" size="medium"  label={`Cédula Jurídica`} defaultValue={props.companyData.legalid} onChange={handleCompanyDataChange} inputProps={{ maxLength: 12 }} disabled={!props.isEmployer}/>
              <CompanyPhone id="Companyphone" variant="outlined" size="medium"  label={`Teléfono`} defaultValue={props.companyData.phone} onChange={handleCompanyDataChange} disabled={!props.isEmployer}/>
              <CompanyEmail id="Companyemail" variant="outlined" size="medium"  label={`Email`} defaultValue={props.companyData.email} onChange={handleCompanyDataChange} disabled={!props.isEmployer}/>
              <CompanyLocation id="Companyaddress" variant="outlined" size="medium" multiline rows={3} label={`Dirección`} defaultValue={props.companyData.address} onChange={handleCompanyDataChange} disabled={!props.isEmployer}/>
@@ -386,6 +388,7 @@ function Profile(props) {
          <SaveChangesButton type="submit" variant="contained" size="large" color="primary" disabled={!validFields && !validCompanyFields} onClick={handleSubmit}> GUARDAR CAMBIOS </SaveChangesButton>
        </RightColumn>
      </Container>
+    </>
    );
 }
 
