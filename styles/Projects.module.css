@@ -68,3 +68,25 @@ height: 170px;
   line-height: 35px;
   margin: 100px;
 }
+
+.imgNoProjects {
+  position:relative;
+  top:-70px;
+  width: 50%;
+}
+
+.noProjectsTitle{
+  position:relative;
+  top:-100px;
+  left:-50px;
+  font-weight: 400;
+  font-size: 30px;
+}
+
+.noProjects{
+  position:relative;
+  top:-100px;
+  left: 80px;
+  font-weight: 400;
+  font-size: 25px;
+}
