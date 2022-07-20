@@ -132,6 +132,7 @@ const handleProfile = async(userData) => {
         return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
 };
+
 const handlePayroll = async (userData) => {
     if (userData) {
         if (userData.isEmployer) {
