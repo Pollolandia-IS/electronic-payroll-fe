@@ -13,8 +13,9 @@
  **********************************************************************/
 
 import { styled } from "@mui/material/styles";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { IconButton, Tooltip } from "@mui/material";
+import { left } from "@popperjs/core";
 
 const EmployeeHours1 = styled("div")({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -25,11 +26,11 @@ const EmployeeHours1 = styled("div")({
     isolation: `isolate`,
     flexDirection: `column`,
     width: `360px`,
-    justifyContent: `flex-start`,
     alignItems: `flex-start`,
     padding: `12px`,
     boxSizing: `border-box`,
     overflow: `hidden`,
+    margin: `15px 0px 0px 0px`,
 });
 
 const Row = styled("div")({
@@ -37,22 +38,18 @@ const Row = styled("div")({
     position: `relative`,
     isolation: `isolate`,
     flexDirection: `row`,
-    justifyContent: `flex-start`,
+    justifyContent: `center`,
     alignItems: `center`,
     padding: `0px`,
     boxSizing: `border-box`,
-    alignSelf: `stretch`,
     margin: `0px`,
 });
 
-const CheckCircleOutlineOu = styled(CheckCircleOutlineIcon)(
-    ({ theme }) => ({
-        width: `37px`,
-        height: `37px`,
-        margin: `0px`,
-        color: `#00A8FF`,
-    })
-);
+const CheckCircleOutlineOu = styled(CheckCircleOutlineIcon)(({ theme }) => ({
+    width: `37px`,
+    height: `37px`,
+    marginLeft: `10px`,
+}));
 
 const Left = styled("div")({
     display: `flex`,
@@ -63,7 +60,7 @@ const Left = styled("div")({
     alignItems: `center`,
     padding: `0px`,
     boxSizing: `border-box`,
-    margin: `0px 0px 0px 21px`,
+    margin: `0px 0px 0px 30px`,
 });
 
 const Stats = styled("div")({
@@ -124,12 +121,12 @@ const RightSide = styled("div")({
     position: `relative`,
     isolation: `isolate`,
     flexDirection: `row`,
-    justifyContent: `flex-end`,
-    alignItems: `center`,
-    padding: `0px 10px 0px 0px`,
+    justifyContent: `right`,
+    justifySelf: `flex-end`,
+    alignItems: `flex-end`,
+    padding: `0px 0px 0px 0px`,
     boxSizing: `border-box`,
-    width: `97px`,
-    margin: `0px 0px 0px 21px`,
+    margin: `0px 0px 0px 25px`,
 });
 
 const Arrow = styled("img")({
@@ -142,7 +139,7 @@ function EmployeeHoursCard(props) {
     return (
         <EmployeeHours1>
             <Row>
-                <CheckCircleOutlineOu />
+                <CheckCircleOutlineOu color="success" />
                 <Left>
                     <Stats>
                         <NombreApellido>{props.name}</NombreApellido>
@@ -161,14 +158,13 @@ function EmployeeHoursCard(props) {
                     enterDelay={1069}
                     placement="top-start"
                 >
-                    <IconButton onClick={props.setSelectedEmployee(props.name)}>
-                        <RightSide>
-                            <Arrow
-                                src={`../public/assets/img/Arrow.png`}
-                                alt={"Arrow"}
-                            />
-                        </RightSide>
-                    </IconButton>
+                    <RightSide>
+                        <IconButton
+                            onClick={props.setSelectedEmployee(props.name)}
+                        >
+                            <Arrow src="/assets/img/Arrow.png" alt={"Arrow"} />
+                        </IconButton>
+                    </RightSide>
                 </Tooltip>
             </Row>
         </EmployeeHours1>
