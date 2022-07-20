@@ -7,7 +7,12 @@ import jwt from "jsonwebtoken";
 import { createLocalDate, dateToString } from "../logic/DateTimeHelpers";
 import Router from "next/router";
 import { prisma } from "/.db";
-import { calculateBenefits, calculateMandatoryDeductions, calculateVoluntaryDeductions, createPayment } from "../logic/Payroll";
+import {
+    calculateBenefits,
+    calculateMandatoryDeductions,
+    calculateVoluntaryDeductions,
+    createPayment,
+} from "../logic/Payroll";
 
 export async function getServerSideProps(context) {
     const { req, res } = context;
@@ -83,8 +88,21 @@ export async function getServerSideProps(context) {
             contract.tipoEmpleado === "Por horas"
                 ? contract.salario * totalHours
                 : contract.salario;
-        const payment = createPayment(grossSalary, calculateMandatoryDeductions(grossSalary, mandatoryDeductions, "Empleado"),calculateMandatoryDeductions(grossSalary, mandatoryDeductions, "Patrono"), calculateVoluntaryDeductions(contract.empleado.escoge), calculateBenefits(contract.empleado.selecciona));
-        console.log(payment);
+        const payment = createPayment(
+            grossSalary,
+            calculateMandatoryDeductions(
+                grossSalary,
+                mandatoryDeductions,
+                "Empleado"
+            ),
+            calculateMandatoryDeductions(
+                grossSalary,
+                mandatoryDeductions,
+                "Patrono"
+            ),
+            calculateVoluntaryDeductions(contract.empleado.escoge),
+            calculateBenefits(contract.empleado.selecciona)
+        );
         payments.push(payment);
         return {
             id: index + 1,
@@ -113,10 +131,33 @@ export async function getServerSideProps(context) {
     };
 }
 
-const payDetail = ({ projectString, name, isEmployer, payrollRows, payments }) => {
+const payDetail = ({
+    projectString,
+    name,
+    isEmployer,
+    payrollRows,
+    payments,
+    contracts
+}) => {
     const project = JSON.parse(projectString);
     const startDate = createLocalDate(new Date(project.fechaInicio));
     const endDate = createLocalDate(new Date(project.fechaFin));
+
+    const handlePay = async () => {
+        await fetch("/api/pay", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                contracts: contracts,
+                payments: payments,
+                frequency: project.frecuenciaPago,
+                endDate: project.fechaFin,
+            }),
+        });
+        Router.push("/payroll");
+    }
     return (
         <>
             <Sidebar selected={7} username={name} isEmployer={isEmployer} />
@@ -162,9 +203,8 @@ const payDetail = ({ projectString, name, isEmployer, payrollRows, payments }) =
                     >
                         Cancelar
                     </Button>
-                    <Button variant="outlined" color="primary">
-                        {" "}
-                        Pagar Planilla{" "}
+                    <Button variant="outlined" color="primary" onClick={handlePay}>
+                        Pagar Planilla
                     </Button>
                 </div>
             </div>
