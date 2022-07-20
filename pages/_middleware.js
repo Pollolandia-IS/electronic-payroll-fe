@@ -22,6 +22,8 @@ const handleRequest = (req, userData) => {
         return handleHours(userData);
     } else if (url === `${BASEURL}/payroll`) {
         return handlePayroll(userData);
+    } else if (url.startsWith(`${BASEURL}/payDetail`)) {
+        return handlePayDetails(req, userData);
     } else if (url.match(/http:\/\/localhost:3000\/([0-9]+)\/verify/g)) {
         let userID = url.match(/\/([0-9]+)/g)[0].substring(1);
         try {
@@ -127,6 +129,23 @@ const handlePayroll = async (userData) => {
             return response;
         } else {
             return NextResponse.redirect(`${BASEURL}/coming-soon`);
+        }
+    } else {
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
+    }
+}
+
+const handlePayDetails = async (req, userData) => {
+    const projectName = req.nextUrl.searchParams.get("project");
+    if (userData && projectName) {
+        if (userData.isEmployer) {
+            const ids = await fetchIds(userData);
+            let response = NextResponse.next();
+            response.headers.append("ids", JSON.stringify(ids));
+            response.headers.append("project", projectName);
+            return response;
+        } else {
+            return NextResponse.redirect(`${BASEURL}/unauthorized`);
         }
     } else {
         return NextResponse.redirect(`${BASEURL}/unauthorized`);
