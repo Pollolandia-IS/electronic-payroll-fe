@@ -37,7 +37,9 @@ export async function getServerSideProps(context) {
         },
     });
 
+    let counter = 0;
     const hoursReportsWithId = hoursReports.map((hourTime) => ({
+        id: counter++,
         horasTrabajadas: hourTime.horasTrabajadas,
         fechaHora: JSON.stringify(hourTime.fechaHora)
             .split("T")[0]
@@ -99,9 +101,10 @@ const employerHours = ({
     const [selectedProject, setSelectedProject] = useState("");
     const [searchText, setSearchText] = useState("");
 
-    const createEmployeeCard = (nombre, cedula) => {
+    const createEmployeeCard = (nombre, cedula, index) => {
         return (
             <EmployeeHoursCard
+                key={index}
                 name={nombre}
                 pending={checkHours(cedula)}
                 setSelectedEmployee={setSelectedEmployee}
@@ -110,17 +113,18 @@ const employerHours = ({
     };
 
     const getEmployees = () => {
+        let index = 0;
         return employees.map((employee) => {
             employee = employee.split(",");
             if (searchText === "") {
-                return createEmployeeCard(employee[0], employee[1]);
+                return createEmployeeCard(employee[0], employee[1], index++);
             } else {
                 if (
                     employee[0].includes(searchText) ||
                     employee[1].includes(searchText)
                 ) {
                     employee = employee.split(",");
-                    return createEmployeeCard(employee[0], employee[1]);
+                    return createEmployeeCard(employee[0], employee[1], index++);
                 }
             }
         });
@@ -159,13 +163,15 @@ const employerHours = ({
         let employeeHours = [];
         let employeeId = "";
 
-        for (let i = 0; i < employees.length; i++) {
-            if (employees[i][0] === employeeName) {
-                employeeId = employees[i][1];
-                setSelectedId(employeeId);
+        employees.map((employee) => {
+            employee = employee.split(",");
+            if (employee[0] === employeeName) {
+                employeeId = employee[1];
             }
-        }
+        });
+
         employeeHours = getTableRows(employeeId);
+        console.log(employeeHours);
         if (employeeHours.length === 0) {
             return (
                 <div className={styles.right}>
@@ -181,21 +187,24 @@ const employerHours = ({
 
     const getTableRows = (employeeId) => {
         let employeeHours = [];
-        for (let i = 0; i < hours.length; i++) {
-            if (hours[i].cedulaEmpleado === employeeId) {
-                let row = [];
-                row.push(hours[i].nombreProyecto);
-                row.push(hours[i].horasTrabajadas);
-                row.push(hours[i].fechaHora);
-                let state = getState(
-                    hours[i].estado,
-                    hours[i].nombreProyecto,
-                    hours[i].fechaHora
-                );
-                row.push(state);
-                employeeHours.push(row);
-            }
+
+        if (employeeId.includes(" ")) {
+            employeeId = employeeId.split(" ");
+            employeeId = employeeId[1];
         }
+
+        hours.map((report) => {
+            if (report.cedulaEmpleado === employeeId) {
+                let reportData = {
+                    id: report.fechaHora,
+                    project: report.nombreProyecto,
+                    hours: report.horasTrabajadas,
+                    date: report.fechaHora,
+                    state: getState(report.estado, report.nombreProyecto, report.fechaHora),
+                };
+                employeeHours.push(reportData);
+            }
+        });
         return employeeHours;
     };
 
