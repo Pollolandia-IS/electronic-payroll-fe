@@ -9,7 +9,6 @@ export default function handler(req, res){
 async function editCompany(req, res){
 
     try{
-        console.log(req.body);
         const { companyName, companyId, companyPhone, companyEmail, companyAddress } = req.body;
 
         const updateCompany = await prisma.empresa.update({
