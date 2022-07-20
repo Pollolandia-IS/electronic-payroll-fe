@@ -3,7 +3,7 @@ import Sidebar from "../components/Sidebar";
 import styles from "/styles/payroll.module.css";
 import jwt from "jsonwebtoken";
 import PayrollTable from "../components/PayrollTable";
-import { dateToString } from "../logic/DateTimeHelpers"
+import { dateToString } from "../logic/DateTimeHelpers";
 import { calculateProjectState } from "../logic/Payroll";
 
 export async function getServerSideProps(context) {

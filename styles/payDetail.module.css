@@ -1,7 +1,6 @@
 .content {
-  margin-left: 331px;
+    margin-left: 331px;
 }
-
 
 .title {
     margin: 40px 0 5px 0;
@@ -13,19 +12,19 @@
     color: #000000;
 }
 .subtitle {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 15px;
-  line-height: 18px;
-  color: #1976D2;
-  margin: 0 0 40px 0;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 18px;
+    color: #1976d2;
+    margin: 0 0 40px 0;
 }
 
 .alert {
     margin-bottom: 55px;
     width: 608px;
-    height: 76px;    
+    height: 76px;
 }
 
 .buttons {

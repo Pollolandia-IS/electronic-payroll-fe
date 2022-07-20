@@ -347,4 +347,4 @@ export const calculateBenefits = (userChoices) => {
         });
     });
     return benefitsApplied;
-}
+};

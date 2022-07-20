@@ -137,7 +137,7 @@ const payDetail = ({
     isEmployer,
     payrollRows,
     payments,
-    contracts
+    contracts,
 }) => {
     const project = JSON.parse(projectString);
     const startDate = createLocalDate(new Date(project.fechaInicio));
@@ -157,7 +157,7 @@ const payDetail = ({
             }),
         });
         Router.push("/payroll");
-    }
+    };
     return (
         <>
             <Sidebar selected={7} username={name} isEmployer={isEmployer} />
@@ -203,7 +203,11 @@ const payDetail = ({
                     >
                         Cancelar
                     </Button>
-                    <Button variant="outlined" color="primary" onClick={handlePay}>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={handlePay}
+                    >
                         Pagar Planilla
                     </Button>
                 </div>
