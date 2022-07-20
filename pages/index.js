@@ -6,6 +6,8 @@ import jwt from "jsonwebtoken";
 import Cookies from "js-cookie";
 import Dashboard from "../components/Dashboard";
 import { dateToString } from "../logic/DateTimeHelpers";
+import Router from "next/router";
+import { prisma } from "/.db";
 
 export async function getServerSideProps(context) {
     const { req, res } = context;
@@ -13,6 +15,23 @@ export async function getServerSideProps(context) {
     let decoded = null;
     if (cookies.token) {
       decoded = jwt.verify(cookies.token, process.env.JWT_SECRET);
+    }
+    
+    if (decoded.userData.isEmployer) {
+        const id = JSON.parse(res._headers.id).id;
+        const hasCompany = await prisma.empresa.findMany({
+            where: {
+                cedulaEmpleador: id,
+            },
+        });
+        if(hasCompany === undefined || hasCompany.length === 0) {
+            return {
+                redirect: {
+                    destination: "/RegisterCompany",
+                    permanent: false,
+                },
+            };
+        }
     }
     return {
         props: {

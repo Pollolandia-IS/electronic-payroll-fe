@@ -342,7 +342,7 @@ function SignUp() {
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
-        if (event.target.value.length > 3 && event.target.value.includes("@")) {
+        if (event.target.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
             setIsValidEmail(true);
         } else {
             setIsValidEmail(false);
