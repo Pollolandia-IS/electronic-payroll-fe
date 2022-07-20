@@ -185,7 +185,7 @@ const handlePayDetails = async (req, userData) => {
     const projectName = req.nextUrl.searchParams.get("project");
     if (userData && projectName) {
         if (userData.isEmployer) {
-            const ids = await fetchIds(userData);
+            const ids = await fetchIds(userData, true);
             let response = NextResponse.next();
             response.headers.append("ids", JSON.stringify(ids));
             response.headers.append("project", projectName);

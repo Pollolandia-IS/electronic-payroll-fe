@@ -7,6 +7,6 @@ module.exports = {
   experimental: { images: { layoutRaw: true } },
   nextConfig,
   env: {
-    URL: 'https://pollolandia.vercel.app'
+    URL: process.env.URL,
   }
 }
