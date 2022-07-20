@@ -60,7 +60,7 @@ export default function ProfilePage (props) {
     
     return(
         <>
-            <Sidebar selected={1} username={props.name} isEmployer={props.isEmployer} />
+            <Sidebar selected={1} username={props.userData.name} isEmployer={props.isEmployer} />
             <main className={styles.main}>
                 <Profile userData={props.userData} companyData={props.companyData} isEmployer={props.isEmployer}/>
             </main>
