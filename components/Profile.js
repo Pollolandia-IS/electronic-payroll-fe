@@ -375,7 +375,7 @@ function Profile(props) {
              {`Tu Empresa`}
                </CompanyTitle>
            <CompanyForm>
-             <CompanyId id="Companyid" variant="outlined" size="medium"  label={`Cédula Jurídica`} defaultValue={props.companyData.legalid} onChange={handleCompanyDataChange} inputProps={{ maxLength: 12, readOnly: true, }}/>
+             <CompanyId id="Companyid" variant="outlined" size="medium"  label={`Cédula Jurídica`} defaultValue={props.companyData.legalid} onChange={handleCompanyDataChange} inputProps={{ maxLength: 12, readOnly: true, }} disabled={!props.isEmployer}/>
              <CompanyName id="Companyname" variant="outlined" size="medium"  label={`Razón Social`} defaultValue={props.companyData.name} onChange={handleCompanyDataChange} disabled={!props.isEmployer}/>
              <CompanyPhone id="Companyphone" variant="outlined" size="medium"  label={`Teléfono`} defaultValue={props.companyData.phone} onChange={handleCompanyDataChange} disabled={!props.isEmployer}/>
              <CompanyEmail id="Companyemail" variant="outlined" size="medium"  label={`Email`} defaultValue={props.companyData.email} onChange={handleCompanyDataChange} disabled={!props.isEmployer}/>
