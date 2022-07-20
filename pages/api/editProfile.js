@@ -1,4 +1,5 @@
 import {prisma} from '/.db'
+import jwt from "jsonwebtoken";
 
 export default function handler(req, res){
     if(req.method === "POST"){
@@ -8,15 +9,14 @@ export default function handler(req, res){
 
 async function editProfile(req, res){
     try{
-        const { userName, userId, oldId, userEmail, oldEmail, userPhone } = req.body;
+        const { userName, userId, userEmail, oldEmail, userPhone, isEmployer } = req.body;
 
         console.log(req.body);
         const updateProfile = await prisma.persona.update({
             where: {
-                cedula: oldId,
+                cedula: userId,
             },
             data:{
-                cedula : userId,
                 nombre : userName,
                 telefono : userPhone,
             }
@@ -31,8 +31,12 @@ async function editProfile(req, res){
                     email: userEmail,
                 }
             });
+
         }
-        res.status(200).json(updateProfile);
+
+        const userData = { isEmployer: isEmployer, name: userName, email: userEmail };
+        const token = jwt.sign( {userData} , process.env.JWT_SECRET);
+        res.status(200).json(token);
     } catch(error){
         res.status(500);
         res.send(error.message);
