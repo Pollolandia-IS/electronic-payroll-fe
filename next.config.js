@@ -6,4 +6,7 @@ const nextConfig = {
 module.exports = {
   experimental: { images: { layoutRaw: true } },
   nextConfig,
-};
+  env: {
+    URL: 'https://pollolandia.vercel.app'
+  }
+}

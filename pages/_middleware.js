@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const BASEURL = "http://localhost:3000";
+const BASEURL = process.env.URL;
 export default async function middleware(req) {
     const userData = await decodeToken(req);
     return handleRequest(req, userData);
@@ -24,7 +24,7 @@ const handleRequest = (req, userData) => {
         return handlePayroll(userData);
     } else if (url.startsWith(`${BASEURL}/payDetail`)) {
         return handlePayDetails(req, userData);
-    } else if (url.match(/http:\/\/localhost:3000\/([0-9]+)\/verify/g)) {
+    } else if (url.match(new RegExp(`${BASEURL.split('/')[0]}\/\/${BASEURL.split('//')[1]}\/([0-9]+)\/verify`))) {
         let userID = url.match(/\/([0-9]+)/g)[0].substring(1);
         try {
             fetch(`${BASEURL}/api/verify`, {
