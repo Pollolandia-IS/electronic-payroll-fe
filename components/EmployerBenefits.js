@@ -225,6 +225,26 @@ const EmployerBenefits = ({ props }) => {
                         <AddIcon fontSize="large" />
                     </IconBox>
                 </div>
+                {getRows().length !== 0 ? (
+                    null
+                ) : (
+                    <div className={styles.main__noBenefits}>
+                        {selectedProjectName === "Todos"
+                            ? <>
+                            <img className={styles.imgNoBenefitsTotal} src="assets/img/404.png"></img> 
+                            <div className={styles.noBenefitsTotalTitle}> Aún no hay beneficios creados</div>
+                            </>
+                            : <> 
+                            <img className={styles.imgNoBenefitsTotal} src="assets/img/404.png"></img> 
+                            <div className={styles.noBenefitsTotalTitle}> Aún no hay beneficios creados para este proyecto </div>
+                            </> }
+                        <p className={styles.noBenefitsTotal}>
+                            {" "}
+
+                            Agrega un beneficio con el botón +
+                        </p>
+                    </div>
+                )}
                 <div className={styles.main__content}>{getRows()}</div>
             </main>
         </>

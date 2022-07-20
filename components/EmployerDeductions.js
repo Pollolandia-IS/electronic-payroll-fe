@@ -234,10 +234,17 @@ const Deductions = ({ props }) => {
                 ) : (
                     <div className={styles.main__noDeductions}>
                         {selectedProjectName === "Todos"
-                            ? "Aún no hay deducciones creadas."
-                            : "Aún no hay deducciones creadas para este proyecto."}
-                        <p style={{ fontWeight: 400, fontSize: 20 }}>
+                            ? <>
+                            <img className={styles.imgNoDeductionsTotal} src="assets/img/404.png"></img> 
+                            <div className={styles.noDeductionsTotalTitle}> Aún no hay deducciones creadas</div>
+                            </>
+                            : <> 
+                            <img className={styles.imgNoDeductionsTotal} src="assets/img/404.png"></img> 
+                            <div className={styles.noDeductionsTotalTitle}> Aún no hay deducciones creadas para este proyecto </div>
+                            </> }
+                        <p className={styles.noDeductionsTotal}>
                             {" "}
+
                             Agrega una deducción con el botón +
                         </p>
                     </div>
