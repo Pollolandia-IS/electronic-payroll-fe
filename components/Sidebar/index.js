@@ -213,6 +213,12 @@ function Sidebar(props) {
                                     isSelected={props.selected == 7}
                                     href={"/payroll"}
                                 />
+                                <SidebarRow6
+                                    icon="addTime"
+                                    text={"Reportes de Horas"}
+                                    isSelected={props.selected == 8}
+                                    href={"/employerHours"}
+                                />
                             </>
                         )}
                         {props.isEmployer === false && (
