@@ -266,9 +266,9 @@ function Sidebar(props) {
                                 src={"/"}
                                 alt={props.username}
                             />
-                            <Link href={"/profile"}>
+                            <a href={"/profile"}>
                                 <UserName>{props.username}</UserName>
-                            </Link>
+                            </a>
                             <IconButton
                                 size="small"
                                 color="primary"
