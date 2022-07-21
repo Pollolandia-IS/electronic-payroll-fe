@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const BASEURL = "http://localhost:3000";
+const BASEURL = process.env.URL;
 export default async function middleware(req) {
     const userData = await decodeToken(req);
     return handleRequest(req, userData);
@@ -22,11 +22,23 @@ const handleRequest = (req, userData) => {
         return handleHours(userData);
     } else if (url === `${BASEURL}/employerHours`) {
         return handleEmployerHours(userData);
+    } else if (url === `${BASEURL}/profile`) {
+        return handleProfile(userData);
     } else if (url === `${BASEURL}/RegisterCompany`) {
         return handleRegisterCompany(userData);
     } else if (url === `${BASEURL}/payroll`) {
         return handlePayroll(userData);
-    } else if (url.match(/http:\/\/localhost:3000\/([0-9]+)\/verify/g)) {
+    } else if (url.startsWith(`${BASEURL}/payDetail`)) {
+        return handlePayDetails(req, userData);
+    } else if (
+        url.match(
+            new RegExp(
+                `${BASEURL.split("/")[0]}\/\/${
+                    BASEURL.split("//")[1]
+                }\/([0-9]+)\/verify`
+            )
+        )
+    ) {
         let userID = url.match(/\/([0-9]+)/g)[0].substring(1);
         try {
             fetch(`${BASEURL}/api/verify`, {
@@ -142,6 +154,18 @@ const handleEmployerHours = async (userData) => {
     } else {
         return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
+}
+
+const handleProfile = async (userData) => {
+    if (userData) {
+        const ids = await fetchIds(userData, true);
+        let response = NextResponse.next();
+        response.headers.append("userdata", JSON.stringify(userData));
+        response.headers.append("ids", JSON.stringify(ids));
+        return response;
+    } else {
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
+    }
 };
 
 const handleRegisterCompany = async (userData) => {
@@ -157,7 +181,7 @@ const handleRegisterCompany = async (userData) => {
     } else {
         return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
-}
+};
 
 const handlePayroll = async (userData) => {
     if (userData) {
@@ -172,7 +196,24 @@ const handlePayroll = async (userData) => {
     } else {
         return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
-}
+};
+
+const handlePayDetails = async (req, userData) => {
+    const projectName = req.nextUrl.searchParams.get("project");
+    if (userData && projectName) {
+        if (userData.isEmployer) {
+            const ids = await fetchIds(userData, true);
+            let response = NextResponse.next();
+            response.headers.append("ids", JSON.stringify(ids));
+            response.headers.append("project", projectName);
+            return response;
+        } else {
+            return NextResponse.redirect(`${BASEURL}/unauthorized`);
+        }
+    } else {
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
+    }
+};
 
 const decodeToken = async (req) => {
     const { cookies } = req;

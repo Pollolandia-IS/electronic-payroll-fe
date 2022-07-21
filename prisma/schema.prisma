@@ -163,16 +163,19 @@ model hace_uso {
 }
 
 model pago {
-  cedulaEmpleado      String      @db.VarChar(12)
-  fechaHora           DateTime    @db.DateTime
-  deduccionesEmpleado String?     @db.Text
-  deduccionesPatrono  String?     @db.Text
-  salarioBruto        Float?
-  empleado            empleado    @relation(fields: [cedulaEmpleado], references: [cedula], onUpdate: NoAction, map: "FK__pago__cedulaEmpl__3DB3258D")
-  aplica_b            aplica_b[]
-  aplica_do           aplica_do[]
-  aplica_dv           aplica_dv[]
-  genera              genera[]
+  cedulaEmpleado         String      @db.VarChar(12)
+  fechaHora              DateTime    @db.DateTime
+  deduccionesEmpleado    String?     @db.Text
+  deduccionesPatrono     String?     @db.Text
+  salarioBruto           Float?
+  beneficios             String?     @db.Text
+  salarioNeto            Float?
+  deduccionesVoluntarias String?     @db.Text
+  empleado               empleado    @relation(fields: [cedulaEmpleado], references: [cedula], onUpdate: NoAction, map: "FK__pago__cedulaEmpl__3DB3258D")
+  aplica_b               aplica_b[]
+  aplica_do              aplica_do[]
+  aplica_dv              aplica_dv[]
+  genera                 genera[]
 
   @@id([cedulaEmpleado, fechaHora], map: "PK__pago__626A902F3DDD2FFB")
 }

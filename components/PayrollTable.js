@@ -1,5 +1,6 @@
 import { HistoryOutlined, LocalAtm } from "@mui/icons-material";
 import { Chip, IconButton, Tooltip } from "@mui/material";
+import Router from "next/router";
 import DataTable from "./DataTable";
 
 export default function PayrollTable(props) {
@@ -138,6 +139,14 @@ export default function PayrollTable(props) {
                         <IconButton
                             color="primary"
                             disabled={!cellValues.row.payAction}
+                            onClick={() => {
+                                Router.push({
+                                    pathname: "/payDetail",
+                                    query: {
+                                        project: cellValues.row.projectName,
+                                    },
+                                });
+                            }}
                         >
                             <LocalAtm sx={{ fontSize: 28 }} />
                         </IconButton>

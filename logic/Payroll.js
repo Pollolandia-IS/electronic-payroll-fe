@@ -10,7 +10,11 @@ import { addDays, getDayDifference } from "./DateTimeHelpers";
  * @throws {Error} if the salary is less than 0
  * @throws {Error} if the percentage is less than 0
  */
-export function applyPercentageDeduction(totalSalary, percentageDeduction) {
+export function applyPercentageDeduction(
+    totalSalary,
+    percentageDeduction,
+    returnTotal = true
+) {
     if (isNaN(totalSalary)) {
         throw new Error("The salary is not a number");
     }
@@ -23,7 +27,9 @@ export function applyPercentageDeduction(totalSalary, percentageDeduction) {
     if (percentageDeduction < 0) {
         throw new Error("The percentage deduction is less than 0");
     }
-    return totalSalary - totalSalary * percentageToDecimal(percentageDeduction);
+    return returnTotal
+        ? totalSalary - totalSalary * percentageToDecimal(percentageDeduction)
+        : totalSalary * percentageToDecimal(percentageDeduction);
 }
 
 const percentageToDecimal = (percentage) => percentage / 100;
@@ -215,6 +221,7 @@ export function createPaymentField(name, amount) {
 export function createPayment(
     salary,
     mandatoryDeductions,
+    employerMandatoryDeductions,
     voluntaryDeductions,
     benefits
 ) {
@@ -230,6 +237,10 @@ export function createPayment(
         (accumulated, deduction) => accumulated + deduction.amount,
         0
     );
+    const totalEmployerMandatoryDeductions = employerMandatoryDeductions.reduce(
+        (accumulated, deduction) => accumulated + deduction.amount,
+        0
+    );
     const netSalary =
         salary - totalMandatoryDeductions - totalVoluntaryDeductions;
     return {
@@ -240,6 +251,8 @@ export function createPayment(
         totalVoluntaryDeductions,
         mandatoryDeductions,
         totalMandatoryDeductions,
+        employerMandatoryDeductions,
+        totalEmployerMandatoryDeductions,
         netSalary,
     };
 }
@@ -251,7 +264,7 @@ export function createPayment(
  */
 export function calculateProjectState(endDate) {
     const today = new Date();
-    today.setHours(today.getHours() - 6);
+    today.setHours(0, 0, 0, 0);
     const projectEndDate = new Date(endDate);
     const dayDifference = getDayDifference(projectEndDate, new Date(today));
     if (dayDifference > 2) {
@@ -262,3 +275,76 @@ export function calculateProjectState(endDate) {
         return "Pendiente " + dayDifference;
     }
 }
+
+export const calculateMandatoryDeductions = (
+    salary,
+    mandatoryDeductions,
+    type
+) => {
+    const mandatoryDeductionsApplied = [];
+    let currentPercentage;
+    const totalMandatoryDeductions = mandatoryDeductions.reduce(
+        (accumulated, deduction) => {
+            if (
+                deduction.nombre.startsWith(type) &&
+                !deduction.nombre.includes("Impuesto de Renta")
+            ) {
+                currentPercentage = applyPercentageDeduction(
+                    salary,
+                    deduction.porcentaje,
+                    false
+                );
+                mandatoryDeductionsApplied.push({
+                    name: deduction.nombre.split(": ")[1],
+                    amount: currentPercentage,
+                });
+                return accumulated + currentPercentage;
+            }
+            return accumulated;
+        },
+        0
+    );
+    if (type === "Empleado") {
+        mandatoryDeductionsApplied.push(calculateIncomeTax(salary));
+    }
+    return mandatoryDeductionsApplied;
+};
+
+const calculateIncomeTax = (salary) => {
+    const breakpoints = [0, 842000, 1236000, 2169000, 4337000, salary];
+    const taxs = [0, 0.1, 0.15, 0.2, 0.25];
+    let totalTax = 0;
+    for (let i = 0; i < breakpoints.length - 1; i++) {
+        if (salary > breakpoints[i]) {
+            totalTax += (breakpoints[i + 1] - breakpoints[i]) * taxs[i];
+        }
+    }
+    return { name: "Impuesto de Renta", amount: totalTax };
+};
+
+export const calculateVoluntaryDeductions = (voluntaryDeductions) => {
+    const voluntaryDeductionsApplied = [];
+    voluntaryDeductions.forEach((deduction) => {
+        voluntaryDeductionsApplied.push({
+            name: deduction.nombreDeduccion,
+            amount: deduction.aporte,
+        });
+    });
+    return voluntaryDeductionsApplied;
+};
+
+export const calculateBenefits = (userChoices) => {
+    if (userChoices.length === 0) {
+        return [];
+    }
+    let currentBenefit;
+    const benefitsApplied = [];
+    userChoices.forEach((benefit) => {
+        currentBenefit = benefit.beneficios;
+        benefitsApplied.push({
+            name: currentBenefit.nombreBeneficio,
+            amount: currentBenefit.montoPago,
+        });
+    });
+    return benefitsApplied;
+};

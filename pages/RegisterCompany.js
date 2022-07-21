@@ -133,7 +133,6 @@ const ButtonContained = styled(Button)({
 export async function getServerSideProps(context) {
     const { res } = context;
     const employerId = JSON.parse(res._headers.id).id;
-    console.log(employerId);
     return {
         props: {
             employerId,
