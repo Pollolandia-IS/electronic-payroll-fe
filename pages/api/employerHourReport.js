@@ -8,17 +8,16 @@ export default function handler(req, res) {
 
 async function addHoursEmployer(req, res) {
     try {
-        const {employeeId, projectName, date, state} = req.body;
+        const {cedulaEmpleado, fechaHora, estado} = req.body;
         const result = await prisma.reporteHoras.update({
             where: {
                 cedulaEmpleado_fechaHora: {
-                    cedulaEmpleado: employeeId,
-                    fechaHora: date,
+                    cedulaEmpleado: cedulaEmpleado,
+                    fechaHora: fechaHora,
                 },
-                nombreProyecto: projectName,
             },
             data: {
-                estado: state,
+                estado: estado,
             },
         });
         res.status(200).json(result);
