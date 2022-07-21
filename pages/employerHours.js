@@ -250,7 +250,10 @@ const employerHours = ({
     const getDateForDB = (date) => {
         let dateDB = "";
         dateHours.map((hour) => {
-            if (hour.fechaHora.includes(date)) {
+            if (
+                hour.fechaHora.includes(date) &&
+                hour.cedulaEmpleado === selectedId
+            ) {
                 dateDB = hour.fechaHora;
             }
         });
