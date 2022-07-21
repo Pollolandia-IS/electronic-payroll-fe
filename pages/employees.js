@@ -98,7 +98,6 @@ export async function getServerSideProps(context) {
     let reportsEmployee =
         await prisma.$queryRaw`SELECT r.cedulaEmpleado, COUNT(*) AS counterVal FROM reporteHoras r WHERE cedulaJuridica = ${companyID} AND estado = 1 GROUP BY cedulaEmpleado`;
 
-    console.log("From DB to reports", companyID);
     const projects = await prisma.proyecto.findMany({
         where: {
             cedulaJuridica: companyID,
