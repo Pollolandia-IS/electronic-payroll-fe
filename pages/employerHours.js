@@ -3,12 +3,15 @@ import Sidebar from "../components/Sidebar";
 import EmployeeHoursCard from "../components/EmployeeHoursCard";
 import Search from "../components/Search";
 import ReportHoursTable from "../components/ReportHoursTable";
-import { IconButton, Tooltip } from "@mui/material";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import CancelOutlineIcon from "@mui/icons-material/CancelOutlined";
 import styles from "../styles/EmployerHours.module.css";
-import { hoursToMilliseconds, set } from "date-fns";
 import jwt from "jsonwebtoken";
+import { styled } from "@mui/material/styles";
+
+const Arrow = styled("img")({
+    height: `20px`,
+    width: `10px`,
+    margin: `0px`,
+});
 
 export async function getServerSideProps(context) {
     const { req, res } = context;
@@ -67,11 +70,12 @@ export async function getServerSideProps(context) {
                 cedula: true,
             },
         });
-        employeesReports.push(`${employee.nombre}, ${employee.cedula}`);
+        employeesReports.push(`${employee.nombre},${employee.cedula}`);
     }
 
     return {
         props: {
+            hoursReports: JSON.stringify(hoursReports),
             hoursReportsWithId,
             employeesReports,
             employeesId,
@@ -84,6 +88,7 @@ export async function getServerSideProps(context) {
 }
 
 const employerHours = ({
+    hoursReports,
     hoursReportsWithId,
     employeesReports,
     employeesId,
@@ -92,6 +97,7 @@ const employerHours = ({
     isEmployer,
     name,
 }) => {
+    const [dateHours, setDateHours] = useState(JSON.parse(hoursReports));
     const [hours, setHours] = useState(hoursReportsWithId);
     const [employees, setEmployees] = useState(employeesReports);
     const [employeesIds, setEmployeesIds] = useState(employeesId);
@@ -100,31 +106,50 @@ const employerHours = ({
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedProject, setSelectedProject] = useState("");
     const [searchText, setSearchText] = useState("");
+    const [action, setAction] = useState(true);
+    const [method, setMethod] = useState("");
 
-    const createEmployeeCard = (nombre, cedula, index) => {
+    useEffect(() => {
+        if (method === "approve") {
+            approveHour();
+        } else if (method === "reject") {
+            rejectHour();
+        }
+    }, [action]);
+
+    const selectReport = (selectedReport, selectedAction) => {
+        setSelectedProject(selectedReport.project);
+        setSelectedDate(selectedReport.date);
+        setMethod(selectedAction);
+        setAction(!action);
+    };
+
+    const createEmployeeCard = (nombre, cedula) => {
         return (
             <EmployeeHoursCard
-                key={index}
+                key={cedula}
+                id={cedula}
                 name={nombre}
                 pending={checkHours(cedula)}
                 setSelectedEmployee={setSelectedEmployee}
+                setSelectedId={setSelectedId}
             />
         );
     };
 
     const getEmployees = () => {
-        let index = 0;
         return employees.map((employee) => {
             employee = employee.split(",");
             if (searchText === "") {
-                return createEmployeeCard(employee[0], employee[1], index++);
+                return createEmployeeCard(employee[0], employee[1]);
             } else {
                 if (
-                    employee[0].includes(searchText) ||
-                    employee[1].includes(searchText)
+                    employee[0]
+                        .toLowerCase()
+                        .includes(searchText.toLowerCase()) ||
+                    employee[1].toLowerCase().includes(searchText.toLowerCase())
                 ) {
-                    employee = employee.split(",");
-                    return createEmployeeCard(employee[0], employee[1], index++);
+                    return createEmployeeCard(employee[0], employee[1]);
                 }
             }
         });
@@ -152,26 +177,23 @@ const employerHours = ({
                     <div className={styles.right_subtitle}>
                         <h1>No has seleccionado ningún empleado.</h1>
                     </div>
+                    <div className={styles.right__subtitle}>
+                        <h1>
+                            Utiliza el botón de{" "}
+                            <Arrow src="/assets/img/Arrow.png" alt={"Arrow"} />{" "}
+                            para seleccionar un empleado.
+                        </h1>
+                    </div>
                 </div>
             );
         } else {
-            return createHourtable(selectedEmployee);
+            return createHourtable();
         }
     };
 
-    const createHourtable = (employeeName) => {
+    const createHourtable = () => {
         let employeeHours = [];
-        let employeeId = "";
-
-        employees.map((employee) => {
-            employee = employee.split(",");
-            if (employee[0] === employeeName) {
-                employeeId = employee[1];
-            }
-        });
-
-        employeeHours = getTableRows(employeeId);
-        console.log(employeeHours);
+        employeeHours = getTableRows();
         if (employeeHours.length === 0) {
             return (
                 <div className={styles.right}>
@@ -181,26 +203,33 @@ const employerHours = ({
                 </div>
             );
         } else {
-            return <ReportHoursTable rows={employeeHours} />;
+            return (
+                <ReportHoursTable
+                    rows={employeeHours}
+                    selectReport={selectReport}
+                />
+            );
         }
     };
 
-    const getTableRows = (employeeId) => {
+    const getTableRows = () => {
         let employeeHours = [];
-
-        if (employeeId.includes(" ")) {
-            employeeId = employeeId.split(" ");
-            employeeId = employeeId[1];
-        }
-
+        let employeeId = "";
+        employees.map((employee) => {
+            employee = employee.split(",");
+            if (employee[0] === selectedEmployee) {
+                employeeId = employee[1];
+            }
+        });
+        let index = 0;
         hours.map((report) => {
             if (report.cedulaEmpleado === employeeId) {
                 let reportData = {
-                    id: report.fechaHora,
+                    id: index++,
                     project: report.nombreProyecto,
                     hours: report.horasTrabajadas,
                     date: report.fechaHora,
-                    state: getState(report.estado, report.nombreProyecto, report.fechaHora),
+                    state: getState(report.estado),
                 };
                 employeeHours.push(reportData);
             }
@@ -208,74 +237,30 @@ const employerHours = ({
         return employeeHours;
     };
 
-    const getState = (state, projectName, date) => {
+    const getState = (state) => {
         if (state === 0) {
             return "Aprobado";
         } else if (state === 1) {
             return "Pendiente";
         } else {
-            return (
-                <div className={styles.report_state}>
-                    <Tooltip title="Aprobar" arrow placement="top">
-                        <IconButton
-                            size="small"
-                            onClick={() => {
-                                approveHour();
-                                setSelectedProject(projectName);
-                                setSelectedDate(date);
-                            }}
-                        >
-                            <CheckCircleOutlineIcon color="success" />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Rechazar" arrow placement="top">
-                        <IconButton
-                            size="small"
-                            onClick={() => {
-                                rejectHour();
-                                setSelectedProject(projectName);
-                                setSelectedDate(date);
-                            }}
-                        >
-                            <CancelOutlineIcon color="error" />
-                        </IconButton>
-                    </Tooltip>
-                </div>
-            );
+            return "Rechazado";
         }
     };
 
-    const approveHour = () => {
-        console.log("LLegue con: ", selectedProject, selectedDate);
-        /*const dataForDB = {
-            estado: 0,
-            nombreProyecto: selectedProject,
-            fechaHora: selectedDate,
-            cedulaEmpleado: selectedId,
-        };
-        try {
-            await fetch(`api/employerHourReport`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(dataForDB),
-            });
-            getReports();
-            getEmployeesIds();
-            getEmployees();
-            getEmployeeHours();
-        } catch (error) {
-            console.log(error);
-        }*/
+    const getDateForDB = (date) => {
+        let dateDB = "";
+        dateHours.map((hour) => {
+            if (hour.fechaHora.includes(date)) {
+                dateDB = hour.fechaHora;
+            }
+        });
+        return dateDB;
     };
 
-    const rejectHour = () => {
-        console.log("LLegue con: ", selectedProject, selectedDate);
-        /*const dataForDB = {
-            estado: 69,
-            nombreProyecto: selectedProject,
-            fechaHora: selectedDate,
+    const approveHour = async () => {
+        const dataForDB = {
+            estado: 0,
+            fechaHora: getDateForDB(selectedDate),
             cedulaEmpleado: selectedId,
         };
         try {
@@ -287,20 +272,45 @@ const employerHours = ({
                 body: JSON.stringify(dataForDB),
             });
             getReports();
-            getEmployeesIds();
             getEmployees();
             getEmployeeHours();
         } catch (error) {
             console.log(error);
-        }*/
+        }
+    };
+
+    const rejectHour = async () => {
+        const dataForDB = {
+            estado: 69,
+            fechaHora: getDateForDB(selectedDate),
+            cedulaEmpleado: selectedId,
+        };
+        try {
+            await fetch(`api/employerHourReport`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(dataForDB),
+            });
+            getReports();
+            getEmployees();
+            getEmployeeHours();
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const getReports = async () => {
+        setHours([]);
+        setDateHours([]);
+        setEmployees([]);
+        setEmployeesIds([]);
         const reqBody = {
             employerId: employerId,
             companyId: companyId,
         };
-        const hours = await (
+        const hoursFromDB = await (
             await fetch(`/api/employerGetReports`, {
                 method: "POST",
                 headers: {
@@ -309,29 +319,10 @@ const employerHours = ({
                 body: JSON.stringify(reqBody),
             })
         ).json();
-        setHours(hours);
-        setEmployeesIds([]);
-        for (let i = 0; i < hours.length; i++) {
-            if (!employeesIds.includes(hours[i].cedulaEmpleado)) {
-                employeesIds.push(hours[i].cedulaEmpleado);
-            }
-        }
-    };
-
-    const getEmployeesIds = async () => {
-        const reqBody = {
-            employeesIds: employeesIds,
-        };
-        const employees = await (
-            await fetch(`/api/employerGetEmployees`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(reqBody),
-            })
-        ).json();
-        setEmployees(employees);
+        setHours(hoursFromDB.hoursReportsWithId);
+        setDateHours(hoursFromDB.hours);
+        setEmployeesIds(hoursFromDB.employeesIds);
+        setEmployees(hoursFromDB.employeesReports);
     };
 
     return (
