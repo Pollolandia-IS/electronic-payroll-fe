@@ -252,6 +252,7 @@ function EmployeeReportModal(props) {
                             size="large"
                             color="primary"
                             endIcon={<FileDownloadOutlined color="primary" />}
+                            onClick={() => props.download(props.downloadData)}
                         >
                             DESCARGAR
                         </ButtonOutlined>
@@ -260,6 +261,7 @@ function EmployeeReportModal(props) {
                             size="large"
                             color="primary"
                             endIcon={<MailOutlined color="primary" />}
+                            onClick={() => props.download(props.downloadData, true)}
                         >
                             ENVIAR CORREO
                         </ButtonOutlined1>

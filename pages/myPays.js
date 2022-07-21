@@ -9,6 +9,7 @@ import { SaveOutlined } from "@mui/icons-material";
 import Dropdown, { DropdownBox } from "../components/Dropdown";
 import DateRangeModal from "../components/DateRangeModal";
 import { dateToString } from "../logic/DateTimeHelpers";
+import {generateTabletoPDF, generateJSONtoXLSX } from "./api/services/generateFile";
 
 export async function getServerSideProps(context) {
     const { req, res } = context;
@@ -29,15 +30,6 @@ export async function getServerSideProps(context) {
             employeeTypes.push(contract.tipoEmpleado);
         }
     });
-    // const payments = await prisma.genera.findMany({
-    //     where: {
-    //         cedulaEmpleado: ids.id,
-    //     },
-    //     include: {
-    //         proyecto: true,
-    //         pago: true,
-    //     },
-    // });
     const payments = await prisma.pago.findMany({
         where: {
             cedulaEmpleado: ids.id,
@@ -76,11 +68,11 @@ export async function getServerSideProps(context) {
         };
     });
 
-
     return {
         props: {
             name: userData.name,
             isEmployer: userData.isEmployer,
+            email: userData.email,
             projects: JSON.stringify(
                 projects.map((project) => project.proyecto)
             ),
@@ -92,10 +84,102 @@ export async function getServerSideProps(context) {
 }
 
 const myPays = (props) => {
+    const handlePDF = (row, sendMail = false) => {
+        const titles = [row.project, row.payDate, props.name, row.type];
+        const data = [
+            {
+                field: "Salario Bruto",
+                value: `${Number(row.grossSalary)
+                    .toFixed(2)
+                    .toString()
+                    .replace(".", ",")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ${"CRC"}`,
+            },
+            {
+                field: row.taxes[0].name,
+                value: `${Number(row.taxes[0].amount)
+                    .toFixed(2)
+                    .toString()
+                    .replace(".", ",")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ${"CRC"}`,
+            },
+            {
+                field: row.taxes[1].name,
+                value: `${Number(row.taxes[1].amount)
+                    .toFixed(2)
+                    .toString()
+                    .replace(".", ",")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ${"CRC"}`,
+            },
+            {
+                field: row.taxes[2].name,
+                value: `${Number(row.taxes[2].amount)
+                    .toFixed(2)
+                    .toString()
+                    .replace(".", ",")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ${"CRC"}`,
+            },
+            {
+                field: row.taxes[3].name,
+                value: `${Number(row.taxes[3].amount)
+                    .toFixed(2)
+                    .toString()
+                    .replace(".", ",")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ${"CRC"}`,
+            },
+            {
+                field: "Impuestos totales",
+                value: `${Number(row.mandatoryDeductions)
+                    .toFixed(2)
+                    .toString()
+                    .replace(".", ",")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ${"CRC"}`,
+            },
+            { field: "", value: "" },
+            ...row.donations.map((donation) => {
+                return {
+                    field: donation.name,
+                    value: `${Number(donation.amount)
+                        .toFixed(2)
+                        .toString()
+                        .replace(".", ",")
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ${"CRC"}`,
+                };
+            }),
+            {
+                field: "Deducciones voluntarias totales",
+                value: `${Number(row.voluntaryDeductions)
+                    .toFixed(2)
+                    .toString()
+                    .replace(".", ",")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ${"CRC"}`,
+            },
+            { field: "", value: "" },
+            {
+                field: "Pago neto",
+                value: `${Number(row.netSalary)
+                    .toFixed(2)
+                    .toString()
+                    .replace(".", ",")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ${"CRC"}`,
+            },
+        ];
+        generateTabletoPDF(
+            titles,
+            [
+                { title: "Descripcion", field: "field" },
+                { title: "Monto", field: "value" },
+            ],
+            data,
+            `Desglose_pago-${props.name}-${row.payDate}`,
+            props.email,
+            props.name,
+            sendMail
+        );
+    };
     const createRows = (projects, contracts, payments) => {
         const rows = [];
         payments.forEach((payment, index) => {
-          console.log("sadasd", payment);
             rows.push({
                 id: index,
                 project: payment.proyecto.nombre,
@@ -112,10 +196,21 @@ const myPays = (props) => {
                     payment.pago.deduccionesVoluntarias
                 ).reduce((acc, curr) => acc + curr.amount, 0),
                 netSalary: payment.pago.salarioNeto,
+                taxes: JSON.parse(payment.pago.deduccionesEmpleado),
+                donations: JSON.parse(payment.pago.deduccionesVoluntarias),
             });
         });
         return rows;
     };
+    const rows = createRows(
+        props.projects,
+        JSON.parse(props.contracts),
+        JSON.parse(props.payments)
+    );
+    const xslxData = rows.map((row) => {
+        const { id, ...rest } = row;
+        return rest;
+    });
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [dateText, setDateText] = useState("");
@@ -128,6 +223,7 @@ const myPays = (props) => {
         "Todos los tipos de contrato"
     );
     const [projects, setProjects] = useState(JSON.parse(props.projects));
+    const [downloadData, setDownloadData] = useState(null);
     return (
         <>
             <Sidebar
@@ -143,7 +239,12 @@ const myPays = (props) => {
                 endDate={endDate}
                 setEndDate={setEndDate}
             />
-            <EmployeeReportModal isOpen={isOpen} setIsOpen={setIsOpen} />
+            <EmployeeReportModal
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                download={handlePDF}
+                downloadData={downloadData}
+            />
             <div className={styles.content}>
                 <div className={styles.header}>
                     <Dropdown
@@ -193,11 +294,9 @@ const myPays = (props) => {
                 </div>
                 <EmployeeReportTable
                     setIsOpen={setIsOpen}
-                    rows={createRows(
-                        props.projects,
-                        JSON.parse(props.contracts),
-                        JSON.parse(props.payments)
-                    )}
+                    rows={rows}
+                    name={props.name}
+                    setDownloadData={setDownloadData}
                 />
                 <Button
                     className={styles.button}
@@ -205,6 +304,12 @@ const myPays = (props) => {
                     size="large"
                     color="success"
                     endIcon={<SaveOutlined />}
+                    onClick={() => {
+                        generateJSONtoXLSX(
+                            xslxData,
+                            `Historial_de_pagos-${props.name.replace(" ", "_")}`
+                        );
+                    }}
                 >
                     Descargar en excel
                 </Button>

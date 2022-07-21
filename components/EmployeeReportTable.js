@@ -98,7 +98,7 @@ const EmployeeReportTable = (props) => {
         },
         {
             field: "mail",
-            // headerName: "Enviar",
+            headerName: "",
             width: 75,
             align: "center",
             headerAlign: "center",
@@ -108,6 +108,7 @@ const EmployeeReportTable = (props) => {
                     <IconButton
                         color="primary"
                         onClick={() => {
+                            props.setDownloadData(cellValues.row);
                             props.setIsOpen(true);
                         }}
                     >
@@ -127,7 +128,6 @@ const EmployeeReportTable = (props) => {
                 width={1185}
                 density="standard"
             />
-            
         </>
     );
 };
