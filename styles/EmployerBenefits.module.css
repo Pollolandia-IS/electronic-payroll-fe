@@ -51,6 +51,7 @@
     width: 996px;
     height: 170px;
 }
+
 .main__noBenefits{
     color: rgba(0, 0, 0, 0.87);
     font-style: normal;
@@ -62,6 +63,7 @@
     line-height: 35px;
     margin: 100px;
 }
+
 .imgNoBenefitsTotal{
     position:relative;
     top:-70px;
@@ -75,10 +77,11 @@
     font-weight: 400;
     font-size: 30px;
 }
+
 .noBenefitsTotal{
     position:relative;
     top:-100px;
-    left: 80px;
+    left: -50px;
     font-weight: 400;
     font-size: 25px;
 }

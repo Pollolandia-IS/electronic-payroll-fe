@@ -86,7 +86,7 @@ height: 170px;
 .noProjects{
   position:relative;
   top:-100px;
-  left: 80px;
+  left: -50px;
   font-weight: 400;
   font-size: 25px;
 }
