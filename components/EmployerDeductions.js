@@ -37,24 +37,47 @@ const Deductions = ({ props }) => {
     const [selectedDeduction, setSelectedDeduction] = useState("");
     const [isOpenRemove, setIsOpenRemove] = useState(false);
 
+    const createDeductionCard = (
+        nombreDeduccion,
+        monto,
+        nombreProyecto,
+        descripcion,
+        currency
+    ) => {
+        return (
+            <DeductionsCard
+                key={nombreDeduccion}
+                name={nombreDeduccion}
+                amount={monto}
+                currency={currency}
+                description={descripcion}
+                setIsOpenRemove={setIsOpenRemove}
+                setSelectedDeduction={setSelectedDeduction}
+                selectedProject={selectedProjectName}
+                companyID={companyID}
+                projects={projects}
+                projectName={nombreProyecto}
+            />
+        );
+    };
+
+    const getDeductionCurrency = (projectName) => {
+        const project = proyectString.find((project) => project.nombre === projectName);
+        return project.moneda;
+    }
+
     const getDeductions = () => {
         if (selectedProjectName == "Todos") {
             return deductionString.map((deduction) => {
                 if (deduction.habilitado) {
                     if (searchText == "") {
-                        return (
-                            <DeductionsCard
-                                key={deduction.nombreDeduccion}
-                                name={deduction.nombreDeduccion}
-                                amount={deduction.monto}
-                                description={deduction.descripcion}
-                                setIsOpenRemove={setIsOpenRemove}
-                                setSelectedDeduction={setSelectedDeduction}
-                                selectedProject={selectedProjectName}
-                                companyID={companyID}
-                                projects={projects}
-                                projectName={deduction.nombreProyecto}
-                            />
+                        let deductionCurrency = getDeductionCurrency(deduction.nombreProyecto);
+                        return createDeductionCard(
+                            deduction.nombreDeduccion,
+                            deduction.monto,
+                            deduction.nombreProyecto,
+                            deduction.descripcion,
+                            deductionCurrency
                         );
                     } else {
                         if (
@@ -62,19 +85,13 @@ const Deductions = ({ props }) => {
                                 .toLowerCase()
                                 .includes(searchText.toLowerCase())
                         ) {
-                            return (
-                                <DeductionsCard
-                                    key={deduction.nombreDeduccion}
-                                    name={deduction.nombreDeduccion}
-                                    amount={deduction.monto}
-                                    description={deduction.descripcion}
-                                    setIsOpenRemove={setIsOpenRemove}
-                                    setSelectedDeduction={setSelectedDeduction}
-                                    selectedProject={selectedProjectName}
-                                    companyID={companyID}
-                                    projects={projects}
-                                    projectName={deduction.nombreProyecto}
-                                />
+                            let deductionCurrency = getDeductionCurrency(deduction.nombreProyecto);
+                            return createDeductionCard(
+                                deduction.nombreDeduccion,
+                                deduction.monto,
+                                deduction.nombreProyecto,
+                                deduction.descripcion,
+                                deductionCurrency
                             );
                         }
                     }
@@ -85,19 +102,13 @@ const Deductions = ({ props }) => {
                 if (deduction.habilitado) {
                     if (selectedProjectName == deduction.nombreProyecto) {
                         if (searchText == "") {
-                            return (
-                                <DeductionsCard
-                                    key={deduction.nombreDeduccion}
-                                    name={deduction.nombreDeduccion}
-                                    amount={deduction.monto}
-                                    description={deduction.descripcion}
-                                    setIsOpenRemove={setIsOpenRemove}
-                                    setSelectedDeduction={setSelectedDeduction}
-                                    selectedProject={selectedProjectName}
-                                    companyID={companyID}
-                                    projects={projects}
-                                    projectName={deduction.nombreProyecto}
-                                />
+                            let deductionCurrency = getDeductionCurrency(deduction.nombreProyecto);
+                            return createDeductionCard(
+                                deduction.nombreDeduccion,
+                                deduction.monto,
+                                deduction.nombreProyecto,
+                                deduction.descripcion,
+                                deductionCurrency
                             );
                         } else {
                             if (
@@ -105,21 +116,13 @@ const Deductions = ({ props }) => {
                                     .toLowerCase()
                                     .includes(searchText.toLowerCase())
                             ) {
-                                return (
-                                    <DeductionsCard
-                                        key={deduction.nombreDeduccion}
-                                        name={deduction.nombreDeduccion}
-                                        amount={deduction.monto}
-                                        description={deduction.descripcion}
-                                        setIsOpenRemove={setIsOpenRemove}
-                                        setSelectedDeduction={
-                                            setSelectedDeduction
-                                        }
-                                        selectedProject={selectedProjectName}
-                                        companyID={companyID}
-                                        projects={projects}
-                                        projectName={deduction.nombreProyecto}
-                                    />
+                                let deductionCurrency = getDeductionCurrency(deduction.nombreProyecto);
+                                return createDeductionCard(
+                                    deduction.nombreDeduccion,
+                                    deduction.monto,
+                                    deduction.nombreProyecto,
+                                    deduction.descripcion,
+                                    deductionCurrency
                                 );
                             }
                         }
@@ -226,7 +229,19 @@ const Deductions = ({ props }) => {
                         <AddIcon fontSize="large" />
                     </IconBox>
                 </div>
-                { getRows().length !== 0 ? <div className={styles.main__content}>{getRows()}</div> : <div className={styles.main__noDeductions}>{selectedProjectName === "Todos" ? "Aún no hay deducciones creadas." : "Aún no hay deducciones creadas para este proyecto."}<p style={{fontWeight: 400, fontSize: 20}}> Agrega una deducción con el botón +</p></div> }
+                {getRows().length !== 0 ? (
+                    <div className={styles.main__content}>{getRows()}</div>
+                ) : (
+                    <div className={styles.main__noDeductions}>
+                        {selectedProjectName === "Todos"
+                            ? "Aún no hay deducciones creadas."
+                            : "Aún no hay deducciones creadas para este proyecto."}
+                        <p style={{ fontWeight: 400, fontSize: 20 }}>
+                            {" "}
+                            Agrega una deducción con el botón +
+                        </p>
+                    </div>
+                )}
             </main>
         </>
     );

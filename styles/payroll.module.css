@@ -1,0 +1,10 @@
+.content {
+    width: 1149px;
+    height: 1024px;
+    margin-left: 290px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 15px;
+}

@@ -71,7 +71,7 @@ export async function getServerSideProps(context) {
             },
             select: {
                 nombreProyecto: true,
-                montoPago: true,
+                salario: true,
             },
         });
 

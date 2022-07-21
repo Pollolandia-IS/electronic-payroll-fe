@@ -82,7 +82,6 @@ export async function getServerSideProps(context) {
             nombreProyecto: true,
         },
     });
-
     let projectQuery = await prisma.proyecto.findMany({
         where: {
             cedulaJuridica: companyID,

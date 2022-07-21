@@ -49,11 +49,11 @@ const EmployeeDeductions = ({ props }) => {
     //TODO: Fix styling
 
     const checkDeductionAmount = () => {
-        var currentAmountSum = 0;
-        var maxAmountSum = 0;
+        let currentAmountSum = 0;
+        let maxAmountSum = 0;
         for (let i = 0; i < hiredIn.length; i++) {
             if (hiredIn[i].nombreProyecto === projectName) {
-                maxAmountSum += hiredIn[i].montoPago;
+                maxAmountSum += hiredIn[i].salario;
             }
         }
         if (selectedDeductions.length === 0) {

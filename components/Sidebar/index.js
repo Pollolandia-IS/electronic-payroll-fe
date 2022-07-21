@@ -18,6 +18,7 @@ import Router from "next/router";
 import { Avatar, IconButton } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 const CollapsableOpened = styled("div")({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -138,6 +139,7 @@ const User = styled("div")({
     padding: `0px 15px`,
     boxSizing: `border-box`,
     alignSelf: `stretch`,
+    cursor: "pointer",
 });
 
 const Avatar1 = styled(Avatar)({
@@ -207,6 +209,12 @@ function Sidebar(props) {
                                     isSelected={props.selected == 6}
                                     href={"/benefits"}
                                 />
+                                <SidebarRow6
+                                    icon="receipt"
+                                    text={"Pago de Planilla"}
+                                    isSelected={props.selected == 7}
+                                    href={"/payroll"}
+                                />
                             </>
                         )}
                         {props.isEmployer === false && (
@@ -224,7 +232,7 @@ function Sidebar(props) {
                                     href={"/project"}
                                 />
                                 <SidebarRow4
-                                    icon="report"
+                                    icon="addTime"
                                     text={"Registro de Horas"}
                                     isSelected={props.selected == 4}
                                     href={"/hours"}
@@ -246,21 +254,23 @@ function Sidebar(props) {
                     </div>
                     <Account>
                         <Divider></Divider>
-                        <User>
-                            <Avatar1
-                                variant="circular"
-                                src={"/"}
-                                alt={props.username}
-                            />
-                            <UserName>{props.username}</UserName>
-                            <IconButton
-                                size="small"
-                                color="primary"
-                                onClick={handleLogout}
-                            >
-                                <LogoutIcon />
-                            </IconButton>
-                        </User>
+                            <User>
+                                <Avatar1
+                                    variant="circular"
+                                    src={"/"}
+                                    alt={props.username}
+                                />
+                                <Link href={"/profile"}>
+                                    <UserName>{props.username}</UserName>
+                                </Link>
+                                <IconButton
+                                    size="small"
+                                    color="primary"
+                                    onClick={handleLogout}
+                                >
+                                    <LogoutIcon />
+                                </IconButton>
+                            </User>
                     </Account>
                 </List>
             </Top>

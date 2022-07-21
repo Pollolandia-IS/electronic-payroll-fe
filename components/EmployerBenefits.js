@@ -40,7 +40,8 @@ const EmployerBenefits = ({ props }) => {
         nombreProyecto,
         nombreBeneficio,
         montoPago,
-        descripcion
+        descripcion,
+        currency
     ) => {
         return (
             <BenefitsCard
@@ -51,6 +52,7 @@ const EmployerBenefits = ({ props }) => {
                 projectName={nombreProyecto}
                 name={nombreBeneficio}
                 amount={montoPago}
+                currency={currency}
                 description={descripcion}
                 setIsOpen={setIsOpenRemove}
                 setSelected={setSelectedBenefit}
@@ -59,16 +61,23 @@ const EmployerBenefits = ({ props }) => {
         );
     };
 
+    const getBenefitCurrency = (projectName) => {
+        const project = proyectString.find((project) => project.nombre === projectName);
+        return project.moneda;
+    }
+
     const getBenefits = () => {
         return benefitString.map((benefit) => {
             if ( benefit.habilitado) {
             if (selectedProjectName == "Todos") {
                 if (searchText == "") {
+                    let benefitCurrency = getBenefitCurrency(benefit.nombreProyecto);
                     return createBenefitCard(
                         benefit.nombreProyecto,
                         benefit.nombreBeneficio,
                         benefit.montoPago,
-                        benefit.descripcion
+                        benefit.descripcion,
+                        benefitCurrency
                     );
                 } else {
                     if (
@@ -76,22 +85,26 @@ const EmployerBenefits = ({ props }) => {
                             .toLowerCase()
                             .includes(searchText.toLowerCase())
                     ) {
+                        let benefitCurrency = getBenefitCurrency(benefit.nombreProyecto);
                         return createBenefitCard(
                             benefit.nombreProyecto,
                             benefit.nombreBeneficio,
                             benefit.montoPago,
-                            benefit.descripcion
+                            benefit.descripcion,
+                            benefitCurrency
                         );
                     }
                 }
             } else {
                 if (selectedProjectName == benefit.nombreProyecto) {
                     if (searchText == "") {
+                        let benefitCurrency = getBenefitCurrency(benefit.nombreProyecto);
                         return createBenefitCard(
                             benefit.nombreProyecto,
                             benefit.nombreBeneficio,
                             benefit.montoPago,
-                            benefit.descripcion
+                            benefit.descripcion,
+                            benefitCurrency
                         );
                     } else {
                         if (
@@ -99,11 +112,13 @@ const EmployerBenefits = ({ props }) => {
                                 .toLowerCase()
                                 .includes(searchText.toLowerCase())
                         ) {
+                            let benefitCurrency = getBenefitCurrency(benefit.nombreProyecto);
                             return createBenefitCard(
                                 benefit.nombreProyecto,
                                 benefit.nombreBeneficio,
                                 benefit.montoPago,
-                                benefit.descripcion
+                                benefit.descripcion,
+                                benefitCurrency
                             );
                         }
                     }
