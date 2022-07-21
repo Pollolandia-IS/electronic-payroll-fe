@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import Dashboard from "../components/Dashboard";
 import { dateToString } from "../logic/DateTimeHelpers";
 import Router from "next/router";
+import safeJsonStringify from "safe-json-stringify";
 import { prisma } from "/.db";
 
 export async function getServerSideProps(context) {
@@ -31,7 +32,34 @@ export async function getServerSideProps(context) {
                     permanent: false,
                 },
             };
+        }else{
+            let projects = await prisma.proyecto.findMany({
+                where: {
+                  cedulaJuridica: hasCompany[0].cedulaJuridica,
+                  habilitado: true,
+                },
+                include: {
+                  _count: {
+                    select: {
+                      esContratado: true,
+                    },
+                  },
+                },
+                orderBy: {
+                    nombre: "asc"
+                }
+              });
+            const projectsString = JSON.parse(safeJsonStringify(projects));
+            return {
+                props: {
+                    isEmployer: decoded ? decoded.userData.isEmployer : null,
+                    name: decoded ? decoded.userData.name : null,
+                    projectsString,
+                    companyID: hasCompany[0].cedulaJuridica,
+                },
+            };
         }
+        
     }
     return {
         props: {
@@ -45,7 +73,19 @@ export default function Home(props) {
     return (
         <>
             <Sidebar selected={1} username={props.name} isEmployer={props.isEmployer} />
-            <Dashboard isEmployer={props.isEmployer} username={props.name} />
+            {props.isEmployer ? (
+                <Dashboard
+                    isEmployer={props.isEmployer}
+                    username={props.name}
+                    projectsString={props.projectsString}
+                    companyID={props.companyID}
+                />
+            ) : (
+                <Dashboard
+                    isEmployer={props.isEmployer}
+                    username={props.name}
+                />
+            )}
         </>
     );
 }

@@ -12,8 +12,10 @@
 *
 **********************************************************************/
 import { styled } from '@mui/material/styles';
+import styles from "/styles/Dashboard.module.css";
 import dynamic from 'next/dynamic';
-const ApexCharts = dynamic(() => import('react-apexcharts'), { ssr: false });
+import StatCard from './StatCard';
+const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const Hero1 = styled("div")({  
   backgroundColor: `rgba(251, 250, 250, 1)`,  
@@ -94,44 +96,62 @@ const UndrawPartyingReAt7F = styled("img")({
   margin: `0px 0px 0px 117.00000762939453px`,  
 });
 
-const piechart = () => {
-  var options = {
-    series: [44, 55, 13, 43, 22],
+const Dashboard = ({ companyID, projectsString, username, isEmployer })  => {
+  let employeeCounts = [];
+  let projectNames = [];
+  //console.log(projectsString);
+  const getEmployeeCounts = () => {
+    projectsString.map((project) => {
+      employeeCounts.push(project._count.esContratado);
+    });
+  }
+  console.log(projectsString);
+  const getProjectNames = () => {
+    projectsString.map((project) => {
+      projectNames.push(project.nombre);
+    });
+    console.log(projectNames);
+  }
+  getEmployeeCounts();
+  getProjectNames();
+  const series = employeeCounts;
+  const options= {
     chart: {
-    width: 380,
-    type: 'pie',
-  },
-  labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
-  responsive: [{
-    breakpoint: 480,
-    options: {
-      chart: {
-        width: 200
-      },
-      legend: {
-        position: 'bottom'
+      width: 1000,
+      type: 'pie',
+    },
+    labels: projectNames,
+    responsive: [{
+      breakpoint: 480,
+      options: {
+        chart: {
+          width: 200
+        },
+        legend: {
+          position: 'bottom'
+        }
       }
-    }
-  }]
+    }]
   };
 
-  var chart = new ApexCharts(document.querySelector("#chart"), options);
-  chart.render();
-  console.log("pene");
-}
-
-function Dashboard(props) {
   return (
     <Hero1 >
        <HeroContent >
          <Text >
            <BienvenidoDavid >
-             {`Te damos la bienvenida, ${props.username}`}
+             {`Te damos la bienvenida, ${username}`}
                </BienvenidoDavid>
            <YaPuedesAdministrarT >
-             {props.isEmployer ? 
-             piechart
-             `Ya puedes administrar tus proyectos` : `Ya puedes consultar los detalles de tus pagos`}
+             {isEmployer ? 
+             <>
+             Ya puedes administrar tus proyectos
+             <div className={styles.pieChart}>
+             <ReactApexChart options={options} series={series} type="pie" height={1000} width={500}/>
+             <StatCard/>
+             </div> 
+             </>
+             : `Ya puedes consultar los detalles de tus pagos`
+             }
                </YaPuedesAdministrarT>
          </Text>
          <UndrawPartyingReAt7F  src={"/assets/img/welcome.png"} alt={"welcome"}/>
