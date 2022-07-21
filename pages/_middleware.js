@@ -20,6 +20,8 @@ const handleRequest = (req, userData) => {
         return handleDeductions(userData);
     } else if (url === `${BASEURL}/hours`) {
         return handleHours(userData);
+    } else if (url === `${BASEURL}/employerHours`) {
+        return handleEmployerHours(userData);
     } else if (url === `${BASEURL}/profile`) {
         return handleProfile(userData);
     } else if (url === `${BASEURL}/RegisterCompany`) {
@@ -138,6 +140,21 @@ const handleHours = async (userData) => {
         return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
 };
+
+const handleEmployerHours = async (userData) => {
+    if (userData) {
+        if (userData.isEmployer) {
+            const ids = await fetchIds(userData, true);
+            let response = NextResponse.next();
+            response.headers.append("ids", JSON.stringify(ids));
+            return response;
+        } else {
+            return NextResponse.redirect(`${BASEURL}/unauthorized`);
+        }
+    } else {
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
+    }
+}
 
 const handleProfile = async (userData) => {
     if (userData) {
