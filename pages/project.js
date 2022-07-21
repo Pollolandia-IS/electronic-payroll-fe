@@ -173,7 +173,20 @@ const Projects = ({ companyID, projectsString, name, isEmployer }) => {
                         <AddIcon fontSize="large" />
                     </IconBox>
                 </div>
-                { projectsString.length > 0 ? <div className={styles.main__content}>{getRows()}</div> : <div className={styles.main__noProjects}>Aún no hay proyectos <p style={{fontWeight: 400, fontSize: 20}}>Agrega tu primer proyecto en el botón +</p></div> }
+                {getRows().length !== 0 ? (
+                    null
+                ) : (
+                    <div className={styles.main__noProjects}>
+                        <img className={styles.imgNoProjects} src="assets/img/404.png"></img> 
+                        <div className={styles.noProjectsTitle}> Aún no hay proyectos </div>
+                        <p className={styles.noProjects}>
+                            {" "}
+
+                            Agrega un proyecto con el botón +
+                        </p>
+                    </div>
+                )}
+                <div className={styles.main__content}>{getRows()}</div>
             </main>
         </>
     );

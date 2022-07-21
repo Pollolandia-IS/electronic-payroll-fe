@@ -59,3 +59,25 @@
     line-height: 35px;
     margin: 100px;
 }
+
+.imgNoDeductionsTotal{
+    position:relative;
+    top:-70px;
+    width: 50%;
+}
+
+.noDeductionsTotalTitle{
+    position:relative;
+    top:-100px;
+    left:-50px;
+    font-weight: 400;
+    font-size: 30px;
+}
+
+.noDeductionsTotal{
+    position:relative;
+    top:-100px;
+    left: -50px;
+    font-weight: 400;
+    font-size: 25px;
+}
