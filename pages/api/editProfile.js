@@ -11,7 +11,6 @@ async function editProfile(req, res){
     try{
         const { userName, userId, userEmail, oldEmail, userPhone, isEmployer } = req.body;
 
-        console.log(req.body);
         const updateProfile = await prisma.persona.update({
             where: {
                 cedula: userId,

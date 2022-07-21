@@ -33,7 +33,7 @@ exports.sendPasswordToEmployee = async (
                 <div style="text-align:center; justify-content: center; margin-top: 20px;"> 
                     <h1 style="margin-bottom: 40px; margin-top: 40px; font-size: 80px; font-weight: 700;">${password}</h1>
                 </div>
-                <div> <h1 styles="font-size: 40px;">Para verificar tu cuenta accede al siguiente enlace: <a href="http://localhost:3000/${cedulaEmpleado}/verify">Click aquí</a> </h1> </div>
+                <div> <h1 styles="font-size: 40px;">Para verificar tu cuenta accede al siguiente enlace: <a href="${process.env.URL}/${cedulaEmpleado}/verify">Click aquí</a> </h1> </div>
                 <div> <h1 styles="font-size: 40px;">Advertencia: Si usted no ha sido informado o no está al tanto de este correo, por favor ignórelo. </h1> </div>
             </div>`,
         attachments: [
@@ -57,7 +57,7 @@ exports.sendAccountToEmployeer = async (userEmail, cedulaEmpleador, nombre) => {
         <div style="text-align:center;">
         <img src="cid:logo1"/>
             <div> <h1 styles="font-size: 40px;">Estimado ${nombre}, bienvenido a la plataforma Pollolandia Solutions.</h1>
-            <h1 styles="font-size: 40px;">Para verificar tu cuenta accede al siguiente enlace: <a href="http://localhost:3000/${cedulaEmpleador}/verify">Click aquí</a> </h1> </div>
+            <h1 styles="font-size: 40px;">Para verificar tu cuenta accede al siguiente enlace: <a href="${process.env.URL}/${cedulaEmpleador}/verify">Click aquí</a> </h1> </div>
             <div> <h1 styles="font-size: 40px;">Advertencia: Si usted no ha sido informado o no está al tanto de este correo, por favor ignórelo. </h1> </div>
         </div>`,
         attachments: [

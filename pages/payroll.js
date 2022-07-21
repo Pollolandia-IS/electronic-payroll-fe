@@ -1,20 +1,10 @@
 import { prisma } from "/.db";
-import AddIcon from "@mui/icons-material/Add";
-import { Select, FormControl, InputLabel, MenuItem } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import safeJsonStringify from "safe-json-stringify";
-import HourTable from "../components/HourTable";
-import HourModal from "../components/HourModal";
-import Search from "../components/Search";
 import Sidebar from "../components/Sidebar";
-import IconBox from "../components/IconBox";
 import styles from "/styles/payroll.module.css";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import jwt from "jsonwebtoken";
 import PayrollTable from "../components/PayrollTable";
-import { dateToString } from "../logic/DateTimeHelpers"
-import { calculateProjectState, getNextPaymentDate } from "../logic/Payroll";
+import { dateToString } from "../logic/DateTimeHelpers";
+import { calculateProjectState } from "../logic/Payroll";
 
 export async function getServerSideProps(context) {
     const { req, res } = context;
@@ -35,9 +25,6 @@ export async function getServerSideProps(context) {
                     esContratado: true,
                 },
             },
-        },
-        orderBy: {
-            nombre: "asc",
         },
     });
 

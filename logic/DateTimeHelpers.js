@@ -173,3 +173,7 @@ export function getDayDifference(date1, date2) {
         (date1.getTime() - date2.getTime()) / (1000 * 60 * 60 * 24)
     );
 }
+
+export const createLocalDate = (date) => {
+    return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+}
