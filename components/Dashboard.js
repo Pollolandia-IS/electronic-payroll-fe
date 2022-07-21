@@ -12,8 +12,9 @@
 *
 **********************************************************************/
 import { styled } from '@mui/material/styles';
+import dynamic from 'next/dynamic';
+const ApexCharts = dynamic(() => import('react-apexcharts'), { ssr: false });
 
- 
 const Hero1 = styled("div")({  
   backgroundColor: `rgba(251, 250, 250, 1)`,  
   border: `1px solid rgba(176, 176, 176, 0.5)`,  
@@ -92,7 +93,33 @@ const UndrawPartyingReAt7F = styled("img")({
   width: `342px`,  
   margin: `0px 0px 0px 117.00000762939453px`,  
 });
- 
+
+const piechart = () => {
+  var options = {
+    series: [44, 55, 13, 43, 22],
+    chart: {
+    width: 380,
+    type: 'pie',
+  },
+  labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+  responsive: [{
+    breakpoint: 480,
+    options: {
+      chart: {
+        width: 200
+      },
+      legend: {
+        position: 'bottom'
+      }
+    }
+  }]
+  };
+
+  var chart = new ApexCharts(document.querySelector("#chart"), options);
+  chart.render();
+  console.log("pene");
+}
+
 function Dashboard(props) {
   return (
     <Hero1 >
@@ -102,7 +129,9 @@ function Dashboard(props) {
              {`Te damos la bienvenida, ${props.username}`}
                </BienvenidoDavid>
            <YaPuedesAdministrarT >
-             {props.isEmployer ? `Ya puedes administrar tus proyectos` : `Ya puedes consultar los detalles de tus pagos`}
+             {props.isEmployer ? 
+             piechart
+             `Ya puedes administrar tus proyectos` : `Ya puedes consultar los detalles de tus pagos`}
                </YaPuedesAdministrarT>
          </Text>
          <UndrawPartyingReAt7F  src={"/assets/img/welcome.png"} alt={"welcome"}/>
