@@ -212,7 +212,7 @@ const AddHoursEmployee = ({
                     .concat(" | ")
                     .concat(newDate.toISOString().substring(11, 16)),
                 nameProject: selectedProjectName,
-                state: "Aprobado",
+                state: "Pendiente",
             };
             setNextId(nextId + 1);
             setHourToAdd(hourToAdd.concat(newHour));

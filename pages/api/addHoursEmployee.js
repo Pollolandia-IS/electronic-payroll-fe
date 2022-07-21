@@ -39,7 +39,7 @@ async function addHoursEmployee(req, res) {
             nombreProyecto: projectID,
             fechaHora: date.slice(0, 19) + "Z",
             horasTrabajadas: parseInt(hours),
-            estado: 0,
+            estado: 1,
         },
     });
     return res.status(200).json({ message: "success" });
