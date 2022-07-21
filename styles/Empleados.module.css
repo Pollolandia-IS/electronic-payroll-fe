@@ -1,6 +1,6 @@
 .container {
-    margin-top: 149px;
-    margin-left: 200px;
+    margin-top: 20px;
+    margin-left: 350px;
     width: 1103px;
     height: 511.84px;
     display: flex;
@@ -8,26 +8,26 @@
     align-items: flex-start;
 }
 
-.cards {
+
+.main__header {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
     align-items: center;
-    margin-top: 30px;
-    width: 100%;
-    height: 100%;
+    margin: 20px 0px;
+    gap: 23px;
+
+    width: 1149px;
+    height: 50px;
 }
 
-.title {
-    width: 137px;
-    height: 34px;
-    font-family: 'Roboto Slab';
+.main__noContracts{
+    color: rgba(0, 0, 0, 0.87);
     font-style: normal;
-    font-weight: 700;
-    font-size: 26px;
-    line-height: 34px;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    color: #FE3D2B;
+    font-family: "Heebo", sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: 0px;
+    text-decoration: none;
+    line-height: 35px;
+    margin: 100px;
 }
