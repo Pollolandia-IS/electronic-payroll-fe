@@ -30,6 +30,8 @@ const handleRequest = (req, userData) => {
         return handlePayroll(userData);
     } else if (url.startsWith(`${BASEURL}/payDetail`)) {
         return handlePayDetails(req, userData);
+    } else if (url === `${BASEURL}/myPays`) {
+        return handleMyPays(userData);
     } else if (
         url.match(
             new RegExp(
@@ -214,6 +216,21 @@ const handlePayDetails = async (req, userData) => {
         return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
 };
+
+const handleMyPays = async (userData) => {
+    if (userData) {
+        if (!userData.isEmployer) {
+            const ids = await fetchIds(userData, true);
+            let response = NextResponse.next();
+            response.headers.append("ids", JSON.stringify(ids));
+            return response;
+        } else {
+            return NextResponse.redirect(`${BASEURL}/unauthorized`);
+        }
+    } else {
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
+    }
+}
 
 const decodeToken = async (req) => {
     const { cookies } = req;

@@ -255,28 +255,34 @@ function Sidebar(props) {
                                     isSelected={props.selected == 6}
                                     href={"/benefits"}
                                 />
+                                <SidebarRow6
+                                    icon="receipt"
+                                    text={"Mis Pagos"}
+                                    isSelected={props.selected == 7}
+                                    href={"/myPays"}
+                                />
                             </>
                         )}
                     </div>
                     <Account>
                         <Divider></Divider>
-                            <User>
-                                <Avatar1
-                                    variant="circular"
-                                    src={"/"}
-                                    alt={props.username}
-                                />
-                                <Link href={"/profile"}>
-                                    <UserName>{props.username}</UserName>
-                                </Link>
-                                <IconButton
-                                    size="small"
-                                    color="primary"
-                                    onClick={handleLogout}
-                                >
-                                    <LogoutIcon />
-                                </IconButton>
-                            </User>
+                        <User>
+                            <Avatar1
+                                variant="circular"
+                                src={"/"}
+                                alt={props.username}
+                            />
+                            <a href={"/profile"}>
+                                <UserName>{props.username}</UserName>
+                            </a>
+                            <IconButton
+                                size="small"
+                                color="primary"
+                                onClick={handleLogout}
+                            >
+                                <LogoutIcon />
+                            </IconButton>
+                        </User>
                     </Account>
                 </List>
             </Top>
