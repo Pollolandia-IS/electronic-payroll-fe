@@ -1,5 +1,10 @@
 .pieChart {
     position:relative;
     top:300px;
-    
+}
+
+.stat_card {
+    position:relative;
+    top:0px;
+    left:550px;
 }

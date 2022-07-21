@@ -50,11 +50,18 @@ export async function getServerSideProps(context) {
                 }
               });
             const projectsString = JSON.parse(safeJsonStringify(projects));
+            let reports = await prisma.reporteHoras.findMany({
+                where: {
+                    cedulaJuridica: hasCompany[0].cedulaJuridica,
+                    estado: 1,
+                },
+            });
             return {
                 props: {
                     isEmployer: decoded ? decoded.userData.isEmployer : null,
                     name: decoded ? decoded.userData.name : null,
                     projectsString,
+                    reports,
                     companyID: hasCompany[0].cedulaJuridica,
                 },
             };
@@ -79,6 +86,7 @@ export default function Home(props) {
                     username={props.name}
                     projectsString={props.projectsString}
                     companyID={props.companyID}
+                    reports={props.reports}
                 />
             ) : (
                 <Dashboard
