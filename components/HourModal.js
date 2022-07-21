@@ -4,6 +4,7 @@ import Stack from "@mui/material/Stack";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDateTimePicker } from "@mui/x-date-pickers/DesktopDateTimePicker";
+import { useEffect, useState } from "react";
 
 const TypeQuest = styled("div")(({ theme }) => ({
     backgroundColor: `rgba(255, 255, 255, 1)`,
@@ -131,6 +132,45 @@ const Link2 = styled("div")(({ theme }) => ({
 }));
 
 function HourModal(props) {
+    const [disableButtonModal, setDisableButtonModal] = useState(true);
+    const today = new Date();
+
+    let dateLeft = new Date(today);
+
+    if (props.isOpen) {
+        dateLeft = props.projectStart.filter((item) => {
+            return item.nombre === props.selectedProjectName;
+        })[0].fechaInicio;
+    }
+
+    useEffect(() => {
+        if (!props.hours || !props.date) {
+            setDisableButtonModal(true);
+            return;
+        }
+
+        if (props.date == "Invalid Date") {
+            setDisableButtonModal(true);
+            return;
+        }
+
+        if (props.hours <= 0 || props.hours > 24) {
+            setDisableButtonModal(true);
+            return;
+        }
+
+        if (props.date > today) {
+            setDisableButtonModal(true);
+            return;
+        }
+
+        if (props.date.toISOString() < dateLeft) {
+            setDisableButtonModal(true);
+            return;
+        }
+
+        setDisableButtonModal(false);
+    }, [props.hours, props.date]);
     return (
         <Dialog open={props.isOpen} onClose={() => props.setIsOpen(false)}>
             <TypeQuest>
@@ -144,7 +184,7 @@ function HourModal(props) {
                         <TextFieldStandard
                             name="hours"
                             value={props.hours}
-                            onChange={props.handleHours}
+                            onChange={(e) => props.handleHours(e.target.value)}
                             variant="standard"
                             size="small"
                             label={`Horas`}
@@ -155,7 +195,7 @@ function HourModal(props) {
                                 <DesktopDateTimePicker
                                     label="Fecha de registro"
                                     value={props.date}
-                                    onChange={props.handleDate}
+                                    onChange={(date) => props.handleDate(date)}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
@@ -171,13 +211,15 @@ function HourModal(props) {
                 <Cta>
                     <Links>
                         <Link1 onClick={() => props.setIsOpen(false)}>
-                            <Link2 sx={{ cursor: "pointer" }}>{`Cancelar`}</Link2>
+                            <Link2
+                                sx={{ cursor: "pointer" }}
+                            >{`Cancelar`}</Link2>
                         </Link1>
                         <Button
                             variant="contained"
                             size="medium"
                             color="primary"
-                            disabled={props.disableButton}
+                            disabled={disableButtonModal}
                             onClick={props.handleSubmit}
                         >
                             {" "}

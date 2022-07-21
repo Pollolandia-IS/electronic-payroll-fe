@@ -42,6 +42,9 @@ export async function getServerSideProps(context) {
         where: {
             cedulaEmpleado: employeeID,
         },
+        orderBy: {
+            fechaHora: "desc",
+        },
     });
 
     let counter = 0;
@@ -94,27 +97,18 @@ export async function getServerSideProps(context) {
         )
     );
 
+    const projectStart = await prisma.proyecto.findMany({
+        where: {
+            cedulaJuridica: companyID,
+        },
+        select: {
+            nombre: true,
+            fechaInicio: true,
+        },
+    });
 
     const proyectString = JSON.parse(safeJsonStringify(projectQuery));
 
-    let startFinishProjects = [];
-    for (let i = 0; i < proyectString.length; i++) {
-        const datesProject = await prisma.proyecto.findOne({
-            where: {
-                nombre: proyectString[i].nombre,
-            },
-            select: {
-                fechaInicio: true,
-                fechaFin: true,
-            },
-        });
-        
-        startFinishProjects.push({
-            name: proyectString[i].nombre,
-            startDate: datesProject.fechaInicio,
-            finishDate: datesProject.fechaFin,
-        });
-    }
     proyectString.push({
         nombre: "Todos los proyectos",
     });
@@ -126,7 +120,7 @@ export async function getServerSideProps(context) {
             proyectString,
             name: userData.name,
             isEmployer: userData.isEmployer,
-            startFinishProjects,
+            projectStart: JSON.parse(safeJsonStringify(projectStart)),
         },
     };
 }
@@ -137,7 +131,7 @@ const AddHoursEmployee = ({
     proyectString,
     name,
     isEmployer,
-    startFinishProjects,
+    projectStart,
 }) => {
     const projects = proyectString;
     let hoursUsers = [];
@@ -189,23 +183,6 @@ const AddHoursEmployee = ({
         setButtonState(value);
     };
 
-    const handleHoursChange = (event) => {
-        setHoursState(event.target.value);
-        if (event.target.value > 0 && event.target.value <= 24) {
-            handleButtonState(false);
-        } else {
-            handleButtonState(true);
-        }
-    };
-
-    const handleDateChange = (event) => {
-        if (event != "Invalid Date") {
-            setDateState(event);
-            handleButtonState(false);
-        }
-        handleHoursChange({ target: { value: hours } });
-    };
-
     const handleSubmit = async (event) => {
         event.preventDefault();
         const response = await fetch("/api/addHoursEmployee", {
@@ -246,16 +223,18 @@ const AddHoursEmployee = ({
     return projects.length > 1 ? (
         <>
             <HourModal
+                selectedProjectName={selectedProjectName}
                 date={date}
-                handleDate={handleDateChange}
+                handleDate={setDateState}
                 hours={hours}
-                handleHours={handleHoursChange}
+                handleHours={setHoursState}
                 employeeID={cedulaEmpleado}
                 isOpen={showModal}
                 setIsOpen={setShowModal}
                 handleSubmit={handleSubmit}
                 disableButton={button}
                 handleButton={handleButtonState}
+                projectStart={projectStart}
             />
             <div className={Styles.body}>
                 <div className={Styles.sidebar}>
