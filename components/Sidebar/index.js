@@ -215,7 +215,7 @@ function Sidebar(props) {
                                 />
                                 <SidebarRow6
                                     icon="addTime"
-                                    text={"Reportes de Horas"}
+                                    text={"Registro de Horas"}
                                     isSelected={props.selected == 8}
                                     href={"/employerHours"}
                                 />
