@@ -95,6 +95,10 @@ export async function getServerSideProps(context) {
         });
     });
 
+    let reportsEmployee =
+        await prisma.$queryRaw`SELECT r.cedulaEmpleado, COUNT(*) AS counterVal FROM reporteHoras r WHERE cedulaJuridica = ${companyID} AND estado = 1 GROUP BY cedulaEmpleado`;
+
+    console.log("From DB to reports", companyID);
     const projects = await prisma.proyecto.findMany({
         where: {
             cedulaJuridica: companyID,
@@ -118,6 +122,7 @@ export async function getServerSideProps(context) {
             contractsEmployee,
             JSONProjectContract,
             companyID,
+            reportsEmployee,
         },
     };
 }
@@ -130,6 +135,7 @@ const Employees = ({
     contractsEmployee,
     JSONProjectContract,
     companyID,
+    reportsEmployee,
 }) => {
     const [employees, setEmployees] = useState(employeesDB);
     const [selectedProjectName, setSelectedProjectName] = useState(
@@ -261,9 +267,11 @@ const Employees = ({
     };
 
     useEffect(() => {
+        let hoursOfEmployee = 0;
         let array = [];
         let index = 0;
         let projectsRow = employees.map((employee) => {
+            hoursOfEmployee = reportsEmployee.find( (report) => report.cedulaEmpleado === employee.cedula);
             index++;
             return {
                 id: index,
@@ -274,7 +282,7 @@ const Employees = ({
                 projects: contractsEmployee.find(
                     (contract) => contract.id === employee.cedula
                 ).count,
-                reports: 1,
+                reports: hoursOfEmployee ? hoursOfEmployee.counterVal : 0,
             };
         });
         for (let i = 0; i < projectsRow.length; i++) {

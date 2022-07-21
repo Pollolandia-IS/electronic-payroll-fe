@@ -1,7 +1,8 @@
 import DataTable from "./DataTable";
-import { Avatar } from "@mui/material";
+import { Avatar, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { IoPencilSharp } from "react-icons/io5";
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function EmployeeTable(props) {
     const columns = [
@@ -63,8 +64,8 @@ export default function EmployeeTable(props) {
         },
         {
             field: "reports",
-            headerName: "Reportes",
-            width: 120,
+            headerName: "Reportes Pendientes",
+            width: 160,
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,
@@ -78,13 +79,11 @@ export default function EmployeeTable(props) {
             disableColumnMenu: true,
             renderCell: (params) => {
                 return (
-                    <IoPencilSharp
-                        size={23}
-                        style={{ color: "#1976D2", cursor: "pointer" }}
-                        onClick={() =>
-                            props.editEmployeeCompany(params.row.cedula)
-                        }
-                    />
+                    <IconButton color="primary" onClick={() =>
+                        props.editEmployeeCompany(params.row.cedula)
+                    }> 
+                        <EditIcon />
+                    </IconButton>
                 );
             },
         },
@@ -95,7 +94,7 @@ export default function EmployeeTable(props) {
             rows={props.rows}
             columns={columns}
             height={824}
-            width={1296}
+            width={1336}
         />
     );
 }
