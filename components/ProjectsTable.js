@@ -17,7 +17,6 @@ export default function ProjectsTable(props) {
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,
-            // in this row print <Avatar1 variant="circular" alt={employee.name}/>
             renderCell: (params) => {
                 return (
                     <Avatar variant="circular" > {(params.row.name).charAt(0)} </Avatar>
