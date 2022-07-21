@@ -14,6 +14,7 @@
 
 import { styled } from "@mui/material/styles";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 import { IconButton, Tooltip } from "@mui/material";
 import { left } from "@popperjs/core";
 
@@ -45,11 +46,19 @@ const Row = styled("div")({
     margin: `0px`,
 });
 
-const CheckCircleOutlineOu = styled(CheckCircleOutlineIcon)(({ theme }) => ({
+const CheckCircleOutline = styled(CheckCircleOutlineIcon)(({ theme }) => ({
     width: `37px`,
     height: `37px`,
     marginLeft: `10px`,
 }));
+
+const PendingActionsOutlined = styled(PendingActionsOutlinedIcon)(
+    ({ theme }) => ({
+        width: `37px`,
+        height: `37px`,
+        marginLeft: `10px`,
+    })
+);
 
 const Left = styled("div")({
     display: `flex`,
@@ -139,7 +148,11 @@ function EmployeeHoursCard(props) {
     return (
         <EmployeeHours1>
             <Row>
-                <CheckCircleOutlineOu color="success" />
+                {props.pending ? (
+                    <PendingActionsOutlined color="warning" />
+                ) : (
+                    <CheckCircleOutline color="success" />
+                )}
                 <Left>
                     <Stats>
                         <NombreApellido>{props.name}</NombreApellido>
@@ -160,7 +173,10 @@ function EmployeeHoursCard(props) {
                 >
                     <RightSide>
                         <IconButton
-                            onClick={props.setSelectedEmployee(props.name)}
+                            onClick={() => {
+                                props.setSelectedEmployee(props.name);
+                                props.setSelectedId(props.id);
+                            }}
                         >
                             <Arrow src="/assets/img/Arrow.png" alt={"Arrow"} />
                         </IconButton>
