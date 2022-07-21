@@ -1,9 +1,9 @@
 import { prisma } from "/.db";
 
 export default function handler(req, res) {
-  if (req.method === "POST") {
-    addEmployeeToProject(req, res);
-  }
+    if (req.method === "POST") {
+        addEmployeeToProject(req, res);
+    }
 }
 
 async function addEmployeeToProject(req, res) {

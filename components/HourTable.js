@@ -5,7 +5,7 @@ export default function HourTable(props) {
         {
             field: "hours",
             headerName: "Horas",
-            width: 100,
+            width: 80,
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,
@@ -26,6 +26,14 @@ export default function HourTable(props) {
             headerAlign: "center",
             disableColumnMenu: true,
         },
+        {
+            field: "nameProject",
+            headerName: "Nombre del Proyecto",
+            width: 200,
+            align: "center",
+            headerAlign: "center",
+            disableColumnMenu: true,
+        },
     ];
 
     return (
@@ -33,7 +41,7 @@ export default function HourTable(props) {
             rows={props.rows}
             columns={columns}
             height={797}
-            width={502}
+            width={902}
         />
     );
 }

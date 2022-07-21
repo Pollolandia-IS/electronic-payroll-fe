@@ -72,7 +72,7 @@ const AddEmployee = ({
 
   const getCleanInputs = () => {
     return {
-      montoPago: "",
+      salario: "",
       tipoEmpleado: "",
       puesto: "",
       fechaInicio: "",
@@ -115,9 +115,8 @@ const AddEmployee = ({
     event.preventDefault();
     const form = {
       ...formState,
-      montoPago: parseInt(formState.montoPago),
+      salario: parseFloat(formState.salario),
       fechaInicio: `${formState.fechaInicio}T00:00:00Z`,
-      fechaFin: `${formState.fechaInicio}T00:00:00Z`,
       fechaFin: `${formState.fechaFin}T00:00:00Z`,
     };
 
@@ -175,10 +174,10 @@ const AddEmployee = ({
           <label className={Styles.label}>
             <span>Monto de pago: </span>
             <input
-              value={formState.montoPago}
+              value={formState.salario}
               onChange={handleInputChange}
               type="number"
-              name="montoPago"
+              name="salario"
               required
             />
           </label>
