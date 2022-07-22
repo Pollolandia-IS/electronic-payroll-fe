@@ -17,12 +17,11 @@ import Router from "next/router";
 export async function getServerSideProps(context) {
     const { req, res } = context;
     const { cookies } = req;
-    const ids = JSON.parse(res._headers.ids);
     const { userData } = jwt.verify(cookies.token, process.env.JWT_SECRET);
 
     let projects = await prisma.proyecto.findMany({
         where: {
-          cedulaJuridica: ids.companyId,
+          cedulaJuridica: userData.companyId,
           habilitado: true,
         },
         include: {
@@ -40,7 +39,7 @@ export async function getServerSideProps(context) {
 
     return {
         props: {
-            companyID: ids.companyId,
+            companyID: userData.companyId,
             projectsString,
             name: userData.name,
             isEmployer: userData.isEmployer,

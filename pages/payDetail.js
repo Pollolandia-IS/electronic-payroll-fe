@@ -16,9 +16,9 @@ import {
 
 export async function getServerSideProps(context) {
     const { req, res } = context;
-    const companyID = JSON.parse(res._headers.ids).companyId;
     const { userData } = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
-    const projectName = res.getHeaders().project;
+    const companyID = userData.companyId;
+    const projectName = context.query.project;
     const project = await prisma.proyecto.findUnique({
         where: {
             cedulaJuridica_nombre: {

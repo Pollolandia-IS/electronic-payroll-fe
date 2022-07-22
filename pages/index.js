@@ -18,7 +18,7 @@ export async function getServerSideProps(context) {
     }
     
     if (decoded.userData.isEmployer) {
-        const id = JSON.parse(res._headers.id).id;
+        const id = decoded.userData.id;
         const hasCompany = await prisma.empresa.findMany({
             where: {
                 cedulaEmpleador: id,
@@ -27,7 +27,7 @@ export async function getServerSideProps(context) {
         if(hasCompany === undefined || hasCompany.length === 0) {
             return {
                 redirect: {
-                    destination: "/RegisterCompany",
+                    destination: `/RegisterCompany?id=${id}`,
                     permanent: false,
                 },
             };

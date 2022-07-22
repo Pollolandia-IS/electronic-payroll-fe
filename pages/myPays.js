@@ -3,22 +3,22 @@ import EmployeeReportTable from "../components/EmployeeReportTable";
 import Sidebar from "../components/Sidebar";
 import jwt from "jsonwebtoken";
 import { useState } from "react";
-import styles from "../styles/myPays.module.css";
+import styles from "../styles/MyPays.module.css";
 import { MenuItem, Button, TextField } from "@mui/material";
 import { SaveOutlined } from "@mui/icons-material";
 import Dropdown, { DropdownBox } from "../components/Dropdown";
 import DateRangeModal from "../components/DateRangeModal";
 import { dateToString } from "../logic/DateTimeHelpers";
 import {generateTabletoPDF, generateJSONtoXLSX } from "./api/services/generateFile";
+import { prisma } from "/.db";
 
 export async function getServerSideProps(context) {
     const { req, res } = context;
     const { cookies } = req;
-    const ids = JSON.parse(res._headers.ids);
     const { userData } = jwt.verify(cookies.token, process.env.JWT_SECRET);
     const projects = await prisma.esContratado.findMany({
         where: {
-            cedulaEmpleado: ids.id,
+            cedulaEmpleado: userData.id,
         },
         include: {
             proyecto: true,
@@ -32,7 +32,7 @@ export async function getServerSideProps(context) {
     });
     const payments = await prisma.pago.findMany({
         where: {
-            cedulaEmpleado: ids.id,
+            cedulaEmpleado: userData.id,
         },
         include: {
             genera: {
@@ -44,7 +44,7 @@ export async function getServerSideProps(context) {
     });
     const generatedPayments = await prisma.genera.findMany({
         where: {
-            cedulaEmpleado: ids.id,
+            cedulaEmpleado: userData.id,
         },
         include: {
             proyecto: true,
@@ -83,7 +83,7 @@ export async function getServerSideProps(context) {
     };
 }
 
-const myPays = (props) => {
+const MyPays = (props) => {
     const handlePDF = (row, sendMail = false) => {
         const titles = [row.project, row.payDate, props.name, row.type];
         const data = [
@@ -299,7 +299,7 @@ const myPays = (props) => {
                     setDownloadData={setDownloadData}
                 />
                 <Button
-                    className={styles.button}
+                    sx={{marginTop: "50px", marginLeft: "950px"}}
                     variant="outlined"
                     size="large"
                     color="success"
@@ -318,4 +318,4 @@ const myPays = (props) => {
     );
 };
 
-export default myPays;
+export default MyPays;

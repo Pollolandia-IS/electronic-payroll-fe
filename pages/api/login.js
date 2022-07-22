@@ -13,7 +13,7 @@ const handleLogin = async (req, res) => {
   const userData = await getUserData(email);
   if (userData) {
     sendResponse(
-      { isEmployer: userData.isEmployer, name: userData.name, email: userData.email },
+      { isEmployer: userData.isEmployer, name: userData.name, email: userData.email, id: userData.id, companyId: userData.companyId },
       res,
       password === userData.password,
       userData.verified
@@ -59,15 +59,27 @@ const getUserData = async (email) => {
     },
     include: {
       empleado: true,
-      empleador: true,
-    },
+      empleador: {
+        include: {
+          empresa: {
+            select: {
+              cedulaJuridica: true,
+            },
+          },
+          }
+        },
+      },
   });
+ 
   const userData = {
     email: user.email,
     password: user.contrasenna,
     verified: user.verificado,
     isEmployer: person.empleador != null,
     name: person.nombre,
+    id: person.cedula,
+    companyId: person.empleador != null ? person.empleador.empresa[0].cedulaJuridica : person.empleado.cedulaJuridica,
   };
+
   return userData;
 };

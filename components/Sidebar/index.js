@@ -253,7 +253,7 @@ function Sidebar(props) {
                                     icon="receipt"
                                     text={"Mis Pagos"}
                                     isSelected={props.selected == 7}
-                                    href={"/myPays"}
+                                    href={"/MyPays"}
                                 />
                             </>
                         )}

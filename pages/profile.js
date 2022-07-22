@@ -2,16 +2,16 @@ import jwt from "jsonwebtoken";
 import Sidebar from "../components/Sidebar";
 import Profile from "../components/Profile"
 import styles from "/styles/profile.module.css";
+import { prisma } from "/.db";
 
 export async function getServerSideProps(context) {
     const { req, res } = context;
-    const userIds = JSON.parse(res._headers.ids);
-    const userData = JSON.parse(res._headers.userdata);
     const { cookies } = req;
     let decoded = null;
     if (cookies.token) {
-      decoded = jwt.verify(cookies.token, process.env.JWT_SECRET);
+        decoded = jwt.verify(cookies.token, process.env.JWT_SECRET);
     }
+    const userData = decoded.userData;
 
     let credentialsQuery = await prisma.credenciales.findUnique({
         where: {
@@ -21,13 +21,13 @@ export async function getServerSideProps(context) {
 
     let userQuery = await prisma.persona.findUnique({
         where: {
-            cedula: userIds.id,
+            cedula: userData.id,
         }
     });
 
     let userCompanyQuery = await prisma.empresa.findUnique({
         where: {
-            cedulaJuridica: userIds.companyId,
+            cedulaJuridica: userData.companyId,
         }
     });
 

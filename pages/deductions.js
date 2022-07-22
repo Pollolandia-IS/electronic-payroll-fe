@@ -7,10 +7,9 @@ import safeJsonStringify from "safe-json-stringify";
 export async function getServerSideProps(context) {
     const { req, res } = context;
     const { cookies } = req;
-    const ids = JSON.parse(res._headers.ids);
-    const employeeID = ids.id;
-    const companyID = ids.companyId;
     const { userData } = jwt.verify(cookies.token, process.env.JWT_SECRET);
+    const employeeID = userData.id;
+    const companyID = userData.companyId;
     let isEmployer = userData.isEmployer;
     if (isEmployer) {
         let deductionsQuery = await prisma.deduccionVoluntaria.findMany({

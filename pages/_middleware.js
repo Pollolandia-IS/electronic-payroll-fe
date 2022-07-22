@@ -28,7 +28,7 @@ const handleRequest = (req, userData) => {
         return handlePayroll(userData);
     } else if (url.startsWith(`${BASEURL}/payDetail`)) {
         return handlePayDetails(req, userData);
-    } else if (url === `${BASEURL}/myPays`) {
+    } else if (url === `${BASEURL}/MyPays`) {
         return handleMyPays(userData);
     } else if (
         url.match(
@@ -70,7 +70,7 @@ const handleIndex = async (userData) => {
             return NextResponse.next();
         }
     } else {
-        return NextResponse.redirect(`${BASEURL}/unauthorized`);
+        return NextResponse.redirect(`${BASEURL}/LogIn`);
     }
 };
 

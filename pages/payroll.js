@@ -9,8 +9,8 @@ import { calculateProjectState } from "../logic/Payroll";
 export async function getServerSideProps(context) {
     const { req, res } = context;
     const { cookies } = req;
-    const companyID = JSON.parse(res._headers.ids).companyId;
     const { userData } = jwt.verify(cookies.token, process.env.JWT_SECRET);
+    const companyID = userData.companyId;
 
     let counter = 0;
 

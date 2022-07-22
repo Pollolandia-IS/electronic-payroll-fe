@@ -32,10 +32,9 @@ const TextFieldStandard = styled(Select)({
 export async function getServerSideProps(context) {
     const { req, res } = context;
     const { cookies } = req;
-    const ids = JSON.parse(res._headers.ids);
     const { userData } = jwt.verify(cookies.token, process.env.JWT_SECRET);
-    const employeeID = ids.id;
-    const companyID = ids.companyId;
+    const employeeID = userData.id;
+    const companyID = userData.companyId;
 
     const hours = await prisma.reporteHoras.findMany({
         where: {
