@@ -78,7 +78,7 @@ const getUserData = async (email) => {
     isEmployer: person.empleador != null,
     name: person.nombre,
     id: person.cedula,
-    companyId: person.empleador != null ? person.empleador.empresa[0].cedulaJuridica : person.empleado.cedulaJuridica,
+    companyId: person.empleador != null ? person.empleador.empresa[0] ? person.empleador.empresa[0].cedulaJuridica : null : person.empleado.cedulaJuridica,
   };
 
   return userData;

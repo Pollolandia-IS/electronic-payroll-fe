@@ -245,7 +245,7 @@ function RegisterCompany({ employerId }) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(dataForDB),
             });
-            await router.push("/"); //Where to go after call the api
+            await router.push("/LogIn"); //Where to go after call the api
         } catch (error) {
             console.error(error);
         }
