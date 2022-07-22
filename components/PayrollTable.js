@@ -117,8 +117,11 @@ export default function PayrollTable(props) {
                                         margin: 0,
                                     }}
                                 >
-                                    {" "}
-                                    text{" "}
+                                    {cellValues.row.state.endsWith("0")
+                            ? `Hoy es el Pago!`
+                            : `Quedan ${
+                                  cellValues.row.state.split(" ")[1]
+                              } día(s)`}
                                 </p>
                             </div>
                         );
