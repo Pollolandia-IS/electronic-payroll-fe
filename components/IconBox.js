@@ -32,7 +32,7 @@ const PropertyDefault = styled("div")(({ theme }) =>({
 function IconBox(props) {
   return (
     <PropertyDefault >
-      <IconButton size="medium" color="primary" onClick={props.action} disabled={props.isDisabled} >
+      <IconButton id="button-open-modal" size="medium" color="primary" onClick={props.action} disabled={props.isDisabled} >
         {props.children}
       </IconButton>
     </PropertyDefault>

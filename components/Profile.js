@@ -313,6 +313,7 @@ function Profile(props) {
         oldEmail: props.userData.email,
         userPhone: UserValues.Userphone,
         isEmployer: props.isEmployer,
+        companyId: CompanyValues.Companyid,
       }
       try {
         const response = await fetch(`/api/editProfile/`, {
@@ -334,6 +335,10 @@ function Profile(props) {
         companyPhone: CompanyValues.Companyphone,
         companyEmail: CompanyValues.Companyemail,
         companyAddress: CompanyValues.Companyaddress,
+        id: UserValues.UserId,
+        isEmployer: props.isEmployer,
+        name: UserValues.Username,
+        email: UserValues.Useremail,
       }
       try {
         await fetch(`/api/editCompany/`, {
@@ -341,6 +346,8 @@ function Profile(props) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newCompanyData),
         });
+        const token = await response.json();
+        Cookies.set("token", token, { expires: 7 });
       } catch (error) {
       console.error(error);
       }
@@ -382,7 +389,7 @@ function Profile(props) {
        </LeftColumn>
        <RightColumn>
          <Image  src={"/assets/img/womanWork.png"} alt={"Woman Working"} height={400} width={500} />
-         <SaveChangesButton type="submit" variant="contained" size="large" color="primary" disabled={!validFields && !validCompanyFields} onClick={handleSubmit}> GUARDAR CAMBIOS </SaveChangesButton>
+         <SaveChangesButton id='submit-profile-button' type="submit" variant="contained" size="large" color="primary" disabled={!validFields && !validCompanyFields} onClick={handleSubmit}> GUARDAR CAMBIOS </SaveChangesButton>
        </RightColumn>
      </Container>
     </>

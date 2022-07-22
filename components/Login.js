@@ -289,9 +289,9 @@ function Login() {
   return (
     <StateNormal>
       <Frame>
-        <Frame1>
+        <Frame1 >
           <Logo src="/assets/img/Logo.png" alt={"Logo"} />
-          <InicioDeSesión>{`Inicio de Sesión`}</InicioDeSesión>
+          <InicioDeSesión id="text-inicio-sesion">{`Inicio de Sesión`}</InicioDeSesión>
           {renderAlert()}
         </Frame1>
         <form onSubmit={handleSubmit} style={{ width: "100%" }}>
@@ -302,6 +302,7 @@ function Login() {
               label={`Correo`}
               type="email"
               value={email}
+              id="email-login-input"
               onChange={(evt) => setEmail(evt.target.value)}
               error={errorType < 0}
               inputProps={{"data-testid": "email-input"}}
@@ -312,6 +313,7 @@ function Login() {
               label={`Contraseña`}
               type="password"
               value={password}
+              id="password-login-input"
               onChange={(evt) => setPassword(evt.target.value)}
               error={errorType < 0}
               inputProps={{"data-testid": "password-input"}}
@@ -325,6 +327,7 @@ function Login() {
               type="submit"
               disabled={email.length == 0 || password.length == 0}
               data-testid="submit-button"
+              id="submit-button"
             >
               {" "}
               Iniciar Sesion{" "}

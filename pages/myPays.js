@@ -304,6 +304,7 @@ const MyPays = (props) => {
                     size="large"
                     color="success"
                     endIcon={<SaveOutlined />}
+                    id="save-excel-button"
                     onClick={() => {
                         generateJSONtoXLSX(
                             xslxData,

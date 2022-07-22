@@ -357,6 +357,7 @@ function NewDeductionModal(props) {
                                         variant="outlined"
                                         color="primary"
                                         size="large"
+                                        id="submit-modal-deduccion-button"
                                         endIcon={<ArrowForwardIcon />}
                                         disabled={!validFields}
                                     >

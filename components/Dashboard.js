@@ -98,10 +98,10 @@ function Dashboard(props) {
     <Hero1 >
        <HeroContent >
          <Text >
-           <BienvenidoDavid >
+           <BienvenidoDavid id='welcome-dashboard' >
              {`Te damos la bienvenida, ${props.username}`}
-               </BienvenidoDavid>
-           <YaPuedesAdministrarT >
+            </BienvenidoDavid>
+           <YaPuedesAdministrarT id='subtext-dashboard-index' >
              {props.isEmployer ? `Ya puedes administrar tus proyectos` : `Ya puedes consultar los detalles de tus pagos`}
                </YaPuedesAdministrarT>
          </Text>

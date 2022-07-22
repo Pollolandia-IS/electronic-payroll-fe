@@ -273,6 +273,7 @@ function Sidebar(props) {
                                 size="small"
                                 color="primary"
                                 onClick={handleLogout}
+                                id="logout-button"
                             >
                                 <LogoutIcon />
                             </IconButton>

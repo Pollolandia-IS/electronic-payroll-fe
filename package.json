@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --verbose true"
+    "test": "jest --verbose true",
+    "test:selenium": "node test/UITest/seleniumTest.test.js"
   },
   "dependencies": {
     "@emotion/react": "^11.9.0",
@@ -38,6 +39,7 @@
     "react-dom": "18.1.0",
     "react-icons": "^4.3.1",
     "safe-json-stringify": "^1.2.0",
+    "selenium-webdriver": "^4.3.1",
     "url-loader": "^4.1.1",
     "xlsx": "^0.18.5"
   },
@@ -48,6 +50,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "babel-jest": "^28.1.1",
+    "chromedriver": "^103.0.0",
     "eslint": "8.15.0",
     "eslint-config-next": "12.1.6",
     "identity-obj-proxy": "^3.0.0",

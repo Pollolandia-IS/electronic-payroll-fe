@@ -9,7 +9,7 @@ export default function handler(req, res){
 
 async function editProfile(req, res){
     try{
-        const { userName, userId, userEmail, oldEmail, userPhone, isEmployer } = req.body;
+        const { userName, userId, userEmail, oldEmail, userPhone, isEmployer, companyId } = req.body;
 
         const updateProfile = await prisma.persona.update({
             where: {
@@ -33,7 +33,7 @@ async function editProfile(req, res){
 
         }
 
-        const userData = { isEmployer: isEmployer, name: userName, email: userEmail };
+        const userData = { isEmployer: isEmployer, name: userName, email: userEmail, id: userId, companyId: companyId };
         const token = jwt.sign( {userData} , process.env.JWT_SECRET);
         res.status(200).json(token);
     } catch(error){
