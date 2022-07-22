@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest --verbose true",
-    "test:selenium": "node test/UITest/seleniumTest.test.js"
+    "test:selenium": "node test/UITest/seleniumTest.js"
   },
   "dependencies": {
     "@emotion/react": "^11.9.0",

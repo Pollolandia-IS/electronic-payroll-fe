@@ -119,30 +119,47 @@ describe("Add Benefit", () => {
 });
 
 describe("Get Next Payment Date", () => {
+    const testDate2 = new Date(2022, 1, 28);
+    const testDate1 = new Date(2022, 0, 31);
+    const testDate3 = new Date(2022, 0, 15);
+    const testDate4 = new Date(2022, 1, 28);
+    const testDate5 = new Date(2022, 0, 7);   
+    const testDate6 = new Date(2022, 0, 7);
+    const testDate7 = new Date(2022, 0, 21);
+    const testDate8 = new Date(2022, 2, 4);
+    testDate1.setHours(testDate1.getHours() + 6);
+    testDate2.setHours(testDate2.getHours() + 6);
+    testDate3.setHours(testDate3.getHours() + 6);
+    testDate4.setHours(testDate4.getHours() + 6);
+    testDate5.setHours(testDate5.getHours() + 6);
+    testDate6.setHours(testDate6.getHours() + 6);
+    testDate7.setHours(testDate7.getHours() + 6);
+    testDate8.setHours(testDate8.getHours() + 6);
+
     it("should get the next payment date", () => {
         expect(getNextPaymentDate(new Date(2022, 0, 1), "Mensual")).toEqual(
-            new Date(2022, 0, 31)
+            testDate1
         );
         expect(getNextPaymentDate(new Date(2022, 1, 1), "Mensual")).toEqual(
-            new Date(2022, 1, 28)
+            testDate2
         );
         expect(getNextPaymentDate(new Date(2022, 0, 1), "Quincenal")).toEqual(
-            new Date(2022, 0, 15)
+            testDate3
         );
         expect(getNextPaymentDate(new Date(2022, 1, 16), "Quincenal")).toEqual(
-            new Date(2022, 1, 28)
+            testDate4
         );
         expect(getNextPaymentDate(new Date(2022, 0, 1), "Semanal")).toEqual(
-            new Date(2022, 0, 7)
+            testDate5
         );
         expect(getNextPaymentDate(new Date(2022, 0, 7), "Semanal")).toEqual(
-            new Date(2022, 0, 7)
+            testDate6
         );
         expect(getNextPaymentDate(new Date(2022, 0, 18), "Semanal")).toEqual(
-            new Date(2022, 0, 21)
+            testDate7
         );
         expect(getNextPaymentDate(new Date(2022, 1, 28), "Semanal")).toEqual(
-            new Date(2022, 2, 4)
+            testDate8
         );
     });
 
@@ -213,6 +230,10 @@ describe("Create Payment", () => {
                     createPaymentField("Deduccion Obligatoria 2", 250),
                 ],
                 [
+                    createPaymentField("Deduccion Obligatoria Empleador 1", 2000),
+                    createPaymentField("Deduccion Obligatoria Empleador 2", 2500),
+                ],
+                [
                     createPaymentField("Deduccion Voluntaria 1", 2000),
                     createPaymentField("Deduccion Voluntaria 2", 250),
                 ],
@@ -238,7 +259,12 @@ describe("Create Payment", () => {
                 { name: "Deduccion Obligatoria 2", amount: 250 },
             ],
             totalMandatoryDeductions: 2250,
-            netSalary: 97750,
+            employerMandatoryDeductions: [
+                { name: "Deduccion Obligatoria Empleador 1", amount: 2000 },
+                { name: "Deduccion Obligatoria Empleador 2", amount: 2500 },
+            ],
+            totalEmployerMandatoryDeductions: 4500,
+            netSalary: 95500,
         });
     });
 });
