@@ -62,14 +62,14 @@ const Text = styled("div", {
  
 function SidebarRow(props) {
   return (
-    <Link href={props.href} >
+    <a href={props.href} >
       <Property1Default props={props} >
         <SidebarIcon  icon={props.icon} isSelected={props.isSelected}/>
         <Text props={props} >
           {props.text}
             </Text>
       </Property1Default>
-     </Link>
+     </a>
    );
 }
 

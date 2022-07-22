@@ -3,9 +3,36 @@ const { sendPasswordToEmployee } = require("/pages/api/services/mailServices");
 const { generatePassword } = require("/pages/api/services/generatePassword");
 
 export default function handler(req, res) {
-    console.log("API");
     if (req.method == "POST") {
         insertEmployeeToDatabase(req, res);
+    } else if (req.method == "PATCH") {
+        updateEmployee(req, res);
+    }
+}
+
+async function updateEmployee(req, res) {
+    try {
+        const { Nombre, Cedula, Email, Telefono } = req.body;
+        const person = await prisma.persona.update({
+            where: {
+                cedula: Cedula,
+            },
+            data: {
+                nombre: Nombre,
+                telefono: Telefono,
+            },
+        });
+        const credentials = await prisma.credenciales.update({
+            where: {
+                email: Email,
+            },
+            data: {
+                email: Email,
+            },
+        });
+        return res.status(200).json({ message: "success" });
+    } catch (error) {
+        console.log(error);
     }
 }
 
@@ -17,7 +44,7 @@ async function insertEmployeeToDatabase(req, res) {
             data: {
                 cedula: Cedula,
                 nombre: Nombre,
-                telefono: parseInt(Telefono),
+                telefono: Telefono,
             },
         });
 
@@ -55,10 +82,10 @@ async function insertEmployeeToDatabase(req, res) {
             Cedula,
             nombreEmpresa.razonSocial
         );
-        let result = [person, employee, credentials, uses];
-        res.status(200).json({ result });
+
+        return res.status(200).json({ message: "success" });
     } catch (error) {
-        res.status(500);
-        res.send(error.message);
+        console.log(error);
+        return res.status(500);
     }
 }

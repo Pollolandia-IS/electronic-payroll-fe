@@ -24,13 +24,21 @@ const TextFieldStandard = styled(Select)({
     overflow: `hidden`,
 });
 
-const EmployeeDeductions = ({props}) => {
-    const { employeeID, companyID, projectsString, hiredIn, employeeName, isEmployer } = props;
+const EmployeeDeductions = ({ props }) => {
+    const {
+        employeeID,
+        companyID,
+        projectsString,
+        hiredIn,
+        employeeName,
+        isEmployer,
+    } = props;
     const [selectedDeduction, setSelectedDeduction] = useState("");
     const [isOpenAdd, setIsOpenAdd] = useState(false);
     const [isOpenRemove, setIsOpenRemove] = useState(false);
     const [isOpenError, setIsOpenError] = useState(false);
     const [projectName, setProjectName] = useState("");
+    const [projectCurrency, setProjectCurrency] = useState("");
     const [deductions, setDeductions] = useState([]);
     const [selectedDeductions, setSelectedDeductions] = useState([]);
     const [searchText, setSearchText] = useState("");
@@ -41,11 +49,11 @@ const EmployeeDeductions = ({props}) => {
     //TODO: Fix styling
 
     const checkDeductionAmount = () => {
-        var currentAmountSum = 0;
-        var maxAmountSum = 0;
+        let currentAmountSum = 0;
+        let maxAmountSum = 0;
         for (let i = 0; i < hiredIn.length; i++) {
             if (hiredIn[i].nombreProyecto === projectName) {
-                maxAmountSum += hiredIn[i].montoPago;
+                maxAmountSum += hiredIn[i].salario;
             }
         }
         if (selectedDeductions.length === 0) {
@@ -63,7 +71,6 @@ const EmployeeDeductions = ({props}) => {
             } else {
                 currentAmountSum += defaultAmount;
             }
-            console.log(currentAmountSum);
         }
         if (currentAmountSum <= maxAmountSum) {
             return true;
@@ -118,49 +125,54 @@ const EmployeeDeductions = ({props}) => {
         }
     };
 
+    const createDeductionCard = (deduction) => {
+        let found = false;
+        for (let i = 0; i < selectedDeductions.length && !found; i++) {
+            if (
+                selectedDeductions[i].nombreDeduccion ===
+                deduction.nombreDeduccion
+            ) {
+                found = true;
+                return (
+                    <DeductionEmployeeCard
+                        key={deduction.nombreDeduccion}
+                        name={deduction.nombreDeduccion}
+                        setDefaultAmount={setDefaultAmount}
+                        description={deduction.descripcion}
+                        amount={selectedDeductions[i].aporte}
+                        selected={true}
+                        currency={projectCurrency}
+                        setAmountChosen={setAmountChosen}
+                        setIsOpenAdd={setIsOpenAdd}
+                        setIsOpenRemove={setIsOpenRemove}
+                        setSelectedDeduction={setSelectedDeduction}
+                    />
+                );
+            }
+        }
+        if (!found) {
+            return (
+                <DeductionEmployeeCard
+                    key={deduction.nombreDeduccion}
+                    name={deduction.nombreDeduccion}
+                    setDefaultAmount={setDefaultAmount}
+                    description={deduction.descripcion}
+                    amount={deduction.monto}
+                    selected={false}
+                    currency={projectCurrency}
+                    setAmountChosen={setAmountChosen}
+                    setIsOpenAdd={setIsOpenAdd}
+                    setIsOpenRemove={setIsOpenRemove}
+                    setSelectedDeduction={setSelectedDeduction}
+                />
+            );
+        }
+    };
+
     const parseDeductions = () => {
-        const found = false;
         return deductions.map((deduction) => {
             if (searchText === "") {
-                found = false;
-                for (let i = 0; i < selectedDeductions.length && !found; i++) {
-                    if (
-                        selectedDeductions[i].nombreDeduccion ===
-                        deduction.nombreDeduccion
-                    ) {
-                        found = true;
-                        return (
-                            <DeductionEmployeeCard
-                                key={deduction.nombreDeduccion}
-                                name={deduction.nombreDeduccion}
-                                setDefaultAmount={setDefaultAmount}
-                                description={deduction.descripcion}
-                                amount={selectedDeductions[i].aporte}
-                                selected={true}
-                                setAmountChosen={setAmountChosen}
-                                setIsOpenAdd={setIsOpenAdd}
-                                setIsOpenRemove={setIsOpenRemove}
-                                setSelectedDeduction={setSelectedDeduction}
-                            />
-                        );
-                    }
-                }
-                if (!found) {
-                    return (
-                        <DeductionEmployeeCard
-                            key={deduction.nombreDeduccion}
-                            name={deduction.nombreDeduccion}
-                            setDefaultAmount={setDefaultAmount}
-                            description={deduction.descripcion}
-                            amount={deduction.monto}
-                            selected={false}
-                            setAmountChosen={setAmountChosen}
-                            setIsOpenAdd={setIsOpenAdd}
-                            setIsOpenRemove={setIsOpenRemove}
-                            setSelectedDeduction={setSelectedDeduction}
-                        />
-                    );
-                }
+                return createDeductionCard(deduction);
             } else {
                 if (
                     deduction.nombreDeduccion
@@ -171,49 +183,7 @@ const EmployeeDeductions = ({props}) => {
                         .includes(searchText.toLowerCase()) ||
                     deduction.monto.toString().includes(searchText)
                 ) {
-                    found = false;
-                    for (
-                        let i = 0;
-                        i < selectedDeductions.length && !found;
-                        i++
-                    ) {
-                        if (
-                            selectedDeductions[i].nombreDeduccion ===
-                            deduction.nombreDeduccion
-                        ) {
-                            found = true;
-                            return (
-                                <DeductionEmployeeCard
-                                    key={deduction.nombreDeduccion}
-                                    name={deduction.nombreDeduccion}
-                                    setDefaultAmount={setDefaultAmount}
-                                    description={deduction.descripcion}
-                                    amount={selectedDeductions[i].aporte}
-                                    selected={true}
-                                    setAmountChosen={setAmountChosen}
-                                    setIsOpenAdd={setIsOpenAdd}
-                                    setIsOpenRemove={setIsOpenRemove}
-                                    setSelectedDeduction={setSelectedDeduction}
-                                />
-                            );
-                        }
-                    }
-                    if (!found) {
-                        return (
-                            <DeductionEmployeeCard
-                                key={deduction.nombreDeduccion}
-                                name={deduction.nombreDeduccion}
-                                setDefaultAmount={setDefaultAmount}
-                                description={deduction.descripcion}
-                                amount={deduction.monto}
-                                selected={false}
-                                setAmountChosen={setAmountChosen}
-                                setIsOpenAdd={setIsOpenAdd}
-                                setIsOpenRemove={setIsOpenRemove}
-                                setSelectedDeduction={setSelectedDeduction}
-                            />
-                        );
-                    }
+                    return createDeductionCard(deduction);
                 }
             }
         });
@@ -257,7 +227,9 @@ const EmployeeDeductions = ({props}) => {
     const getDeductions = () => {
         let rows = [];
         let deductions = parseDeductions();
-        deductions = deductions.filter((deduction) => deduction != undefined);
+        deductions = deductions.filter(
+            (deduction) => deduction != undefined
+        );
         for (let i = 0; i < deductions.length; i += 2) {
             rows.push(
                 <div key={i} className={styles.main__row}>
@@ -267,6 +239,13 @@ const EmployeeDeductions = ({props}) => {
             );
         }
         return rows;
+    };
+
+    const changeCurrency = (projectName) => {
+        const currentProject = projectsString.find(
+            (project) => project.nombre === projectName
+        );
+        setProjectCurrency(currentProject.moneda);
     };
 
     const handleProjectChange = async (event) => {
@@ -290,6 +269,7 @@ const EmployeeDeductions = ({props}) => {
         setCurrency(currentProject.moneda);
         setDeductions(deductions);
         getSelectedDeductions(event.target.value);
+        changeCurrency(event.target.value);
     };
 
     const handleTextChange = (event) => {
@@ -324,7 +304,11 @@ const EmployeeDeductions = ({props}) => {
                 buttonText="Aceptar"
                 buttonAction={() => setIsOpenError(false)}
             />
-            <Sidebar selected={5} username={employeeName} isEmployer={isEmployer} />
+            <Sidebar
+                selected={5}
+                username={employeeName}
+                isEmployer={isEmployer}
+            />
             <main className={styles.main}>
                 <div className={styles.main__header}>
                     <FormControl>

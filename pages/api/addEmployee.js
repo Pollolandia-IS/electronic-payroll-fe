@@ -7,24 +7,25 @@ export default function handler(req, res) {
 }
 
 async function addEmployeeToProject(req, res) {
-  console.log(req.body);
-  if (!req.body || !req.body.form || !req.body.selectedEmployees) {
-    return res.status(400).json({ error: "Faltan datos" });
-  }
-
   try {
-    for (let employee of req.body.selectedEmployees) {
+      const { cedulaJuridica, nombreProyecto, cedulaEmpleado, tipoEmpleado, puesto, fechaInicio, fechaFin, jornada, salario } = req.body;
       await prisma.esContratado.create({
         data: {
-          ...req.body.form,
-          cedulaEmpleado: employee,
-          nombreProyecto: req.body.nombreProyecto,
-          cedulaJuridica: req.body.cedulaJuridica,
+          cedulaJuridica: cedulaJuridica,
+          nombreProyecto: nombreProyecto,
+          cedulaEmpleado: cedulaEmpleado,
+          tipoEmpleado: tipoEmpleado,
+          puesto: puesto,
+          fechaInicio: fechaInicio,
+          fechaFin: fechaFin,
+          jornada: jornada,
+          salario: salario
         },
       });
       return res.status(200).json({ success: "OK" });
-    }
+    
   } catch (e) {
+    console.log(e);
     return res.status(500).json({ e });
   }
 }

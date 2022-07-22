@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const BASEURL = "http://localhost:3000";
+const BASEURL = process.env.URL;
 export default async function middleware(req) {
     const userData = await decodeToken(req);
     return handleRequest(req, userData);
@@ -20,7 +20,25 @@ const handleRequest = (req, userData) => {
         return handleDeductions(userData);
     } else if (url === `${BASEURL}/hours`) {
         return handleHours(userData);
-    } else if (url.match(/http:\/\/localhost:3000\/([0-9]+)\/verify/g)) {
+    } else if (url === `${BASEURL}/profile`) {
+        return handleProfile(userData);
+    } else if (url === `${BASEURL}/RegisterCompany`) {
+        return handleRegisterCompany(userData);
+    } else if (url === `${BASEURL}/payroll`) {
+        return handlePayroll(userData);
+    } else if (url.startsWith(`${BASEURL}/payDetail`)) {
+        return handlePayDetails(req, userData);
+    } else if (url === `${BASEURL}/myPays`) {
+        return handleMyPays(userData);
+    } else if (
+        url.match(
+            new RegExp(
+                `${BASEURL.split("/")[0]}\/\/${
+                    BASEURL.split("//")[1]
+                }\/([0-9]+)\/verify`
+            )
+        )
+    ) {
         let userID = url.match(/\/([0-9]+)/g)[0].substring(1);
         try {
             fetch(`${BASEURL}/api/verify`, {
@@ -43,7 +61,14 @@ const handleRequest = (req, userData) => {
 
 const handleIndex = async (userData) => {
     if (userData) {
-        return NextResponse.next();
+        if (userData.isEmployer) {
+            const id = await fetchIds(userData, false);
+            let response = NextResponse.next();
+            response.headers.append("id", JSON.stringify(id));
+            return response;
+        } else {
+            return NextResponse.next();
+        }
     } else {
         return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
@@ -51,7 +76,7 @@ const handleIndex = async (userData) => {
 
 const handleBenefits = async (userData) => {
     if (userData) {
-        const ids = await fetchIds(userData);
+        const ids = await fetchIds(userData, true);
         let response = NextResponse.next();
         response.headers.append("ids", JSON.stringify(ids));
         return response;
@@ -63,7 +88,7 @@ const handleBenefits = async (userData) => {
 const handleProject = async (userData) => {
     if (userData) {
         if (userData.isEmployer) {
-            const ids = await fetchIds(userData);
+            const ids = await fetchIds(userData, true);
             let response = NextResponse.next();
             response.headers.append("ids", JSON.stringify(ids));
             return response;
@@ -78,7 +103,7 @@ const handleProject = async (userData) => {
 const handleEmployees = async (userData) => {
     if (userData) {
         if (userData.isEmployer) {
-            const ids = await fetchIds(userData);
+            const ids = await fetchIds(userData, true);
             let response = NextResponse.next();
             response.headers.append("ids", JSON.stringify(ids));
             return response;
@@ -92,7 +117,7 @@ const handleEmployees = async (userData) => {
 
 const handleDeductions = async (userData) => {
     if (userData) {
-        const ids = await fetchIds(userData);
+        const ids = await fetchIds(userData, true);
         let response = NextResponse.next();
         response.headers.append("ids", JSON.stringify(ids));
         return response;
@@ -104,7 +129,7 @@ const handleDeductions = async (userData) => {
 const handleHours = async (userData) => {
     if (userData) {
         if (!userData.isEmployer) {
-            const ids = await fetchIds(userData);
+            const ids = await fetchIds(userData, true);
             let response = NextResponse.next();
             response.headers.append("ids", JSON.stringify(ids));
             return response;
@@ -115,6 +140,80 @@ const handleHours = async (userData) => {
         return NextResponse.redirect(`${BASEURL}/unauthorized`);
     }
 };
+
+const handleProfile = async (userData) => {
+    if (userData) {
+        const ids = await fetchIds(userData, true);
+        let response = NextResponse.next();
+        response.headers.append("userdata", JSON.stringify(userData));
+        response.headers.append("ids", JSON.stringify(ids));
+        return response;
+    } else {
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
+    }
+};
+
+const handleRegisterCompany = async (userData) => {
+    if (userData) {
+        if (userData.isEmployer) {
+            const id = await fetchIds(userData, false);
+            let response = NextResponse.next();
+            response.headers.append("id", JSON.stringify(id));
+            return response;
+        } else {
+            return NextResponse.redirect(`${BASEURL}/unauthorized`);
+        }
+    } else {
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
+    }
+};
+
+const handlePayroll = async (userData) => {
+    if (userData) {
+        if (userData.isEmployer) {
+            const ids = await fetchIds(userData, true);
+            let response = NextResponse.next();
+            response.headers.append("ids", JSON.stringify(ids));
+            return response;
+        } else {
+            return NextResponse.redirect(`${BASEURL}/coming-soon`);
+        }
+    } else {
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
+    }
+};
+
+const handlePayDetails = async (req, userData) => {
+    const projectName = req.nextUrl.searchParams.get("project");
+    if (userData && projectName) {
+        if (userData.isEmployer) {
+            const ids = await fetchIds(userData, true);
+            let response = NextResponse.next();
+            response.headers.append("ids", JSON.stringify(ids));
+            response.headers.append("project", projectName);
+            return response;
+        } else {
+            return NextResponse.redirect(`${BASEURL}/unauthorized`);
+        }
+    } else {
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
+    }
+};
+
+const handleMyPays = async (userData) => {
+    if (userData) {
+        if (!userData.isEmployer) {
+            const ids = await fetchIds(userData, true);
+            let response = NextResponse.next();
+            response.headers.append("ids", JSON.stringify(ids));
+            return response;
+        } else {
+            return NextResponse.redirect(`${BASEURL}/unauthorized`);
+        }
+    } else {
+        return NextResponse.redirect(`${BASEURL}/unauthorized`);
+    }
+}
 
 const decodeToken = async (req) => {
     const { cookies } = req;
@@ -133,7 +232,7 @@ const decodeToken = async (req) => {
     return null;
 };
 
-const fetchIds = async (userData) => {
+const fetchIds = async (userData, fetchCompanyId) => {
     if (userData) {
         const ids = await (
             await fetch(`${BASEURL}/api/services/fetchIds`, {
@@ -141,6 +240,7 @@ const fetchIds = async (userData) => {
                 headers: {
                     "Content-Type": "application/json",
                     email: userData.email,
+                    fetchCompanyId,
                 },
             })
         ).json();

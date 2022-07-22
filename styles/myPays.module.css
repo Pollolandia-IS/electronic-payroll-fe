@@ -1,0 +1,24 @@
+.content {
+    margin-left: 330px;
+}
+
+.button {
+    margin-top: 50px;
+    margin-left: 950px;
+}
+
+.header {
+    margin: 28px 0 50px 0;
+    display: flex;
+    column-gap: 45px;
+}
+
+.date {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: rgba(0, 0, 0, 0.87);
+}

@@ -11,7 +11,7 @@ export default function DataTable(props) {
                 rows={props.rows}
                 columns={props.columns}
                 rowsPerPageOptions={[5]}
-                density={"comfortable"}
+                density={props.density || "comfortable"}
                 hideFooterSelectedRowCount
             />
         </TableContainer>

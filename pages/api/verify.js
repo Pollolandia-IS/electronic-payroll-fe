@@ -18,7 +18,6 @@ async function verifyUser(req, res) {
             },
         });
 
-        console.log("USER:", user);
         if (user) {
             const credentials = await prisma.credenciales.update({
                 where: {

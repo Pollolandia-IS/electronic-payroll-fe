@@ -200,7 +200,7 @@ function BenefitEmployeeCard(props) {
                                 {`Monto:`}
                             </MontoText>
                             <Valor >
-                                {new Intl.NumberFormat('de-DE').format(props.amount)}
+                                {new Intl.NumberFormat('de-DE').format(props.amount)} {props.currency}
                             </Valor>
                         </Monto>
                         <Description >
