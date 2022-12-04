@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 
 const BASEURL = process.env.URL;
+
+export const config = {
+    matcher: ['/', '/benefits', '/project', '/employees', '/deductions', '/hours', '/profile', '/RegisterCompany', '/payroll', '/payDetail/:path*', '/MyPays', '/api/verify/:path*'],
+}
+
 export default async function middleware(req) {
     const userData = await decodeToken(req);
     return handleRequest(req, userData);

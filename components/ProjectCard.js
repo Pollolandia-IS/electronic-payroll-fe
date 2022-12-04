@@ -240,7 +240,7 @@ function ProjectCard(props) {
                     </Details>
                     <Stats>
                         <Frame11>
-                            <AccountCircleOutlinedIcon color="primary" sx={{cursor: "pointer"}} onClick={() => Router.push(`/${props.companyID}/project/${props.name}/addEmployee`)}/>
+                            <AccountCircleOutlinedIcon color="primary" sx={{cursor: "pointer"}} onClick={() => Router.push(`/employees`)}/>
                             <EmployeeCount>{props.employeeCount}</EmployeeCount>
                         </Frame11>
                         <Frame4></Frame4>

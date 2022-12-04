@@ -10,6 +10,13 @@ export default function handler(req, res) {
 
 const handleLogin = async (req, res) => {
   const { email, password } = req.body;
+  // verify email follows the correct format and length < 100
+  const isValid = email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) && email.length <= 100;
+  if (!isValid) {
+    res.status(422).json({ type: -3, error: "Formato de correo inválido" });
+    return;
+  }
+
   const userData = await getUserData(email);
   if (userData) {
     sendResponse(
