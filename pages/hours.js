@@ -215,7 +215,7 @@ const AddHoursEmployee = ({
                         <Search
                             handleSearch={handleTextChange}
                             searchText={searchText}
-                            placeholder="Buscar beneficio..."
+                            placeholder="Buscar reporte..."
                         />
                         <IconBox
                             action={() => setShowModal(true)}
